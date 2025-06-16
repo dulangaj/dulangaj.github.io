@@ -7,23 +7,45 @@ tags: [projects, python]
 image: pilpil.jpeg
 ---
 
-# 📝 Project Overview
+# Restaurant Analyzer — Data-Driven Restaurant Discovery
 
-This project was originally built as part of a university assignment, but quickly turned into something my friends and I actually used during our student days in Hong Kong.
+## 📝 Project Overview
 
-We built a tool that allowed users to search restaurants on OpenRice (Hong Kong’s equivalent to Yelp) — but instead of relying on the platform’s default algorithm, we let users define their own weighting for various search factors: price, distance, ratings, and more. Essentially, it turned restaurant hunting into something more data-driven and personalized.
+**Restaurant Analyzer** started as a university project, but ended up being something my friends and I genuinely used while studying in Hong Kong. The tool allowed us to search for restaurants on OpenRice (Hong Kong's equivalent to Yelp) — but with a twist: instead of relying on the platform’s default algorithm, users could **customize** how much different factors (price, distance, ratings, bad review ratios, etc.) influenced their search results.
 
-# 🔬 Study & Findings
+With full control over search weightings, the tool made restaurant hunting more data-driven and personalized — and it even led us to discover some of our favorite hidden gems, including [Amazing Ramen](https://www.openrice.com/en/hongkong/r-amazing-ramen-tai-po-japanese-ramen-r192373) -- a hidden gem back then, tucked deep in a far away alley.
 
-As part of the project, we also analyzed real-world restaurant data to study what actually affects customer ratings in Hong Kong.
+---
 
-One particularly interesting insight was that customer satisfaction generally increased with price — but only up to around HK$100 per person. After that, satisfaction levels plateaued, suggesting diminishing returns beyond that price point.
+## 🔬 Study & Findings
 
-# 🔧 Technical Highlights
+As part of the project, we also analyzed real-world restaurant data to explore how pricing and ratings actually correlated in Hong Kong’s restaurant scene. 
+
+- Customer satisfaction tended to increase with price — but only up to around **HK$100 per person**. Beyond that point, satisfaction plateaued, suggesting diminishing returns at higher price points.
+- Analysis across districts (Sha Tin, Mong Kok, TST, CUHK area) revealed significant gaps in certain cuisine types, which led us to propose business opportunities in underserved areas — such as Japanese restaurants near CUHK.
+
+We used multiple data visualizations including scatter plots, heatmaps, histograms, and pie charts to better understand pricing, popularity, cuisine diversity, and geographic gaps across districts.
+
+---
+
+## 🔧 Technical Highlights
+
 - Built web scraping & data collection scripts to pull live data from OpenRice.
-- Developed a simple scoring algorithm that allowed user-defined weightings across multiple search criteria.
-- Built correlation models to analyze price vs. favorability.
-- Packaged the tool for real-world use while dining out during university.
+- Designed a customizable scoring algorithm allowing users to define their own weightings across multiple search factors.
+- Modeled correlations between price, rating, and customer satisfaction.
+- Analyzed real-world restaurant trends using both synthetic data queries and live scraped data.
+- Packaged the tool into a real-world system that my friends and I actively used during university.
 
-# 🔗 Repository
+---
+
+## 🎯 Real-World Outcome
+
+- The tool successfully helped us identify great-value restaurants that we would have never discovered through default OpenRice searches.
+- Using aggressive weighting schemes allowed us to unearth highly rated but lesser-known restaurants tucked away from main areas.
+- Our "hidden gem" favorite — found through the tool — remained a mainstay in our dining until graduation.
+
+---
+
+## 🔗 Repository
+
 Check out the full source code on [GitHub](https://github.com/RiceProjectTeam/RestaurantAnalyzer).
