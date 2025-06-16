@@ -1,3 +1,11 @@
+---
+layout: category
+title: Sample Posts
+category: sample
+permalink: /sample-posts
+---
+
+
 ## YouTube embed example
 
 The YouTube URL of the video is https://www.youtube.com/watch?v=JLMbpiywVxQ. 
