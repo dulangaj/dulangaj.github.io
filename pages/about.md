@@ -4,4 +4,8 @@ title: About
 permalink: /about
 ---
 
-Millennial is a minimalist Jekyll theme. The purpose of this theme is to provide a simple, clean, content-focused publishing platform for your publication site or blog. You can find everything you need to get started under documentation. For more information on how to install and use this theme, check out [the documentation]({{ site.github.url }}{% post_url 2016-10-10-getting-started %}).
+Hi, I’m Dulanga — a software engineer with 4+ years of experience building scalable, production-grade systems across fintech, backend services, and full-stack applications. I specialize in Java, Python, and REST API development, and have hands-on experience working with cloud platforms, relational databases, and automation pipelines.
+
+Originally from Sri Lanka, I’ve worked in Hong Kong and am actively looking for new remote opportunities, with a strong interest in relocating to Australia or Singapore. My work blends clean code, practical problem-solving, and a strong focus on reliability, all backed by solid production on-call experience.
+
+Outside of code, I enjoy travel, exploring new places, and learning how technology adapts across different cultures and markets — a perspective that fuels my passion for building global products.
