@@ -22,7 +22,9 @@ With full control over search weightings, the tool made restaurant hunting more 
 As part of the project, we also analyzed real-world restaurant data to explore how pricing and ratings actually correlated in Hong Kong’s restaurant scene. 
 
 - Customer satisfaction tended to increase with price — but only up to around **HK$100 per person**. Beyond that point, satisfaction plateaued, suggesting diminishing returns at higher price points.
+
 - Analysis across districts (Sha Tin, Mong Kok, TST, CUHK area) revealed significant gaps in certain cuisine types, which led us to propose business opportunities in underserved areas — such as Japanese restaurants near CUHK.
+![Japanese Restaurant Heatmap](/assets/img/17.12_heatmap.png)
 
 We used multiple data visualizations including scatter plots, heatmaps, histograms, and pie charts to better understand pricing, popularity, cuisine diversity, and geographic gaps across districts.
 
