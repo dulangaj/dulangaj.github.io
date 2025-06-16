@@ -10,8 +10,8 @@ permalink:           /:title/
 plugins:             [jekyll-paginate, jekyll-sitemap, jekyll-feed, jekyll-seo-tag]
 
 # Customise atom feed settings (this is where Jekyll-Feed gets configuration information)
-title:		           "Dulanga's website"
-description:	       "Personal portfolio and projects — software engineer, backend developer, global citizen."
+title:		           "Dulanga Jayawardena"
+description:	       "Software Engineer | Fintech, Risk Management, Data Analysis | Portfolio of projects across Hong Kong, Sri Lanka, and the United States."
 author:              "Dulanga Jayawardena"
 
 # RSS 2.0 can be used instead of Atom by uncommenting following two lines

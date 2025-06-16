@@ -1,6 +1,6 @@
 ---
 layout: page
-title: Contact
+title: Get In Touch
 permalink: /contact
 ---
 
