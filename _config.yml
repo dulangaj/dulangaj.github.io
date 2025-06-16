@@ -14,6 +14,9 @@ title:		           "Dulanga's website"
 description:	       "Personal portfolio and projects — software engineer, backend developer, global citizen."
 author:              "Dulanga Jayawardena"
 
+baseurl: ""  # Leave empty because you're using GitHub User Pages
+url: "https://dulangaj.github.io"  # Your actual site URL
+
 # RSS 2.0 can be used instead of Atom by uncommenting following two lines
 #feed:
 #  path: rss-feed.xml
