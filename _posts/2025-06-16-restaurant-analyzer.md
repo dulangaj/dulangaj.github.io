@@ -27,4 +27,4 @@ Customer satisfaction generally increased with price — but only up to around H
 - Packaged the tool for real-world use while dining out during university.
 
 # 🔗 Project Link
-https://github.com/RiceProjectTeam/RestaurantAnalyzer
+[GitHub Link](https://github.com/RiceProjectTeam/RestaurantAnalyzer)
