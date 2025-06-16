@@ -1,9 +1,11 @@
 ---
 layout: post
-title: Sample Posts
+title: "YouTube test"
+author: "Dulanga Jayawardena"
 categories: projects
+tags: [projects]
+image: pilpil.jpeg
 ---
-
 
 ## YouTube embed example
 
