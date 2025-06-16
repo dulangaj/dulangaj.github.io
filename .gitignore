@@ -1,8 +1,16 @@
-_site
-Gemfile.lock
-.sass-cache
+# Jekyll build folders
+_site/
+.jekyll-cache/
 .jekyll-metadata
-.DS_Store
-.jekyll-cache
+.sass-cache/
+
+# Bundler
+vendor/
+.bundle/
+Gemfile.lock
+
+# Ruby specific
 *.gem
-/vendor/
+
+# macOS junk
+.DS_Store
