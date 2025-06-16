@@ -27,3 +27,11 @@ $codepen-color: black;
 $rss-color: #ff6600;
 
 @import "-sections-dir";
+
+.post-content img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    overflow-x: auto;
+  }
