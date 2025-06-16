@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Food Analysis"
+title: "Restaurant Analyzer"
 author: "Dulanga Jay"
 categories: projects
 tags: [projects, python]
