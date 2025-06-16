@@ -40,7 +40,7 @@ While at Dartmouth, I also worked on design and development of the **LitPak Back
 - Developed working prototypes using embedded electronics, sensors, and stitched circuit designs.
 - Worked in cross-functional teams blending design, engineering, and real-world testing.
 
-[Full write-up on LitPak Backpack](/litpak/)
+Full write-up on LitPak Backpack [here](/litpak)
 
 ---
 
