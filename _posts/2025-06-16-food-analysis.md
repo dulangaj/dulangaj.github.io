@@ -21,10 +21,10 @@ One particularly interesting insight:
 Customer satisfaction generally increased with price — but only up to around HK$100 per person. After that, satisfaction levels plateaued, suggesting diminishing returns beyond that price point.
 
 # 🔧 Technical Highlights
-	•	Built web scraping & data collection scripts to pull live data from OpenRice.
-	•	Developed a simple scoring algorithm that allowed user-defined weightings across multiple search criteria.
-	•	Built correlation models to analyze price vs. favorability.
-	•	Packaged the tool for real-world use while dining out during university.
+- Built web scraping & data collection scripts to pull live data from OpenRice.
+- Developed a simple scoring algorithm that allowed user-defined weightings across multiple search criteria.
+- Built correlation models to analyze price vs. favorability.
+- Packaged the tool for real-world use while dining out during university.
 
 # 🔗 Project Link
 https://github.com/RiceProjectTeam/RestaurantAnalyzer
