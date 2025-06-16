@@ -10,7 +10,7 @@ permalink:           /:title
 plugins:             [jekyll-paginate, jekyll-sitemap, jekyll-feed, jekyll-seo-tag]
 
 # Customise atom feed settings (this is where Jekyll-Feed gets configuration information)
-title:		           "'Dulanga's website'"
+title:		           "Dulanga's website"
 description:	       "Personal portfolio and projects — software engineer, backend developer, global citizen."
 author:              "Dulanga Jayawardena"
 
