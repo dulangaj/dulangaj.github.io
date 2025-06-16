@@ -4,8 +4,10 @@ title: About
 permalink: /about
 ---
 
-Hi, I’m Dulanga — a software engineer with 4+ years of experience building scalable, production-grade systems across fintech, backend services, and full-stack applications. I specialize in Java, Python, and REST API development, and have hands-on experience working with cloud platforms, relational databases, and automation pipelines.
+I’m Dulanga — a software engineer with 4+ years of experience building scalable, production-grade systems for financial systems. I specialize in Java, and Python, and have hands-on experience working with cloud platforms, relational databases, and automation pipelines.
 
-Originally from Sri Lanka, I’ve worked in Hong Kong and am actively looking for new remote opportunities, with a strong interest in relocating to Australia or Singapore. My work blends clean code, practical problem-solving, and a strong focus on reliability, all backed by solid production on-call experience.
+Originally from Sri Lanka, I have have lived in Hong Kong for the past 9 years, and I am actively looking for new opportunities, with a strong interest in relocating to Australia or Singapore. My work blends automation, user-centric design, with a strong focus on reliability.
+
+Beyond just building systems, I’m driven by the opportunity to work on technology that meaningfully impacts people’s daily lives. I have a particular interest in consumer health, IoT, and human-centered systems — areas where software and hardware can directly improve wellbeing, safety, and personal agency. My long-term goal is to contribute to products that sit at the intersection of technology, healthcare, and real-world impact.
 
 Outside of code, I enjoy travel, exploring new places, and learning how technology adapts across different cultures and markets — a perspective that fuels my passion for building global products.

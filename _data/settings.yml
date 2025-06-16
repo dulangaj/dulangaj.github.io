@@ -8,12 +8,15 @@ google-ID: ''
 
 menu:
 - {name: 'Projects',  url: 'projects'}
+- {name: 'Profile',  url: 'profile'}
 - {name: 'About',              url: 'about'}
 - {name: 'Contact',            url: 'contact'}
 
 # Available social icons are powered by Font Awesome, so you can use any icon that they offer
 social:
-- {icon: 'instagram', link:  'https://instagram.com/dulangaj'}
+#- {icon: 'instagram', link:  'https://instagram.com/dulangaj'}
+- {icon: 'linkedin', link:   'https://www.linkedin.com/in/dulangaj'}
+- {icon: 'github', link:   'https://www.github.com/dulangaj'}
 - {icon: 'envelope', link:   'mailto:dulangajay@gmail.com'}
 # - {icon: 'rss-square', link: 'rss-feed.xml'}
 
