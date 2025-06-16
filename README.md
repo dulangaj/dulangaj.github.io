@@ -2,4 +2,4 @@
 
 View website at [dulangaj.github](https://dulangaj.github.io/)
 
-Based on Millennial https://lenpaul.github.io/Millennial/
+Based on the Millennial theme from https://lenpaul.github.io/Millennial/
