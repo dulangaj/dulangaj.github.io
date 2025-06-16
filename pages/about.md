@@ -1,8 +1,12 @@
 ---
 layout: page
-title: About
+title: About Me
 permalink: /about
 ---
+
+<div style="max-width: 100%; display: flex; justify-content: center;">
+  <img src="/assets/img/profile.jpeg" alt="Dulanga Jayawardena" style="width: 100%; max-width: 300px; height: auto;">
+</div>
 
 I’m Dulanga — a software engineer with 4+ years of experience building scalable, production-grade systems for financial systems. I specialize in Java, and Python, and have hands-on experience working with cloud platforms, relational databases, and automation pipelines.
 
