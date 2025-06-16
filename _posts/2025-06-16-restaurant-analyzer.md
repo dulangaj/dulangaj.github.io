@@ -1,7 +1,7 @@
 ---
 layout: post
 title: "Restaurant Analyzer"
-author: "Dulanga Jay"
+author: "Dulanga Jayawardena"
 categories: projects
 tags: [projects, python]
 image: pilpil.jpeg
@@ -16,9 +16,8 @@ We built a tool that allowed users to search restaurants on OpenRice (Hong Kong�
 # 🔬 Study & Findings
 
 As part of the project, we also analyzed real-world restaurant data to study what actually affects customer ratings in Hong Kong.
-One particularly interesting insight:
 
-Customer satisfaction generally increased with price — but only up to around HK$100 per person. After that, satisfaction levels plateaued, suggesting diminishing returns beyond that price point.
+One particularly interesting insight was that customer satisfaction generally increased with price — but only up to around HK$100 per person. After that, satisfaction levels plateaued, suggesting diminishing returns beyond that price point.
 
 # 🔧 Technical Highlights
 - Built web scraping & data collection scripts to pull live data from OpenRice.
@@ -26,5 +25,5 @@ Customer satisfaction generally increased with price — but only up to around H
 - Built correlation models to analyze price vs. favorability.
 - Packaged the tool for real-world use while dining out during university.
 
-# 🔗 Project Link
-[GitHub Link](https://github.com/RiceProjectTeam/RestaurantAnalyzer)
+# 🔗 Repository
+Check out the full source code on [GitHub](https://github.com/RiceProjectTeam/RestaurantAnalyzer).

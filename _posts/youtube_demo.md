@@ -1,5 +1,5 @@
 ---
-layout: category
+layout: post
 title: Sample Posts
 categories: projects
 ---
