@@ -1,13 +1,11 @@
 ---
 layout: post
-title: "Lit Pak - Professional in Light, Radiant in Night"
+title: "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
 author: "Dulanga Jayawardena"
 categories: projects
 tags: [projects, engineering]
 image: litpak.jpeg
 ---
-
-# LitPak — Designing a Safer, Smarter Backpack for Nighttime Visibility
 
 ## Overview
 

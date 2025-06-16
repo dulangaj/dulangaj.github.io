@@ -7,8 +7,6 @@ tags: [projects, python]
 image: leaves.jpeg
 ---
 
-# Simulating the Spread of Opinions in Social Networks
-
 ## Overview
 
 This project explored how opinions spread through social networks using two well-known models in opinion dynamics: **DeGroot** (linear) and **Bounded Confidence** (non-linear). The project also proposed a new influence-based self-appraisal mechanism to overcome some of the limitations in existing models.

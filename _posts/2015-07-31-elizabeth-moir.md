@@ -1,13 +1,11 @@
 ---
 layout: post
-title: "Elizabeth Moir School"
+title: "Excelling at Elizabeth Moir School"
 author: "Dulanga Jayawardena"
 categories: profile
 tags: [profile, school]
 image: 15.02_moir.jpeg
 ---
-
-# High School — Elizabeth Moir School, Sri Lanka
 
 ## 📝 Overview
 

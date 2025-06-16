@@ -1,13 +1,11 @@
 ---
 layout: post
-title: "Restaurant Recommender"
+title: "Restaurant Recommender — Data-Driven Restaurant Discovery"
 author: "Dulanga Jayawardena"
 categories: projects
 tags: [projects, python]
 image: pilpil.jpeg
 ---
-
-# Restaurant Recommender — Data-Driven Restaurant Discovery
 
 ## 📝 Project Overview
 

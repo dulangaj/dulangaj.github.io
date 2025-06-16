@@ -1,12 +1,11 @@
 ---
 layout: post
-title: "Studying at CUHK"
+title: "Studying Systems Engineering at CUHK"
 author: "Dulanga Jayawardena"
 categories: profile
 tags: [profile, school]
 image: 16.11_graduation.jpeg
 ---
-# University Highlights — CUHK
 
 ## 🎓 Overview
 

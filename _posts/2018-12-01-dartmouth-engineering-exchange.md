@@ -1,13 +1,11 @@
 ---
 layout: post
-title: "Exchanging at Dartmouth College"
+title: "Doing my exchange semester at Dartmouth College"
 author: "Dulanga Jayawardena"
 categories: profile
 tags: [profile, school]
 image: 18.09_window.jpeg
 ---
-
-# Exchange Semester — Dartmouth College
 
 ## 📝 Overview
 
