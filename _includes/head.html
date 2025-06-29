@@ -1,4 +1,13 @@
 <head>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-NJQZ5S8WWB"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-NJQZ5S8WWB');
+  </script>
   <title>
     {% if page.title == "Home" %}
       {{ site.title }} | {{ site.description }}
@@ -21,7 +30,7 @@
     src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
   </script>
   <!-- Google Analytics -->
-  {% include google-analytics.html %}
+  <!-- TODO delete {% include google-analytics.html %} -->
   <!-- Use Jekyll SEO plugin -->
   {% seo %}
   <script type="application/ld+json">
