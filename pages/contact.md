@@ -4,7 +4,7 @@ title: Get In Touch
 permalink: /contact
 ---
 
-Looking to get in touch? I’m currently open to new opportunities — full-time, remote, or relocation (Australia, Singapore, or anywhere with good coffee and solid internet).
+Looking to get in touch? I’m currently open to new opportunities — full-time, remote, or relocation (anywhere with good coffee and solid internet).
 
 💼 LinkedIn: [linkedin.com/in/dulangaj](https://www.linkedin.com/in/dulangaj)
 
