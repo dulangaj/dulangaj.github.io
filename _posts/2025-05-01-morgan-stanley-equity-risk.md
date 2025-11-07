@@ -2,7 +2,7 @@
 layout: post
 title: "Building Software for Equity Risk Management at Morgan Stanley"
 author: "Dulanga Jayawardena"
-categories: profile
+categories: [profile, projects]
 tags: [profile, work]
 image: 25.04_hongkong.jpeg
 ---
