@@ -382,9 +382,9 @@ button {
 
 .work-card article {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 1.5rem;
-  padding: 1.5rem;
+  grid-template-columns: minmax(320px, 0.75fr) minmax(0, 1fr);
+  gap: 2rem;
+  padding: 1.75rem;
   border-radius: var(--radius-lg);
   background: var(--surface-elevated);
   box-shadow: var(--shadow-card);
@@ -838,6 +838,8 @@ button {
 
   .work-card article {
     grid-template-columns: 1fr;
+    padding: 1.25rem;
+    gap: 1rem;
   }
 
   .site-main {
