@@ -120,11 +120,11 @@ title: Home
     {% for post in latest_posts limit: 3 %}
       <li class="writing-card" data-reveal>
         <article>
-          <p class="writing-meta">
-            <span>{{ post.date | date: "%b %d, %Y" }}</span>
-            {% if post.categories %}
-              <span>{{ post.categories | join: " · " }}</span>
-            {% endif %}
+            <p class="writing-meta">
+              <span>{{ post.date | date: "%b %Y" }}</span>
+              {% if post.categories %}
+                <span>{{ post.categories | join: " · " }}</span>
+              {% endif %}
           </p>
           <h3>
             <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
