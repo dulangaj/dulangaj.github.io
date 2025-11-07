@@ -1,0 +1,43 @@
+- title: "Equity Risk Decisioning Platform"
+  year: 2025
+  summary: "Built the software backbone traders and risk managers use every day to model exposure across global equities."
+  outcome: "Cut alert latency by double digits while keeping systems observable and compliant."
+  link: "/morgan-stanley-equity-risk/"
+  tags: ["Risk", "Java", "Real-time"]
+  image:
+    webp: "/assets/img/25.04_hongkong.webp"
+    fallback: "/assets/img/25.04_hongkong.jpeg"
+    alt: "View of Hong Kong harbour at dusk"
+
+- title: "VBrands Digital Operations"
+  year: 2024
+  summary: "Scaled an omni-channel retail stack that blends bespoke automations with pragmatic no-code tooling."
+  outcome: "Automated special orders and catalog ops, freeing the team to focus on merchandising."
+  link: "/vbrands/"
+  tags: ["Automation", "Python", "Retail"]
+  image:
+    webp: "/assets/img/20.12_vbrands.webp"
+    fallback: "/assets/img/20.12_vbrands.jpeg"
+    alt: "Warm retail storefront"
+
+- title: "LitPak Safety Backpack"
+  year: 2019
+  summary: "Hardware-software wearable that keeps pedestrians visible with motion-aware lighting and thoughtful industrial design."
+  outcome: "Proved 3x visibility improvement through user testing and lab validation."
+  link: "/wearable-safety-backpack/"
+  tags: ["Hardware", "UX Research", "Prototyping"]
+  image:
+    webp: "/assets/img/litpak.webp"
+    fallback: "/assets/img/litpak.jpeg"
+    alt: "LitPak illuminated backpack prototype"
+
+- title: "Restaurant Recommender"
+  year: 2018
+  summary: "Data product that lets students tune their own scoring model while scraping live OpenRice data."
+  outcome: "Surfaced hidden-gem ramen spots and informed a cuisine-gap report for CUHK neighborhoods."
+  link: "/restaurant-recommender/"
+  tags: ["Data", "Python", "Visualization"]
+  image:
+    webp: "/assets/img/pilpil.webp"
+    fallback: "/assets/img/pilpil.jpeg"
+    alt: "Close up of ramen bowls on a wood table"
