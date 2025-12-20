@@ -2,7 +2,7 @@
 layout: post
 title: "Doing my exchange semester at Dartmouth College"
 author: "Dulanga Jayawardena"
-categories: profile
+categories: [profile, projects]
 tags: [profile, school]
 image: 18.09_window.jpeg
 ---

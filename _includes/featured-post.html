@@ -1,7 +1,13 @@
-<article>
-  <a href="{{ site.github.url }}{{ post.url }}">
-    <div class="featured-post" {% if post.image %}style="background-image:url({{ site.github.url }}/assets/img/{{ post.image }})"{% endif %}>
-      <h2><span>{{ post.title }}</span></h2>
-    </div>
+<article class="post-card" data-reveal>
+  <a href="{{ post.url | relative_url }}">
+    <p class="post-card-meta">
+      <span>{{ post.date | date: "%b %d, %Y" }}</span>
+      {% if post.categories %}
+        <span>{{ post.categories | join: " · " }}</span>
+      {% endif %}
+    </p>
+    <h3>{{ post.title }}</h3>
+    <p>{{ post.excerpt | strip_html | truncate: 140 }}</p>
+    <span class="text-link">Read article</span>
   </a>
 </article>

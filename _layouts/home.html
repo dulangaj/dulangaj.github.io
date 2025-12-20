@@ -3,20 +3,139 @@ layout: default
 title: Home
 ---
 
-{% for post in paginator.posts %}
-  {% include featured-post.html %}
-{% endfor %}
+<section class="hero" id="hero">
+  <div class="hero-content" data-reveal>
+    <p class="eyebrow">Dulanga Jayawardena · Software Engineer</p>
+    <h1>Designing resilient software that feels effortless to use.</h1>
+    <p class="lead">I help fintech and operations teams turn messy systems into calm, measurable platforms&mdash;from real-time risk tooling to automation that keeps business-critical work moving.</p>
+    <div class="hero-actions">
+      <a class="btn btn-primary" href="{{ '/projects' | relative_url }}">See selected work</a>
+      <a class="btn btn-ghost" href="{{ '/contact' | relative_url }}">Book time</a>
+    </div>
+    <ul class="hero-metrics" role="list">
+      <li>
+        <span class="metric-label">8+ years</span>
+        <span>Shipping production systems</span>
+      </li>
+      <li>
+        <span class="metric-label">3 continents</span>
+        <span>APAC, NA, EMEA launches</span>
+      </li>
+      <li>
+        <span class="metric-label">0 drama</span>
+        <span>Calm incident response and on-call</span>
+      </li>
+    </ul>
+  </div>
+  <div class="hero-media" data-reveal>
+    <picture>
+      <source srcset="{{ '/assets/img/profile.webp' | relative_url }}" type="image/webp">
+      <img src="{{ '/assets/img/profile.jpeg' | relative_url }}" alt="Portrait of Dulanga Jayawardena" width="560" height="700" loading="eager" fetchpriority="high" decoding="async">
+    </picture>
+  </div>
+</section>
 
-<!-- Pagination links -->
-<div class="pagination">
-  {% if paginator.next_page %}
-    <a class="pagination-button pagination-active next" href="{{ site.github.url }}{{ paginator.next_page_path }}">{{ site.data.settings.pagination.previous_page }}</a>
-  {% else %}
-    <span class="pagination-button">{{ site.data.settings.pagination.previous_page }}</span>
-  {% endif %}
-  {% if paginator.previous_page %}
-    <a class="pagination-button pagination-active" href="{{ site.baseurl }}{{ paginator.previous_page_path }}">{{ site.data.settings.pagination.next_page }}</a>
-  {% else %}
-    <span class="pagination-button">{{ site.data.settings.pagination.next_page }}</span>
-  {% endif %}
-</div>
+{% assign work = site.data.work | default: [] %}
+<section class="section selected-work" id="work" aria-labelledby="selected-work-title">
+  <div class="section-heading" data-reveal>
+    <p class="eyebrow">Selected work</p>
+    <h2 id="selected-work-title">Calm, durable systems for teams that ship fast</h2>
+    <p>Case studies that blend strategy, architecture, and the pixel-level polish stakeholders expect.</p>
+  </div>
+  <ol class="work-grid" role="list">
+    {% for project in work %}
+      <li class="work-card" data-reveal>
+        <article>
+          <div class="work-media">
+            <picture>
+              <source srcset="{{ project.image.webp | relative_url }}" type="image/webp">
+              <img src="{{ project.image.fallback | relative_url }}" alt="{{ project.image.alt }}" loading="lazy" decoding="async" width="640" height="420">
+            </picture>
+          </div>
+          <div class="work-body">
+            <p class="work-meta">
+              <span>{{ project.year }}</span>
+              {% if project.tags %}
+                <span>{{ project.tags | join: ' · ' }}</span>
+              {% endif %}
+            </p>
+            <h3>
+              <a href="{{ project.link | relative_url }}">{{ project.title }}</a>
+            </h3>
+            <p>{{ project.summary }}</p>
+            <p class="work-outcome">{{ project.outcome }}</p>
+            <a class="work-link" href="{{ project.link | relative_url }}" aria-label="Open {{ project.title }} case study">Read the case study</a>
+          </div>
+        </article>
+      </li>
+    {% endfor %}
+  </ol>
+</section>
+
+<section class="section capabilities" id="capabilities" aria-labelledby="capabilities-title">
+  <div class="section-heading" data-reveal>
+    <p class="eyebrow">Capabilities</p>
+    <h2 id="capabilities-title">Where I add leverage</h2>
+    <p>From deep dives with traders to running user sessions with ops teams, I translate ambiguous needs into dependable software.</p>
+  </div>
+  <div class="capabilities-grid" data-reveal>
+    <article>
+      <h3>Product & systems</h3>
+      <ul>
+        <li>North-star definition + measurement</li>
+        <li>Service design & architecture reviews</li>
+        <li>Designing APIs, events, and UX flow</li>
+        <li>Migration planning without downtime</li>
+      </ul>
+    </article>
+    <article>
+      <h3>Engineering craft</h3>
+      <ul>
+        <li>Java, Python, TypeScript, Bash</li>
+        <li>Data tooling across Kafka, SQL, KDB+</li>
+        <li>Testing-first habits & steady on-call</li>
+        <li>Performance profiling + instrumentation</li>
+      </ul>
+    </article>
+    <article>
+      <h3>People & delivery</h3>
+      <ul>
+        <li>Coaching teams through incident reviews</li>
+        <li>Exec-ready storytelling + visuals</li>
+        <li>Vendor and compliance alignment</li>
+        <li>Remote-friendly rituals and async comms</li>
+      </ul>
+    </article>
+  </div>
+</section>
+
+{% assign latest_posts = site.posts %}
+<section class="section writing" id="writing" aria-labelledby="writing-title">
+  <div class="section-heading" data-reveal>
+    <p class="eyebrow">Latest writing</p>
+    <h2 id="writing-title">Notes from the field</h2>
+    <p>Short reads on engineering process, research, and experiments.</p>
+  </div>
+  <ul class="writing-list" role="list">
+    {% for post in latest_posts limit: 3 %}
+      <li class="writing-card" data-reveal>
+        <article>
+            <p class="writing-meta">
+              <span>{{ post.date | date: "%b %Y" }}</span>
+              {% if post.categories %}
+                <span>{{ post.categories | join: " · " }}</span>
+              {% endif %}
+          </p>
+          <h3>
+            <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+          </h3>
+          <p>{{ post.excerpt | strip_html | truncate: 140 }}</p>
+          <a class="text-link" href="{{ post.url | relative_url }}">Keep reading</a>
+        </article>
+      </li>
+    {% endfor %}
+  </ul>
+  <div class="writing-cta" data-reveal>
+    <a class="btn btn-secondary" href="{{ '/projects' | relative_url }}">Browse the archive</a>
+  </div>
+</section>
