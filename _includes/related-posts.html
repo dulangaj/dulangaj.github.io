@@ -1,18 +1,28 @@
-{% assign listed_posts_urls = page.url | split: ' ' %}
-<div class="related" data-reveal>
+<div class="related">
   <h2>{{ site.data.settings.related_posts }}</h2>
-  <ul class="related-posts" role="list">
+  {% assign listed_posts_urls = page.url | split: ' ' %}
+  <ul class="related-posts">
     {% for tag in page.tags %}
       {% for mypost in site.tags[tag] limit:2 %}
-        {% unless listed_posts_urls contains mypost.url %}
+        {% if listed_posts_urls contains mypost.url %}
+        {% else %}
           <li>
-            <a href="{{ mypost.url | relative_url }}">
-              <p class="related-meta">{{ mypost.date | date: "%b %d, %Y" }}</p>
-              <h3>{{ mypost.title }}</h3>
-            </a>
+            <h3>
+              <a href="{{ site.github.url }}{{ mypost.url }}">
+                <div class="related-thumbnail">
+                  {% if mypost.image %}
+                    <img src="{{ site.url }}{{ site.baseurl }}/assets/img/{{ mypost.image }}">
+                  {% endif %}
+                </div>
+                <div class="related-title">
+                  {{ mypost.title }}
+                </div>
+                <!--<small>{{ mypost.date | date: "%B %-d, %Y" }}</small>-->
+              </a>
+            </h3>
           </li>
           {% assign listed_posts_urls = listed_posts_urls | push: mypost.url %}
-        {% endunless %}
+        {% endif %}
       {% endfor %}
     {% endfor %}
   </ul>

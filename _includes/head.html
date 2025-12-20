@@ -1,30 +1,38 @@
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  {% assign meta_description = page.excerpt | strip_html | default: site.description %}
-  <meta name="description" content="{{ meta_description | strip_newlines }}">
-  <meta name="color-scheme" content="light dark">
-  <meta name="theme-color" media="(prefers-color-scheme: light)" content="#f5f5f7">
-  <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#050505">
-  <title>
-    {% if page.title == "Home" %}
-      {{ site.title }} · {{ site.description }}
-    {% else %}
-      {{ page.title }} · {{ site.title }}
-    {% endif %}
-  </title>
-  <link rel="icon" href="{{ '/favicon.ico' | relative_url }}" type="image/x-icon">
-  <link rel="stylesheet" href="{{ '/assets/css/main.css' | relative_url }}">
-  <link rel="stylesheet" href="{{ '/assets/css/syntax.css' | relative_url }}">
-  {% feed_meta %}
-  {% seo %}
+  <!-- Google tag (gtag.js) -->
   <script async src="https://www.googletagmanager.com/gtag/js?id=G-NJQZ5S8WWB"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
+
     gtag('config', 'G-NJQZ5S8WWB');
   </script>
+  <title>
+    {% if page.title == "Home" %}
+      {{ site.title }} | {{ site.description }}
+    {% else %}
+      {{ page.title }} | {{ site.title }}
+    {% endif %}
+  </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="{{ site.github.url }}/assets/css/main.css">
+  <link rel="stylesheet" href="{{ site.github.url }}/assets/css/syntax.css">
+  <!-- Use Atom -->
+  {% feed_meta %}
+  <!-- RSS-v2.0
+  <link href="{{ site.github.url }}/rss-feed.xml" type="application/rss+xml" rel="alternate" title="{{ site.title }} | {{ site.description }}"/>
+  //-->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Source+Code+Pro">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css">
+  <script type="text/javascript" async
+    src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+  </script>
+  <!-- Google Analytics -->
+  <!-- TODO delete {% include google-analytics.html %} -->
+  <!-- Use Jekyll SEO plugin -->
+  {% seo %}
   <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -38,5 +46,5 @@
       "jobTitle": "Software Engineer",
       "knowsAbout": ["Software Engineering", "Fintech", "Java", "Python"]
     }
-  </script>
+    </script>
 </head>

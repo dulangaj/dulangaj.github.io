@@ -1,16 +1,6 @@
-<footer class="site-footer" data-reveal>
-  <div>
-    <p>Available for advisory, hands-on engineering, or rapid experiments.</p>
-    <p><a class="text-link" href="{{ '/contact' | relative_url }}">Send a note</a> and we can scope something in a day.</p>
-  </div>
-  <ul class="social-list" role="list">
-    {% for item in site.data.settings.social %}
-      <li>
-        <a href="{{ item.link }}" target="_blank" rel="noreferrer noopener">
-          <span aria-hidden="true">↗</span> {{ item.label }}
-        </a>
-      </li>
-    {% endfor %}
-  </ul>
-  <p class="footer-meta">© {{ site.author }} · built with Jekyll</p>
+<footer class="footer">
+  {% for item in site.data.settings.social %}
+    <a href="{{ item.link }}" class="menu-link" target="_blank"><i class="fa fa-{{ item.icon }}" aria-hidden="true"></i></a>
+  {% endfor %}
+  <div class="footer-description"><a href="{{ site.github.url }}/">{{ site.description }} <br> by {{ site.author }}</a></div>
 </footer>

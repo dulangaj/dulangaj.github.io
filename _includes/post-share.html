@@ -1,10 +1,7 @@
-{% assign site_base = site.url | default: site.github.url | default: "" %}
-{% assign share_url = site_base | append: page.url %}
-<div class="post-share" data-reveal>
-  <p>{{ site.data.settings.sharing_button_prompt }}</p>
-  <div class="sharing-actions">
-    <a class="share-pill" href="https://twitter.com/intent/tweet?text={{ page.title | uri_escape }}&amp;url={{ share_url | uri_escape }}" target="_blank" rel="noreferrer noopener">Share on X</a>
-    <a class="share-pill" href="https://www.linkedin.com/sharing/share-offsite/?url={{ share_url | uri_escape }}" target="_blank" rel="noreferrer noopener">Share on LinkedIn</a>
-    <button class="share-pill is-ghost" type="button" data-copy-link="{{ share_url }}">Copy link</button>
+<div class="post-share">
+  <div class="post-date">{{ site.data.settings.sharing_button_prompt }}</div>
+  <div class="sharing-icons">
+    <a href="https://twitter.com/intent/tweet?text={{ page.title }}&amp;url={{ site.github.url }}{{ page.url }}" target="_blank"><i class="fa fa-twitter" aria-hidden="true"></i></a>
+    <a href="https://www.facebook.com/sharer/sharer.php?u={{ site.github.url }}{{ page.url }}&amp;title={{ page.title }}" target="_blank"><i class="fa fa-facebook" aria-hidden="true"></i></a>
   </div>
 </div>
