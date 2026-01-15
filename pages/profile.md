@@ -26,13 +26,6 @@ contact:
     - { label: "LinkedIn", url: "https://www.linkedin.com/in/dulangaj" }
     - { label: "GitHub", url: "https://www.github.com/dulangaj" }
     - { label: "Email", url: "mailto:dulangajay@gmail.com" }
-principles:
-  - title: "Design with evidence"
-    copy: "Discovery doesn’t stop after kickoff. I blend interviews, instrumentation, and lightweight prototypes so the team has proof at every step."
-  - title: "Protect deep focus"
-    copy: "Healthy systems come from calm engineers. I run rituals that keep on-call humane, reduce alert fatigue, and make weekends predictable."
-  - title: "Tell the story"
-    copy: "Executives, regulators, and users all need different narratives. I translate the work—roadmaps, dashboards, visuals—so decisions are easy."
 tools:
   - title: "Applications & services"
     copy: "Stacks I reach for when shaping APIs, UI layers, or service meshes."

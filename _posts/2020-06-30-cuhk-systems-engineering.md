@@ -16,7 +16,7 @@ highlights:
 tags: [Education, Systems Engineering, Hong Kong]
 image: 16.11_graduation.jpeg
 image_alt: "Graduation ceremony at CUHK"
-featured: false
+featured: true
 ---
 
 ## 🎓 Overview

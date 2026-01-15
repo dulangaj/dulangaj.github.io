@@ -33,23 +33,6 @@ layout: default
   </div>
 </section>
 
-{% if page.principles %}
-  <section class="section principles" aria-labelledby="principles-title">
-    <div class="section-heading" data-reveal>
-      <p class="eyebrow">Operating principles</p>
-      <h2 id="principles-title">How I run teams and projects</h2>
-    </div>
-    <ul class="principles-list" role="list">
-      {% for principle in page.principles %}
-        <li data-reveal>
-          <h3>{{ principle.title }}</h3>
-          <p>{{ principle.copy }}</p>
-        </li>
-      {% endfor %}
-    </ul>
-  </section>
-{% endif %}
-
 {% assign profile_posts = site.categories.profile | default: empty %}
 {% assign education_posts = site.categories.education | default: empty %}
 {% assign experience = profile_posts | concat: education_posts | sort: "year" | reverse %}
@@ -116,47 +99,6 @@ layout: default
         <p>{{ paragraph }}</p>
       {% endfor %}
     </div>
-  </section>
-{% endif %}
-
-{% assign profile_posts = site.categories[page.category] | slice: 0, 3 %}
-{% if profile_posts and profile_posts.size > 0 %}
-  <section class="section writing" aria-labelledby="profile-writing-title">
-    <div class="section-heading" data-reveal>
-      <p class="eyebrow">Latest notes</p>
-      <h2 id="profile-writing-title">Recent profile pieces</h2>
-    </div>
-    <ul class="work-grid profile-writing-grid" role="list">
-      {% for post in profile_posts %}
-        {% assign has_image = post.image %}
-        <li class="work-card" data-reveal>
-          <article>
-            {% if has_image %}
-              <div class="work-media">
-                <img src="{{ '/assets/img/' | append: post.image | relative_url }}" alt="{{ post.image_alt | default: post.title }}" loading="lazy" decoding="async">
-              </div>
-            {% else %}
-              <div class="work-media is-placeholder">
-                <span>Story</span>
-              </div>
-            {% endif %}
-            <div class="work-body">
-              <p class="work-meta">
-                <span>{{ post.date | date: "%b %Y" }}</span>
-                {% if post.tags %}
-                  <span>{{ post.tags | join: " · " }}</span>
-                {% endif %}
-              </p>
-              <h3>
-                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <p>{{ post.excerpt | strip_html | truncate: 150 }}</p>
-              <a class="work-link" href="{{ post.url | relative_url }}">Read the story</a>
-            </div>
-          </article>
-        </li>
-      {% endfor %}
-    </ul>
   </section>
 {% endif %}
 
