@@ -2,9 +2,14 @@
 layout: post
 title: "Restaurant Recommender — Data-Driven Restaurant Discovery"
 author: "Dulanga Jayawardena"
-categories: projects
-tags: [projects, python]
+categories: [projects, blog]
+year: 2018
+summary: "Data product that lets students tune their own scoring model while scraping live OpenRice data."
+outcome: "Surfaced hidden-gem ramen spots and informed a cuisine-gap report for CUHK neighborhoods."
+tags: [Data, Python, Visualization]
 image: pilpil.jpeg
+image_alt: "Close up of ramen bowls on a wood table"
+featured: true
 ---
 
 ## 📝 Project Overview

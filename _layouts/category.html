@@ -2,7 +2,32 @@
 layout: default
 ---
 
-{% assign category_posts = site.posts | where_exp: 'post', 'post.categories contains page.category' %}
+{% assign category_posts = "" | split: "" %}
+{% for post in site.posts %}
+  {% assign dominated = false %}
+  {% if page.categories %}
+    {% if post.category and page.categories contains post.category %}
+      {% assign dominated = true %}
+    {% elsif post.categories %}
+      {% for cat in post.categories %}
+        {% if page.categories contains cat %}
+          {% assign dominated = true %}
+          {% break %}
+        {% endif %}
+      {% endfor %}
+    {% endif %}
+  {% else %}
+    {% if post.category == page.category %}
+      {% assign dominated = true %}
+    {% elsif post.categories and post.categories contains page.category %}
+      {% assign dominated = true %}
+    {% endif %}
+  {% endif %}
+  {% if dominated %}
+    {% assign category_posts = category_posts | push: post %}
+  {% endif %}
+{% endfor %}
+{% assign category_posts = category_posts | sort: "year" | reverse %}
 
 <section class="page-hero" data-reveal>
   <p class="eyebrow">{{ page.title }}</p>

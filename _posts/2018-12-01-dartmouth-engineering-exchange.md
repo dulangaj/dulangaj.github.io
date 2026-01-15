@@ -2,9 +2,21 @@
 layout: post
 title: "Doing my exchange semester at Dartmouth College"
 author: "Dulanga Jayawardena"
-categories: [profile, projects]
-tags: [profile, school]
+category: profile
+company: Dartmouth College
+role: Exchange Student, Engineering
+period: 2018
+year: 2018
+summary: "Studied health technology and engineering design at one of America's top institutions."
+outcome: "Led LitPak wearable project from ethnography through hardware prototyping."
+highlights:
+  - Studied health technology and engineering design.
+  - Gained practical lab experience in materials engineering.
+  - Participated in South House Residential Community Executive Committee.
+tags: [Education, Engineering, Exchange]
 image: 18.09_window.jpeg
+image_alt: "View from Dartmouth window"
+featured: false
 ---
 
 ## 📝 Overview

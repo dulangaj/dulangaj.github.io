@@ -2,9 +2,14 @@
 layout: post
 title: "Simulating the Spread of Opinions in Social Networks"
 author: "Dulanga Jayawardena"
-categories: projects
-tags: [projects, python]
+category: projects
+year: 2020
+summary: "Mathematical modeling and simulations exploring how opinions spread through social networks."
+outcome: "Proposed new influence-based self-appraisal mechanism for opinion dynamics models."
+tags: [Research, Python, Simulation]
 image: leaves.jpeg
+image_alt: "Abstract network visualization"
+featured: false
 ---
 
 ## Overview

@@ -50,25 +50,25 @@ layout: default
   </section>
 {% endif %}
 
-{% assign experience = site.data.experience | default: [] %}
+{% assign experience = site.categories.profile | sort: "year" | reverse %}
 {% if experience.size > 0 %}
   <section class="section experience" aria-labelledby="experience-title">
     <div class="section-heading" data-reveal>
       <p class="eyebrow">Experience</p>
-      <h2 id="experience-title">Where I’ve shipped</h2>
+      <h2 id="experience-title">Where I've shipped</h2>
     </div>
     <ol class="experience-list">
-      {% for job in experience %}
+      {% for post in experience %}
         <li class="experience-card" data-reveal>
           <div class="experience-meta">
-            <span>{{ job.period }}</span>
-            <span>{{ job.company }}</span>
+            <span>{{ post.period }}</span>
+            <span>{{ post.company }}</span>
           </div>
-          <h3>{{ job.role }}</h3>
-          <p>{{ job.summary }}</p>
-          {% if job.highlights %}
+          <h3><a href="{{ post.url | relative_url }}">{{ post.role }}</a></h3>
+          <p>{{ post.summary }}</p>
+          {% if post.highlights %}
             <ul>
-              {% for highlight in job.highlights %}
+              {% for highlight in post.highlights %}
                 <li>{{ highlight }}</li>
               {% endfor %}
             </ul>

@@ -2,9 +2,21 @@
 layout: post
 title: "Excelling at Elizabeth Moir School"
 author: "Dulanga Jayawardena"
-categories: profile
-tags: [profile, school]
+category: profile
+company: Elizabeth Moir School
+role: A-Level Student, Math Stream
+period: 2013 — 2015
+year: 2015
+summary: "Completed A-Level studies in Physics, Chemistry, Mathematics, and Further Mathematics."
+outcome: "Placed within Top 30 in Sri Lanka at Edexcel A Levels."
+highlights:
+  - Ranked among top students nationally in Edexcel A Levels.
+  - Active in Rotaract Club and Toastmasters Gavel Club.
+  - Attended NUS Science Summer School and volunteered at Tech in Asia Singapore.
+tags: [Education, A-Levels, Sri Lanka]
 image: 15.02_moir.jpeg
+image_alt: "Elizabeth Moir School"
+featured: false
 ---
 
 ## 📝 Overview

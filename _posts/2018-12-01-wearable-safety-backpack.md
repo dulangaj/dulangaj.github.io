@@ -2,9 +2,14 @@
 layout: post
 title: "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
 author: "Dulanga Jayawardena"
-categories: projects
-tags: [projects, engineering]
+categories: [projects, blog]
+year: 2019
+summary: "Hardware-software wearable that keeps pedestrians visible with motion-aware lighting and thoughtful industrial design."
+outcome: "Proved 3x visibility improvement through user testing and lab validation."
+tags: [Hardware, UX Research, Prototyping]
 image: litpak.jpeg
+image_alt: "LitPak illuminated backpack prototype"
+featured: true
 ---
 
 ## Overview
