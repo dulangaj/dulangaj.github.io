@@ -5,7 +5,7 @@ author: "Dulanga Jayawardena"
 category: profile
 company: Morgan Stanley
 role: Associate, Equity Risk Technology
-period: 2022 — Present
+period: 2022 — 2025
 year: 2025
 summary: "Built the software backbone traders and risk managers use every day to model exposure across global equities."
 outcome: "Cut alert latency by double digits while keeping systems observable and compliant."

@@ -8,7 +8,7 @@ role: BEng Systems Engineering
 period: 2016 — 2020
 year: 2020
 summary: "Combined coursework, projects, and extracurriculars to build a foundation in software engineering and data science."
-outcome: "Graduated with Honours, ranking among top performers nationally."
+outcome: "Graduated with Honours, ranking among top performers."
 highlights:
   - Completed final year project on opinion dynamics in social networks.
   - Built data analysis tools for restaurant discovery.
