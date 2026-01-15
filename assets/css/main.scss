@@ -350,6 +350,50 @@ button {
   color: var(--text-muted);
 }
 
+.background-content {
+  max-width: 65ch;
+  margin-top: 2rem;
+}
+
+.background-content p {
+  font-size: 1.1rem;
+  line-height: 1.7;
+  color: var(--text-muted);
+  margin: 0 0 1.25rem;
+}
+
+.background-content p:last-child {
+  margin-bottom: 0;
+}
+
+.contact-cta {
+  text-align: center;
+  border-top: none;
+  background: var(--surface-muted);
+  margin: 5rem calc(var(--shell-padding) * -1) 0;
+  padding: 4rem var(--shell-padding);
+}
+
+.contact-cta-content h2 {
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  margin: 0 0 0.75rem;
+}
+
+.contact-cta-content > p {
+  color: var(--text-muted);
+  margin: 0 0 2rem;
+}
+
+.contact-links {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1rem;
+}
+
 .hero-media picture {
   border-radius: var(--radius-lg);
   overflow: hidden;

@@ -103,6 +103,20 @@ layout: default
   </section>
 {% endif %}
 
+{% if page.background %}
+  <section class="section background" aria-labelledby="background-title">
+    <div class="section-heading" data-reveal>
+      <p class="eyebrow">Background</p>
+      <h2 id="background-title">{{ page.background.title }}</h2>
+    </div>
+    <div class="background-content" data-reveal>
+      {% for paragraph in page.background.paragraphs %}
+        <p>{{ paragraph }}</p>
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
+
 {% assign profile_posts = site.categories[page.category] | slice: 0, 3 %}
 {% if profile_posts and profile_posts.size > 0 %}
   <section class="section writing" aria-labelledby="profile-writing-title">
@@ -141,5 +155,21 @@ layout: default
         </li>
       {% endfor %}
     </ul>
+  </section>
+{% endif %}
+
+{% if page.contact %}
+  <section class="section contact-cta" aria-labelledby="contact-title">
+    <div class="contact-cta-content" data-reveal>
+      <h2 id="contact-title">{{ page.contact.title }}</h2>
+      <p>{{ page.contact.intro }}</p>
+      <ul class="contact-links" role="list">
+        {% for link in page.contact.links %}
+          <li>
+            <a href="{{ link.url }}" class="btn btn-ghost">{{ link.label }}</a>
+          </li>
+        {% endfor %}
+      </ul>
+    </div>
   </section>
 {% endif %}
