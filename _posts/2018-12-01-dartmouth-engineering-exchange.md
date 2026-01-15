@@ -19,7 +19,7 @@ image_alt: "View from Dartmouth window"
 featured: false
 ---
 
-## 📝 Overview
+## Overview
 
 During my exchange at **Dartmouth College**, I had the opportunity to study topics at the intersection of health technology, materials science, and engineering design. Being at Dartmouth allowed me to learn alongside some of the brightest minds in the world, while gaining hands-on experience working in advanced labs equipped with state-of-the-art tools.
 
@@ -27,7 +27,7 @@ My coursework combined both the technical and human aspects of engineering — w
 
 ---
 
-## 🔬 Academic Highlights
+## Academic Highlights
 
 - Studied **Health Technology** — focusing on the strategy, evaluation, and deployment of healthcare solutions, and hearing from the foremost experts in the healthcare field.
 - Completed **Engineering Design** courses — building prototypes and working on multidisciplinary projects that combined user-centered design with technical problem solving.
@@ -36,13 +36,13 @@ My coursework combined both the technical and human aspects of engineering — w
 ![Canoeing along the Connecticut](/assets/img/18.10_canoe.jpeg)
 ---
 
-## 🏛️ South House Activities
+## South House Activities
 
 Beyond academics, I actively participated in Dartmouth’s **South House Residential Community Executive Committee**, contributing to campus life through student-led events to help build the community and get students involved in campus life.
 
 ---
 
-## 🎒 LitPak Backpack
+## LitPak Backpack
 
 While at Dartmouth, I also worked on design and development of the **LitPak Backpack** — a safety-focused wearable project that integrated LED lighting, conductive thread, and reflective materials to improve nighttime pedestrian visibility. 
 
@@ -54,6 +54,6 @@ Full write-up on LitPak Backpack [here](/wearable-safety-backpack/)
 
 ---
 
-## 🌎 Global Perspective
+## Global Perspective
 
 My exchange semester at Dartmouth gave me invaluable exposure to international academic environments, cutting-edge lab experiences, and interdisciplinary collaboration — all of which continue to influence my approach to problem-solving and product design today.

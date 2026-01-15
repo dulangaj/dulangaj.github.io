@@ -19,7 +19,7 @@ image_alt: "Elizabeth Moir School"
 featured: false
 ---
 
-## 📝 Overview
+## Overview
 
 I completed my A-Level studies at **Elizabeth Moir School** in Colombo, Sri Lanka, specializing in the **Math Stream**, which included:
 
@@ -36,7 +36,7 @@ As part of a highly competitive cohort, I consistently ranked among the top stud
 
 ---
 
-## 🌏 Extracurricular Highlights
+## Extracurricular Highlights
 
 ### Rotaract Club of Colombo East
 
@@ -56,6 +56,6 @@ As part of a highly competitive cohort, I consistently ranked among the top stud
 
 ---
 
-## 🧮 Foundation
+## Foundation
 
 This early academic experience laid the groundwork for my later interest in software engineering, data modeling, and real-world problem solving — blending analytical rigor with practical applications in technology.

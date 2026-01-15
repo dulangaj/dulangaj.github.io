@@ -19,13 +19,13 @@ image_alt: "Graduation ceremony at CUHK"
 featured: true
 ---
 
-## 🎓 Overview
+## Overview
 
 During my time at **The Chinese University of Hong Kong (CUHK)**, I combined coursework, projects, and extracurricular activities to build a strong foundation across software engineering, data science, and interdisciplinary teamwork.
 
 ---
 
-## 🧪 Selected Projects
+## Selected Projects
 
 ### Simulating the Spread of Opinions in Social Networks
 
@@ -41,7 +41,7 @@ As a side project, I built a data analysis pipeline for Hong Kong’s OpenRice (
 
 ---
 
-## 🌏 Extracurricular Highlights
+## Extracurricular Highlights
 
 Outside of academics, I participated in programs that broadened my perspective and built cross-disciplinary experience:
 
@@ -54,6 +54,6 @@ Outside of academics, I participated in programs that broadened my perspective a
 
 ---
 
-## 🏁 Graduation
+## Graduation
 
 Completed my studies and graduated with Honors from CUHK -- with strong technical, analytical, and collaborative skills — skills I continue to apply in professional software development today.

@@ -12,7 +12,7 @@ image_alt: "Close up of ramen bowls on a wood table"
 featured: true
 ---
 
-## 📝 Project Overview
+## Overview
 
 **Restaurant Analyzer** started as a university project, but ended up being something my friends and I genuinely used while studying in Hong Kong. The tool allowed us to search for restaurants on OpenRice (Hong Kong's equivalent to Yelp) — but with a twist: instead of relying on the platform’s default algorithm, users could **customize** how much different factors (price, distance, ratings, bad review ratios, etc.) influenced their search results.
 
@@ -20,7 +20,7 @@ With full control over search weightings, the tool made restaurant hunting more 
 
 ---
 
-## 🔬 Study & Findings
+## Study & Findings
 
 As part of the project, we also analyzed real-world restaurant data to explore how pricing and ratings actually correlated in Hong Kong’s restaurant scene. 
 
@@ -33,7 +33,7 @@ We used multiple data visualizations including scatter plots, heatmaps, histogra
 
 ---
 
-## 🔧 Technical Highlights
+## Technical Highlights
 
 - Built web scraping & data collection scripts to pull live data from OpenRice.
 - Designed a customizable scoring algorithm allowing users to define their own weightings across multiple search factors.
@@ -43,7 +43,7 @@ We used multiple data visualizations including scatter plots, heatmaps, histogra
 
 ---
 
-## 🎯 Real-World Outcome
+## Real-World Outcome
 
 - The tool successfully helped us identify great-value restaurants that we would have never discovered through default OpenRice searches.
 - Using aggressive weighting schemes allowed us to unearth highly rated but lesser-known restaurants tucked away from main areas.
@@ -51,6 +51,6 @@ We used multiple data visualizations including scatter plots, heatmaps, histogra
 
 ---
 
-## 🔗 Repository
+## Repository
 
 Check out the full source code on [GitHub](https://github.com/RiceProjectTeam/RestaurantAnalyzer).

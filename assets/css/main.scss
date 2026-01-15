@@ -751,21 +751,135 @@ button {
   margin: 0 0 0.6rem;
 }
 
-.post-content h1 {
-  font-size: clamp(2.3rem, 5vw, 3.5rem);
-  margin-bottom: 0.5rem;
+.post-hero {
+  margin-top: 4rem;
+  margin-bottom: 3rem;
 }
 
-.post-content article,
+.post-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+}
+
+.post-content h1 {
+  font-size: clamp(2.3rem, 5vw, 3.5rem);
+  line-height: 1.15;
+  margin: 0 0 1rem;
+}
+
+.post-lead {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: var(--text-muted);
+  max-width: 65ch;
+  margin: 0 0 2rem;
+}
+
+.post-hero-media {
+  margin-top: 2rem;
+}
+
+.post-hero-media picture {
+  display: block;
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.post-hero-media img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
+.prose {
+  max-width: 65ch;
+}
+
+.prose > * + * {
+  margin-top: 1.5rem;
+}
+
+.prose h2 {
+  font-size: 1.4rem;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--stroke);
+}
+
+.prose h2:first-child {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.prose h3 {
+  font-size: 1.15rem;
+  margin-top: 2rem;
+}
+
+.prose p {
+  line-height: 1.7;
+  color: var(--text);
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.25rem;
+  color: var(--text-muted);
+}
+
+.prose li {
+  margin-bottom: 0.5rem;
+  line-height: 1.6;
+}
+
+.prose li:last-child {
+  margin-bottom: 0;
+}
+
+.prose img {
+  border-radius: var(--radius-md);
+  width: 100%;
+  margin: 2rem 0;
+}
+
+.prose code {
+  font-size: 0.9em;
+  background: var(--surface-muted);
+  padding: 0.15em 0.4em;
+  border-radius: 0.3rem;
+}
+
+.prose pre {
+  background: var(--surface-muted);
+  padding: 1.25rem;
+  border-radius: var(--radius-md);
+  overflow-x: auto;
+}
+
+.prose pre code {
+  background: none;
+  padding: 0;
+}
+
+.prose blockquote {
+  border-left: 3px solid var(--accent);
+  padding-left: 1.25rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
 .page-content article {
   margin-top: 2rem;
   display: grid;
   gap: 1.5rem;
-}
-
-.post-content img {
-  border-radius: var(--radius-md);
-  width: 100%;
 }
 
 .post-share {

@@ -34,7 +34,7 @@ This project modeled social networks as graphs where:
 
 ## Models Explored
 
-### 1️⃣ DeGroot Model (Linear Consensus)
+### DeGroot Model (Linear Consensus)
 
 - Each agent adjusts their opinion by averaging the opinions of their neighbors.
 - Over time, opinions converge to a group consensus.
@@ -53,7 +53,7 @@ Well-connected individuals accumulate more influence over time, and network topo
 
 ---
 
-### 2️⃣ Bounded Confidence Model (Non-linear Clustering)
+### Bounded Confidence Model (Non-linear Clustering)
 
 - Agents only consider neighbors whose opinions are within a certain threshold difference (𝜏).
 - Leads to clusters of like-minded agents instead of universal consensus.
@@ -100,5 +100,5 @@ As opinion dynamics research grows increasingly relevant in our hyperconnected w
 
 ---
 
-# 🔗 Repository
+## Repository
 Check out the full source code and report on [GitHub](https://github.com/dulangaj/Modelling-and-Simulating-Opinion-Dynamics-in-Social-Networks).
