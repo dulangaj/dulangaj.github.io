@@ -204,26 +204,13 @@ button {
   background: var(--surface-muted);
 }
 
-.hero {
-  margin-top: 4rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 3rem;
-  align-items: center;
-}
-
+.hero,
 .profile-hero {
   margin-top: 4rem;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 3rem;
   align-items: center;
-}
-
-.profile-hero-media picture {
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-soft);
 }
 
 .focus-tags {
@@ -264,7 +251,8 @@ button {
   gap: 1rem;
 }
 
-.hero h1 {
+.hero h1,
+.catalog-header h1 {
   font-size: clamp(2.5rem, 6vw, 4.5rem);
   line-height: 1.1;
   margin: 0 0 1rem;
@@ -379,6 +367,8 @@ button {
   background: var(--surface-muted);
   margin: 5rem calc(var(--shell-padding) * -1) 0;
   padding: 4rem var(--shell-padding);
+  max-width: none;
+  width: calc(100% + var(--shell-padding) * 2);
 }
 
 .contact-cta-content h2 {
@@ -401,7 +391,10 @@ button {
   gap: 1rem;
 }
 
-.hero-media picture {
+.hero-media picture,
+.profile-hero-media picture,
+.post-hero-media picture {
+  display: block;
   border-radius: var(--radius-lg);
   overflow: hidden;
   box-shadow: var(--shadow-soft);
@@ -427,15 +420,33 @@ button {
    Card System - Shared Styles
    =========================== */
 
-/* Card surfaces */
+/* Universal card surface */
+.card,
 .catalog-card article,
 .experience-card,
 .writing-card,
 .post-card,
-.tool-grid article {
+.tool-grid article,
+.principles-list li,
+.capabilities-grid article,
+.empty-state,
+.post-share {
   border-radius: var(--card-radius);
   border: 1px solid var(--stroke);
   background: var(--surface-elevated);
+}
+
+/* Card padding - applied to cards that need internal spacing */
+.card,
+.experience-card,
+.tool-grid article,
+.principles-list li,
+.capabilities-grid article,
+.writing-card,
+.empty-state,
+.post-share,
+.post-card {
+  padding: var(--card-padding);
 }
 
 /* Card bodies */
@@ -490,12 +501,47 @@ button {
   font-size: 1.15rem;
 }
 
-.work-grid {
+/* ===========================
+   Grid System - Content Lists
+   =========================== */
+
+/* Base grid - shared list reset and grid layout */
+.content-grid,
+.work-grid,
+.catalog-grid,
+.principles-list,
+.experience-list,
+.tool-grid,
+.capabilities-grid,
+.writing-list,
+.related-posts {
   list-style: none;
   padding: 0;
   margin: 3rem 0 0;
   display: grid;
+  gap: 1.5rem;
+}
+
+/* Auto-fit column grids (responsive cards) */
+.catalog-grid,
+.principles-list,
+.tool-grid,
+.capabilities-grid {
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.catalog-grid {
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+/* Specific overrides */
+.work-grid {
   gap: 2.5rem;
+}
+
+.related-posts {
+  margin-top: 1.5rem;
+  gap: 1rem;
 }
 
 .work-card article {
@@ -521,7 +567,8 @@ button {
   border-radius: var(--radius-md);
 }
 
-.work-media img {
+.work-media img,
+.catalog-media img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -542,25 +589,10 @@ button {
   margin-top: 4rem;
 }
 
-.catalog-header h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  line-height: 1.1;
-  margin: 0 0 1rem;
-}
-
 .catalog-count {
   color: var(--text-muted);
   font-size: 0.95rem;
   margin: 0;
-}
-
-.catalog-grid {
-  list-style: none;
-  padding: 0;
-  margin: 3rem 0 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 1.5rem;
 }
 
 .catalog-card article {
@@ -576,64 +608,12 @@ button {
   background: var(--surface-muted);
 }
 
-.catalog-media img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.principles-list {
-  list-style: none;
-  padding: 0;
-  margin: 3rem 0 0;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.principles-list li {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--stroke);
-  background: var(--surface-elevated);
-  padding: 1.5rem;
-}
-
-.experience-list {
-  list-style: none;
-  padding: 0;
-  margin: 3rem 0 0;
-  display: grid;
-  gap: 1.5rem;
-}
-
-.experience-card {
-  padding: var(--card-padding);
-}
-
-.experience-meta {
-  /* Uses shared card-meta styles */
-}
-
-.experience-card ul {
+/* Card list styling */
+.experience-card ul,
+.tool-grid ul,
+.capabilities-grid ul {
   margin: 1rem 0 0;
   padding-left: 1.25rem;
-  color: var(--text-muted);
-}
-
-.tool-grid {
-  margin-top: 3rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.tool-grid article {
-  padding: var(--card-padding);
-}
-
-.tool-grid ul {
-  margin: 1rem 0 0;
-  padding-left: 1.2rem;
   color: var(--text-muted);
 }
 
@@ -646,25 +626,13 @@ button {
   padding-top: 0.25rem;
 }
 
-.catalog-meta {
-  /* Uses shared card-meta styles */
-}
-
 .empty-state {
-  padding: 2rem;
-  border-radius: var(--radius-md);
-  background: var(--surface-elevated);
   color: var(--text-muted);
-  border: 1px solid var(--stroke);
 }
 
 .work-body h3 {
   margin: 0.4rem 0;
   font-size: 1.6rem;
-}
-
-.work-meta {
-  /* Uses shared card-meta styles */
 }
 
 .work-outcome {
@@ -682,40 +650,13 @@ button {
 
 .capabilities-grid {
   margin-top: 2.5rem;
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-}
-
-.capabilities-grid article {
-  padding: 1.5rem;
-  border-radius: var(--radius-md);
-  background: var(--surface-elevated);
-  border: 1px solid var(--stroke);
 }
 
 .capabilities-grid h3 {
   margin-top: 0;
 }
 
-.capabilities-grid ul {
-  padding-left: 1.2rem;
-  color: var(--text-muted);
-}
-
-.writing-list {
-  list-style: none;
-  padding: 0;
-  margin: 3rem 0 0;
-  display: grid;
-  gap: 1.5rem;
-}
-
 .writing-card {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--stroke);
-  background: var(--surface-elevated);
-  padding: 1.5rem;
   position: relative;
   display: flex;
   flex-direction: column;
@@ -728,16 +669,7 @@ button {
   gap: 0.75rem;
 }
 
-.writing-meta {
-  display: flex;
-  gap: 0.75rem;
-  color: var(--text-muted);
-  font-size: 0.9rem;
-  margin: 0 0 0.5rem;
-}
-
 .writing-card h3 {
-  margin-top: 0;
   font-size: 1.3rem;
 }
 
@@ -783,21 +715,8 @@ button {
   margin: 0 auto 2rem;
 }
 
-.post-card {
-  border: 1px solid var(--stroke);
-  border-radius: var(--radius-md);
-  padding: 1.5rem;
-  background: var(--surface-elevated);
-}
-
 .post-card-meta {
-  display: flex;
-  gap: 0.75rem;
-  font-size: 0.85rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  margin: 0 0 0.6rem;
+  margin-bottom: 0.6rem;
 }
 
 .post-hero {
@@ -832,19 +751,6 @@ button {
 
 .post-hero-media {
   margin-top: 2rem;
-}
-
-.post-hero-media picture {
-  display: block;
-  border-radius: var(--radius-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-soft);
-}
-
-.post-hero-media img {
-  width: 100%;
-  height: auto;
-  display: block;
 }
 
 .prose {
@@ -933,10 +839,6 @@ button {
 
 .post-share {
   margin-top: 2.5rem;
-  padding: 1.5rem;
-  border-radius: var(--radius-md);
-  background: var(--surface-elevated);
-  border: 1px solid var(--stroke);
 }
 
 .sharing-actions {
@@ -967,14 +869,6 @@ button {
   margin-top: 3rem;
   border-top: 1px solid var(--stroke);
   padding-top: 2rem;
-}
-
-.related-posts {
-  list-style: none;
-  padding: 0;
-  margin: 1.5rem 0 0;
-  display: grid;
-  gap: 1rem;
 }
 
 .related-meta {

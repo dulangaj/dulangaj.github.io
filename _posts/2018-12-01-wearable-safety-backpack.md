@@ -3,7 +3,7 @@ layout: post
 title: "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
 author: "Dulanga Jayawardena"
 categories: [projects, blog]
-year: 2019
+year: 2018
 summary: "Hardware-software wearable that keeps pedestrians visible with motion-aware lighting and thoughtful industrial design."
 outcome: "Proved 3x visibility improvement through user testing and lab validation."
 tags: [Hardware, UX Research, Prototyping]
