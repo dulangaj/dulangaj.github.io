@@ -21,6 +21,13 @@
   --radius-md: 18px;
   --radius-sm: 999px;
   --transition-base: 280ms ease;
+
+  /* Card system */
+  --card-padding: 1.25rem;
+  --card-gap: 0.5rem;
+  --card-radius: var(--radius-lg);
+  --meta-size: 0.8rem;
+  --meta-tracking: 0.12em;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -416,6 +423,73 @@ button {
   max-width: 48ch;
 }
 
+/* ===========================
+   Card System - Shared Styles
+   =========================== */
+
+/* Card surfaces */
+.catalog-card article,
+.experience-card,
+.writing-card,
+.post-card,
+.tool-grid article {
+  border-radius: var(--card-radius);
+  border: 1px solid var(--stroke);
+  background: var(--surface-elevated);
+}
+
+/* Card bodies */
+.catalog-body,
+.work-body,
+.experience-card,
+.writing-card article {
+  display: flex;
+  flex-direction: column;
+  gap: var(--card-gap);
+}
+
+/* Reset margins in card contexts */
+.catalog-body h2,
+.catalog-body p,
+.work-body h3,
+.work-body p,
+.experience-card h3,
+.experience-card p,
+.writing-card h3,
+.writing-card p {
+  margin: 0;
+}
+
+/* Card meta */
+.catalog-meta,
+.work-meta,
+.experience-meta,
+.writing-meta,
+.post-card-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 0.75rem;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: var(--meta-tracking);
+  font-size: var(--meta-size);
+  margin: 0;
+}
+
+/* Card link anchoring */
+.catalog-body .text-link,
+.work-body .work-link,
+.writing-card .text-link {
+  margin-top: auto;
+}
+
+/* Card title sizing */
+.catalog-body h2,
+.experience-card h3,
+.writing-card h3 {
+  font-size: 1.15rem;
+}
+
 .work-grid {
   list-style: none;
   padding: 0;
@@ -492,9 +566,6 @@ button {
 .catalog-card article {
   display: flex;
   flex-direction: column;
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--stroke);
-  background: var(--surface-elevated);
   overflow: hidden;
   height: 100%;
 }
@@ -536,20 +607,11 @@ button {
 }
 
 .experience-card {
-  border-radius: var(--radius-lg);
-  border: 1px solid var(--stroke);
-  background: var(--surface-elevated);
-  padding: 1.5rem 1.75rem;
+  padding: var(--card-padding);
 }
 
 .experience-meta {
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--text-muted);
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.5rem 1rem;
+  /* Uses shared card-meta styles */
 }
 
 .experience-card ul {
@@ -566,10 +628,7 @@ button {
 }
 
 .tool-grid article {
-  border-radius: var(--radius-md);
-  border: 1px solid var(--stroke);
-  padding: 1.5rem;
-  background: var(--surface-elevated);
+  padding: var(--card-padding);
 }
 
 .tool-grid ul {
@@ -579,35 +638,16 @@ button {
 }
 
 .catalog-body {
-  padding: 1.25rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  padding: var(--card-padding);
   flex: 1;
 }
 
-.catalog-body h2,
-.catalog-body p {
-  margin: 0;
-}
-
-.catalog-body h2 {
-  font-size: 1.15rem;
-}
-
 .catalog-body .text-link {
-  margin-top: auto;
   padding-top: 0.25rem;
 }
 
 .catalog-meta {
-  display: flex;
-  gap: 0.75rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.8rem;
-  margin: 0 0 -0.15rem;
+  /* Uses shared card-meta styles */
 }
 
 .empty-state {
@@ -624,12 +664,7 @@ button {
 }
 
 .work-meta {
-  display: flex;
-  gap: 0.75rem;
-  font-size: 0.9rem;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
+  /* Uses shared card-meta styles */
 }
 
 .work-outcome {
