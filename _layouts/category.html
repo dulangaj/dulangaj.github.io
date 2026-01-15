@@ -51,7 +51,7 @@ layout: default
             {% endif %}
             <div class="catalog-body">
               <p class="catalog-meta">
-                <span>{{ post.year | default: post.date | date: "%Y" }}</span>
+                <span>{% if post.year %}{{ post.year }}{% else %}{{ post.date | date: "%Y" }}{% endif %}</span>
                 {% if post.tags %}
                   <span>{{ post.tags | join: " · " }}</span>
                 {% endif %}
