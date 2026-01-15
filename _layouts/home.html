@@ -1,31 +1,29 @@
 ---
 layout: default
-title: Home
 ---
 
 <section class="hero" id="hero">
   <div class="hero-content" data-reveal>
-    <p class="eyebrow">Dulanga Jayawardena · Software Engineer</p>
-    <h1>Designing resilient software that feels effortless to use.</h1>
-    <p class="lead">I help fintech and operations teams turn messy systems into calm, measurable platforms&mdash;from real-time risk tooling to automation that keeps business-critical work moving.</p>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="{{ '/work' | relative_url }}">See selected work</a>
-      <a class="btn btn-ghost" href="{{ '/profile' | relative_url }}">Get in touch</a>
-    </div>
-    <ul class="hero-metrics" role="list">
-      <li>
-        <span class="metric-label">8+ years</span>
-        <span>Shipping production systems</span>
-      </li>
-      <li>
-        <span class="metric-label">3 continents</span>
-        <span>APAC, NA, EMEA launches</span>
-      </li>
-      <li>
-        <span class="metric-label">0 drama</span>
-        <span>Calm incident response and on-call</span>
-      </li>
-    </ul>
+    <p class="eyebrow">{{ page.eyebrow }}</p>
+    <h1>{{ page.headline }}</h1>
+    <p class="lead">{{ page.lead }}</p>
+    {% if page.actions %}
+      <div class="hero-actions">
+        {% for action in page.actions %}
+          <a class="btn btn-{{ action.style }}" href="{{ action.url | relative_url }}">{{ action.label }}</a>
+        {% endfor %}
+      </div>
+    {% endif %}
+    {% if page.metrics %}
+      <ul class="hero-metrics" role="list">
+        {% for metric in page.metrics %}
+          <li>
+            <span class="metric-label">{{ metric.value }}</span>
+            <span>{{ metric.label }}</span>
+          </li>
+        {% endfor %}
+      </ul>
+    {% endif %}
   </div>
   <div class="hero-media" data-reveal>
     <picture>
@@ -36,77 +34,63 @@ title: Home
 </section>
 
 {% assign featured = site.posts | where: "featured", true | sort: "year" | reverse %}
-<section class="section selected-work" id="work" aria-labelledby="selected-work-title">
-  <div class="section-heading" data-reveal>
-    <p class="eyebrow">Selected work</p>
-    <h2 id="selected-work-title">Calm, durable systems for teams that ship fast</h2>
-    <p>Case studies that blend strategy, architecture, and the pixel-level polish stakeholders expect.</p>
-  </div>
-  <ol class="work-grid" role="list">
-    {% for post in featured limit: 4 %}
-      {% assign webp_image = post.image | replace: ".jpeg", ".webp" | replace: ".jpg", ".webp" %}
-      <li class="work-card" data-reveal>
+{% if page.work_section %}
+  <section class="section selected-work" id="work" aria-labelledby="selected-work-title">
+    <div class="section-heading" data-reveal>
+      <p class="eyebrow">{{ page.work_section.eyebrow }}</p>
+      <h2 id="selected-work-title">{{ page.work_section.title }}</h2>
+      <p>{{ page.work_section.description }}</p>
+    </div>
+    <ol class="work-grid" role="list">
+      {% for post in featured limit: 4 %}
+        {% assign webp_image = post.image | replace: ".jpeg", ".webp" | replace: ".jpg", ".webp" %}
+        <li class="work-card" data-reveal>
+          <article>
+            <div class="work-media">
+              <picture>
+                <source srcset="{{ '/assets/img/' | append: webp_image | relative_url }}" type="image/webp">
+                <img src="{{ '/assets/img/' | append: post.image | relative_url }}" alt="{{ post.image_alt }}" loading="lazy" decoding="async" width="640" height="420">
+              </picture>
+            </div>
+            <div class="work-body">
+              <p class="work-meta">
+                <span>{{ post.year }}</span>
+                {% if post.tags %}
+                  <span>{{ post.tags | join: ' · ' }}</span>
+                {% endif %}
+              </p>
+              <h3>
+                <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+              </h3>
+              <p>{{ post.summary }}</p>
+              <p class="work-outcome">{{ post.outcome }}</p>
+              <a class="work-link" href="{{ post.url | relative_url }}" aria-label="Open {{ post.title }} case study">Read more</a>
+            </div>
+          </article>
+        </li>
+      {% endfor %}
+    </ol>
+  </section>
+{% endif %}
+
+{% if page.capabilities %}
+  <section class="section capabilities" id="capabilities" aria-labelledby="capabilities-title">
+    <div class="section-heading" data-reveal>
+      <p class="eyebrow">{{ page.capabilities.eyebrow }}</p>
+      <h2 id="capabilities-title">{{ page.capabilities.title }}</h2>
+      <p>{{ page.capabilities.description }}</p>
+    </div>
+    <div class="capabilities-grid" data-reveal>
+      {% for group in page.capabilities.groups %}
         <article>
-          <div class="work-media">
-            <picture>
-              <source srcset="{{ '/assets/img/' | append: webp_image | relative_url }}" type="image/webp">
-              <img src="{{ '/assets/img/' | append: post.image | relative_url }}" alt="{{ post.image_alt }}" loading="lazy" decoding="async" width="640" height="420">
-            </picture>
-          </div>
-          <div class="work-body">
-            <p class="work-meta">
-              <span>{{ post.year }}</span>
-              {% if post.tags %}
-                <span>{{ post.tags | join: ' · ' }}</span>
-              {% endif %}
-            </p>
-            <h3>
-              <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-            </h3>
-            <p>{{ post.summary }}</p>
-            <p class="work-outcome">{{ post.outcome }}</p>
-            <a class="work-link" href="{{ post.url | relative_url }}" aria-label="Open {{ post.title }} case study">Read more</a>
-          </div>
+          <h3>{{ group.title }}</h3>
+          <ul>
+            {% for item in group.items %}
+              <li>{{ item }}</li>
+            {% endfor %}
+          </ul>
         </article>
-      </li>
-    {% endfor %}
-  </ol>
-</section>
-
-<section class="section capabilities" id="capabilities" aria-labelledby="capabilities-title">
-  <div class="section-heading" data-reveal>
-    <p class="eyebrow">Capabilities</p>
-    <h2 id="capabilities-title">Where I add leverage</h2>
-    <p>From deep dives with traders to running user sessions with ops teams, I translate ambiguous needs into dependable software.</p>
-  </div>
-  <div class="capabilities-grid" data-reveal>
-    <article>
-      <h3>Product & systems</h3>
-      <ul>
-        <li>North-star definition + measurement</li>
-        <li>Service design & architecture reviews</li>
-        <li>Designing APIs, events, and UX flow</li>
-        <li>Migration planning without downtime</li>
-      </ul>
-    </article>
-    <article>
-      <h3>Engineering craft</h3>
-      <ul>
-        <li>Java, Python, TypeScript, Bash</li>
-        <li>Data tooling across Kafka, SQL, KDB+</li>
-        <li>Testing-first habits & steady on-call</li>
-        <li>Performance profiling + instrumentation</li>
-      </ul>
-    </article>
-    <article>
-      <h3>People & delivery</h3>
-      <ul>
-        <li>Coaching teams through incident reviews</li>
-        <li>Exec-ready storytelling + visuals</li>
-        <li>Vendor and compliance alignment</li>
-        <li>Remote-friendly rituals and async comms</li>
-      </ul>
-    </article>
-  </div>
-</section>
-
+      {% endfor %}
+    </div>
+  </section>
+{% endif %}
