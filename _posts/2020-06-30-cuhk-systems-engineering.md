@@ -2,7 +2,7 @@
 layout: post
 title: "Studying Systems Engineering at CUHK"
 author: "Dulanga Jayawardena"
-category: profile
+category: education
 company: The Chinese University of Hong Kong
 role: BEng Systems Engineering
 period: 2016 — 2020

@@ -2,7 +2,7 @@
 layout: post
 title: "Excelling at Elizabeth Moir School"
 author: "Dulanga Jayawardena"
-category: profile
+category: education
 company: Elizabeth Moir School
 role: A-Level Student, Math Stream
 period: 2013 — 2015

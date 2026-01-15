@@ -2,7 +2,7 @@
 layout: post
 title: "Doing my exchange semester at Dartmouth College"
 author: "Dulanga Jayawardena"
-category: profile
+category: education
 company: Dartmouth College
 role: Exchange Student, Engineering
 period: 2018

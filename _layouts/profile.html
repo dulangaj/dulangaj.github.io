@@ -50,7 +50,9 @@ layout: default
   </section>
 {% endif %}
 
-{% assign experience = site.categories.profile | sort: "year" | reverse %}
+{% assign profile_posts = site.categories.profile | default: empty %}
+{% assign education_posts = site.categories.education | default: empty %}
+{% assign experience = profile_posts | concat: education_posts | sort: "year" | reverse %}
 {% if experience.size > 0 %}
   <section class="section experience" aria-labelledby="experience-title">
     <div class="section-heading" data-reveal>
