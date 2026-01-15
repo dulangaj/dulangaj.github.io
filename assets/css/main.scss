@@ -253,8 +253,8 @@ button {
 
 .hero h1,
 .catalog-header h1 {
-  font-size: clamp(2.5rem, 6vw, 4.5rem);
-  line-height: 1.1;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.2;
   margin: 0 0 1rem;
 }
 
@@ -372,7 +372,7 @@ button {
 }
 
 .contact-cta-content h2 {
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   margin: 0 0 0.75rem;
 }
 
@@ -408,7 +408,7 @@ button {
 
 .section-heading h2 {
   margin: 0.3rem 0;
-  font-size: clamp(2rem, 4vw, 3rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
 }
 
 .section-heading p {
@@ -722,6 +722,9 @@ button {
 .post-hero {
   margin-top: 4rem;
   margin-bottom: 3rem;
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .post-meta {
@@ -736,8 +739,8 @@ button {
 }
 
 .post-content h1 {
-  font-size: clamp(2.3rem, 5vw, 3.5rem);
-  line-height: 1.15;
+  font-size: 2rem;
+  line-height: 1.25;
   margin: 0 0 1rem;
 }
 
@@ -751,10 +754,15 @@ button {
 
 .post-hero-media {
   margin-top: 2rem;
+  max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .prose {
   max-width: 65ch;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .prose > * + * {
