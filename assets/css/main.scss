@@ -464,6 +464,22 @@ button {
   font-size: 0.9rem;
 }
 
+.catalog-header {
+  margin-top: 4rem;
+}
+
+.catalog-header h1 {
+  font-size: clamp(2.5rem, 6vw, 4.5rem);
+  line-height: 1.1;
+  margin: 0 0 1rem;
+}
+
+.catalog-count {
+  color: var(--text-muted);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
 .catalog-grid {
   list-style: none;
   padding: 0;

@@ -4,52 +4,44 @@ layout: default
 
 {% assign category_posts = "" | split: "" %}
 {% for post in site.posts %}
-  {% assign dominated = false %}
+  {% assign match = false %}
   {% if page.categories %}
     {% if post.category and page.categories contains post.category %}
-      {% assign dominated = true %}
+      {% assign match = true %}
     {% elsif post.categories %}
       {% for cat in post.categories %}
         {% if page.categories contains cat %}
-          {% assign dominated = true %}
+          {% assign match = true %}
           {% break %}
         {% endif %}
       {% endfor %}
     {% endif %}
   {% else %}
     {% if post.category == page.category %}
-      {% assign dominated = true %}
+      {% assign match = true %}
     {% elsif post.categories and post.categories contains page.category %}
-      {% assign dominated = true %}
+      {% assign match = true %}
     {% endif %}
   {% endif %}
-  {% if dominated %}
+  {% if match %}
     {% assign category_posts = category_posts | push: post %}
   {% endif %}
 {% endfor %}
 {% assign category_posts = category_posts | sort: "year" | reverse %}
 
-<section class="page-hero" data-reveal>
-  <p class="eyebrow">{{ page.title }}</p>
-  <h1>{{ page.title }}</h1>
-  {% if page.intro %}
-    <p class="lead">{{ page.intro }}</p>
-  {% else %}
-    <p class="lead">A curated stream of shipping reports, prototypes, and systems work.</p>
-  {% endif %}
-</section>
-
 <section class="section catalog" aria-labelledby="catalog-title">
-  <div class="section-heading" data-reveal>
-    <p class="eyebrow">Archive</p>
-    <h2 id="catalog-title">{{ category_posts | size }} case studies</h2>
-    <p>Every project pairs measurable outcomes with the craft that keeps stakeholders confident.</p>
+  <div class="catalog-header" data-reveal>
+    <p class="eyebrow">{{ page.title }}</p>
+    <h1 id="catalog-title">{{ page.title }}</h1>
+    {% if page.intro %}
+      <p class="lead">{{ page.intro }}</p>
+    {% endif %}
+    <p class="catalog-count">{{ category_posts | size }} {% if category_posts.size == 1 %}entry{% else %}entries{% endif %}</p>
   </div>
 
   {% if category_posts.size > 0 %}
     <ul class="catalog-grid" role="list">
       {% for post in category_posts %}
-        {% assign summary = post.excerpt | strip_html | truncate: 160 %}
         <li class="catalog-card" data-reveal>
           <article>
             {% if post.image %}
@@ -59,15 +51,15 @@ layout: default
             {% endif %}
             <div class="catalog-body">
               <p class="catalog-meta">
-                <span>{{ post.date | date: "%b %Y" }}</span>
+                <span>{{ post.year | default: post.date | date: "%Y" }}</span>
                 {% if post.tags %}
                   <span>{{ post.tags | join: " · " }}</span>
                 {% endif %}
               </p>
-              <h3>
+              <h2>
                 <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
-              </h3>
-              <p>{{ summary }}</p>
+              </h2>
+              <p>{{ post.summary | default: post.excerpt | strip_html | truncate: 160 }}</p>
               <a class="text-link" href="{{ post.url | relative_url }}">Read more</a>
             </div>
           </article>
