@@ -31,7 +31,7 @@ layout: default
 
 <section class="section catalog" aria-labelledby="catalog-title">
   <div class="catalog-header" data-reveal>
-    <p class="eyebrow">{{ page.title }}</p>
+    {% if page.eyebrow %}<p class="eyebrow">{{ page.eyebrow }}</p>{% endif %}
     <h1 id="catalog-title">{{ page.title }}</h1>
     {% if page.intro %}
       <p class="lead">{{ page.intro }}</p>
