@@ -2,7 +2,7 @@
 layout: post
 title: "Studying Systems Engineering at CUHK"
 author: "Dulanga Jayawardena"
-category: education
+category: profile
 company: The Chinese University of Hong Kong
 role: BEng Systems Engineering
 period: 2016 — 2020
@@ -14,10 +14,11 @@ highlights:
   - Built data analysis tools for restaurant discovery.
   - Represented CUHK in HKIE delegation and led Human Library program.
 tags: [Education, Systems Engineering, Hong Kong]
-image: 16.11_graduation.jpeg
+image: 23.07_cuhk.png
 image_alt: "Graduation ceremony at CUHK"
 featured: true
 ---
+
 
 ## Overview
 
@@ -55,5 +56,7 @@ Outside of academics, I participated in programs that broadened my perspective a
 ---
 
 ## Graduation
+
+![16.11_graduation.jpeg](../assets/img/16.11_graduation.jpeg)
 
 Completed my studies and graduated with Honors from CUHK -- with strong technical, analytical, and collaborative skills — skills I continue to apply in professional software development today.

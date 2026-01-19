@@ -1,7 +1,11 @@
 {
   "permissions": {
     "allow": [
-      "Bash(tree:*)"
+      "Bash(tree:*)",
+      "WebFetch(domain:127.0.0.1)",
+      "Bash(ls:*)",
+      "Bash(xargs:*)",
+      "Bash(grep:*)"
     ]
   }
 }
