@@ -1,13 +1,16 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SiteConfig } from '@/models/SiteConfig'
+import { useScrollProgress } from '@/hooks/useScrollProgress'
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
 /* Fixed top bar: logo/initials left, nav right. Fades in border on scroll. */
+/* Crimson scroll-progress bar runs along the bottom edge of the header.    */
 
 export function Header() {
   const [scrolled,     setScrolled]     = useState(false)
   const [mobileOpen,   setMobileOpen]   = useState(false)
+  const scrollProgress = useScrollProgress()
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -86,7 +89,7 @@ export function Header() {
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
             className="md:hidden overflow-hidden bg-[var(--color-paper)] border-b border-[var(--color-rule)]"
           >
             <div className="px-6 pb-6 pt-2 flex flex-col gap-4">
@@ -103,6 +106,13 @@ export function Header() {
           </motion.nav>
         )}
       </AnimatePresence>
+
+      {/* Scroll progress bar — runs along the very bottom edge of the header */}
+      <motion.div
+        className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-crimson)] origin-left"
+        style={{ scaleX: scrollProgress }}
+        transition={{ duration: 0 }}
+      />
     </motion.header>
   )
 }
