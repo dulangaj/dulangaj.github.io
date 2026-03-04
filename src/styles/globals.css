@@ -1,0 +1,52 @@
+@import "tailwindcss";
+
+/* ─── Design Tokens ─────────────────────────────────────────────────────── */
+@theme {
+  --color-paper:     #fafaf8;
+  --color-surface:   #ffffff;
+  --color-ink:       #1a1a1a;
+  --color-muted:     #6b6b6b;
+  --color-subtle:    #a8a8a4;
+  --color-rule:      #e5e5e0;
+  --color-crimson:   #dc2626;
+  --color-crimson-hover: #b91c1c;
+
+  --font-display:    'Playfair Display', Georgia, serif;
+  --font-body:       'Inter', system-ui, sans-serif;
+  --font-mono:       'JetBrains Mono', 'Courier New', monospace;
+}
+
+/* ─── Base Reset & Globals ───────────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--color-paper);
+  color: var(--color-ink);
+  font-family: var(--font-body);
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+::selection {
+  background-color: var(--color-crimson);
+  color: white;
+}
+
+/* ─── Typography Utilities ───────────────────────────────────────────────── */
+.font-display  { font-family: var(--font-display); }
+.font-body     { font-family: var(--font-body); }
+.font-mono     { font-family: var(--font-mono); }
+
+/* ─── Scrollbar ──────────────────────────────────────────────────────────── */
+::-webkit-scrollbar         { width: 6px; }
+::-webkit-scrollbar-track   { background: var(--color-paper); }
+::-webkit-scrollbar-thumb   { background: var(--color-rule); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--color-subtle); }
