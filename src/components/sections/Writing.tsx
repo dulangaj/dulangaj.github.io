@@ -74,7 +74,7 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
   }
 
   return (
-    <FadeIn delay={delay} className="group cursor-pointer">
+    <FadeIn delay={delay} className="group cursor-pointer h-full">
       <div className="h-full flex flex-col overflow-hidden rounded-lg border border-[var(--color-rule)] hover:border-[var(--color-crimson)] transition-colors duration-500 bg-[var(--color-surface)]">
         {/* Image */}
         {post.image && (
@@ -150,6 +150,7 @@ export function Writing() {
             {visibleRest.map((post, i) => (
               <motion.div
                 key={post.id}
+                className="h-full"
                 initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
