@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { SiteConfig } from '@/models/SiteConfig'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
+import { ThemeToggle } from '@/components/ui/ThemeToggle'
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
 /* Fixed top bar: logo/initials left, nav right. Fades in border on scroll. */
@@ -104,6 +105,10 @@ export function Header() {
           ))}
         </nav>
 
+        {/* Theme toggle + Mobile Hamburger */}
+        <div className="flex items-center gap-1">
+          <ThemeToggle />
+
         {/* Mobile Hamburger */}
         <button
           className="md:hidden flex flex-col gap-[5px] cursor-pointer bg-transparent border-none p-1"
@@ -125,6 +130,7 @@ export function Header() {
             animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -6 : 0 }}
           />
         </button>
+        </div>
       </div>
 
       {/* Mobile Drawer */}

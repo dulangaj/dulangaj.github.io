@@ -1,20 +1,61 @@
 @import "tailwindcss";
 
-/* ─── Design Tokens ─────────────────────────────────────────────────────── */
+/* ─── Design Tokens: Light Mode (default) ────────────────────────────────── */
+/* These are the single source of truth for colors. Edit here to change       */
+/* light mode globally. Dark mode overrides are in the sections below.        */
+/* Tailwind also uses these to generate bg-paper, text-ink, etc. utilities.  */
 @theme {
-  --color-paper:     #fafaf8;
-  --color-surface:   #ffffff;
-  --color-ink:       #1a1a1a;
-  --color-muted:     #6b6b6b;
-  --color-subtle:    #a8a8a4;
-  --color-rule:      #e5e5e0;
-  --color-crimson:   #dc2626;
-  --color-crimson-hover: #b91c1c;
+  --color-paper:         #fafaf8;   /* Page background        */
+  --color-surface:       #ffffff;   /* Card / elevated surface */
+  --color-ink:           #1a1a1a;   /* Primary text            */
+  --color-muted:         #6b6b6b;   /* Secondary text          */
+  --color-subtle:        #a8a8a4;   /* Tertiary / placeholder  */
+  --color-rule:          #e5e5e0;   /* Borders & dividers      */
+  --color-crimson:       #dc2626;   /* Accent / brand          */
+  --color-crimson-hover: #b91c1c;   /* Accent hover            */
 
   --font-display:    'Playfair Display', Georgia, serif;
   --font-body:       'Inter', system-ui, sans-serif;
   --font-mono:       'JetBrains Mono', 'Courier New', monospace;
 }
+
+/* ─── Design Tokens: Dark Mode ───────────────────────────────────────────── */
+/* Warm dark palette — not pure black; brown undertones reduce harshness.     */
+/* Ink is warm off-white (not pure white) for reduced eye strain.             */
+/* Crimson is slightly desaturated so it reads clearly on dark backgrounds.   */
+
+/* System preference (unless user forced light via data-theme="light")        */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --color-paper:         #1a1918;   /* Very dark warm brown-black  */
+    --color-surface:       #242220;   /* Slightly lighter dark warm  */
+    --color-ink:           #ede9e3;   /* Warm off-white text         */
+    --color-muted:         #9b938a;   /* Warm medium gray            */
+    --color-subtle:        #5e5750;   /* Warm dark gray              */
+    --color-rule:          #2e2a26;   /* Dark warm border            */
+    --color-crimson:       #e05252;   /* Muted-vibrant red for dark  */
+    --color-crimson-hover: #ef6e6e;   /* Lighter red hover           */
+  }
+}
+
+/* Explicit user preference (overrides system in both directions)             */
+:root[data-theme="dark"] {
+  --color-paper:         #1a1918;
+  --color-surface:       #242220;
+  --color-ink:           #ede9e3;
+  --color-muted:         #9b938a;
+  --color-subtle:        #5e5750;
+  --color-rule:          #2e2a26;
+  --color-crimson:       #e05252;
+  --color-crimson-hover: #ef6e6e;
+}
+
+/* ─── Color scheme hint (browser chrome: scrollbars, inputs, etc.) ────────── */
+html { color-scheme: light; }
+@media (prefers-color-scheme: dark) {
+  html:not([data-theme="light"]) { color-scheme: dark; }
+}
+html[data-theme="dark"] { color-scheme: dark; }
 
 /* ─── Base Reset & Globals ───────────────────────────────────────────────── */
 *, *::before, *::after {
@@ -39,6 +80,8 @@ body {
   line-height: 1.7;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* Smooth color transition on theme switch */
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 /* ─── Paper texture ──────────────────────────────────────────────────────── */
@@ -54,6 +97,12 @@ body::before {
   background-repeat: repeat;
   background-size: 200px 200px;
 }
+
+/* Slightly more visible texture in dark mode */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body::before { opacity: 0.05; }
+}
+:root[data-theme="dark"] body::before { opacity: 0.05; }
 
 ::selection {
   background-color: var(--color-crimson);
