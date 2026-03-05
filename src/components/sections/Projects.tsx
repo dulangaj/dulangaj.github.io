@@ -1,4 +1,5 @@
 import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
 import { FiArrowRight } from 'react-icons/fi'
 import { featuredPosts } from '@/data/posts'
 import { Post } from '@/models/Post'
@@ -9,15 +10,10 @@ import { FadeIn } from '@/components/ui/FadeIn'
 /* Teases only — the Writing section below is "inside the paper."              */
 
 function LeadStory({ post }: { post: Post }) {
-  const Wrapper = post.link ? 'a' : 'div'
-  const wrapperProps = post.link
-    ? { href: post.link, target: '_blank', rel: 'noopener noreferrer' }
-    : {}
-
   return (
     <FadeIn>
-      <Wrapper
-        {...wrapperProps}
+      <Link
+        to={`/post/${post.id}`}
         className="group grid grid-cols-1 md:grid-cols-5 border-b border-[var(--color-rule)] cursor-pointer"
       >
         {/* Text column — left 3/5 */}
@@ -66,21 +62,16 @@ function LeadStory({ post }: { post: Post }) {
             <div className="absolute inset-0 bg-[var(--color-crimson)] opacity-0 group-hover:opacity-5 transition-opacity duration-500" />
           </div>
         )}
-      </Wrapper>
+      </Link>
     </FadeIn>
   )
 }
 
 function SecondaryStory({ post, index }: { post: Post; index: number }) {
-  const Wrapper = post.link ? 'a' : 'div'
-  const wrapperProps = post.link
-    ? { href: post.link, target: '_blank', rel: 'noopener noreferrer' }
-    : {}
-
   return (
     <FadeIn delay={0.05 * index}>
-      <Wrapper
-        {...wrapperProps}
+      <Link
+        to={`/post/${post.id}`}
         className="group flex flex-col pt-5 cursor-pointer border-t border-[var(--color-rule)]"
       >
         <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)] mb-3">
@@ -101,7 +92,7 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
           </span>
           <FiArrowRight size={11} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
         </div>
-      </Wrapper>
+      </Link>
     </FadeIn>
   )
 }
