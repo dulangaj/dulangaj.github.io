@@ -3,8 +3,11 @@ layout: post
 title: "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
 author: "Dulanga Jayawardena"
 categories: projects
-tags: [projects, engineering]
+category: Engineering
+subtitle: Dartmouth Engineering Exchange
+tags: [Arduino, C, SolidWorks, IoT]
 image: litpak.jpeg
+read_time: 6
 ---
 
 ## Overview

@@ -108,7 +108,7 @@ export function Projects() {
           : 'sm:grid-cols-2 md:grid-cols-4'
 
   return (
-    <section id="projects" className="px-6 md:px-12 py-24">
+    <section id="featured" className="px-6 md:px-12 py-24">
       <div className="max-w-7xl mx-auto">
 
         {/* Masthead */}
@@ -116,7 +116,7 @@ export function Projects() {
           <div className="flex items-baseline justify-between border-b-2 border-[var(--color-ink)] pb-3 mb-0">
             <div className="flex items-baseline gap-4">
               <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">01</span>
-              <span className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)]">Selected Work</span>
+              <span className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)]">Featured</span>
             </div>
             <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)] hidden sm:block">
               Vol. I · Est. 2015

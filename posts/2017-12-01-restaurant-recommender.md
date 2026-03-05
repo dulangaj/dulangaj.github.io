@@ -3,8 +3,12 @@ layout: post
 title: "Restaurant Recommender — Data-Driven Restaurant Discovery"
 author: "Dulanga Jayawardena"
 categories: projects
-tags: [projects, python]
+category: Engineering
+subtitle: Academic Project
+tags: [Python, Tkinter, Machine Learning, Collaborative Filtering]
 image: pilpil.jpeg
+read_time: 5
+link: https://github.com/RiceProjectTeam/RestaurantAnalyzer
 ---
 
 ## 📝 Project Overview

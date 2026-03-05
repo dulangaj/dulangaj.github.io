@@ -60,9 +60,11 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
               {post.title}
             </h3>
 
-            <p className="font-body text-[13px] leading-relaxed text-[var(--color-muted)] mb-6">
-              {post.excerpt}
-            </p>
+            {post.excerpt && (
+              <p className="font-body text-[13px] leading-relaxed text-[var(--color-muted)] mb-6">
+                {post.excerpt}
+              </p>
+            )}
 
             <div className="flex items-center justify-between">
               <span className="font-mono text-[11px] tracking-wide text-[var(--color-subtle)]">
@@ -118,9 +120,11 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
             {post.title}
           </h3>
 
-          <p className="font-body text-[12px] leading-relaxed text-[var(--color-muted)] mb-4 line-clamp-3">
-            {post.excerpt}
-          </p>
+          {post.excerpt && (
+            <p className="font-body text-[12px] leading-relaxed text-[var(--color-muted)] mb-4 line-clamp-3">
+              {post.excerpt}
+            </p>
+          )}
 
           <span className="font-mono text-[10px] tracking-wide text-[var(--color-subtle)]">
             {post.formattedDate}
@@ -139,10 +143,10 @@ export function Writing() {
   const hasMore = posts.length > VISIBLE_INITIAL
 
   return (
-    <section id="writing" className="px-6 md:px-12 py-24">
+    <section id="blog" className="px-6 md:px-12 py-24">
       <div className="max-w-7xl mx-auto">
         <FadeIn>
-          <SectionLabel text="Writing" index="03" />
+          <SectionLabel text="Blog" index="03" />
           <h2 className="font-display text-[clamp(2rem,5vw,3.5rem)] text-[var(--color-ink)] mb-4 leading-tight">
             Notes from the field.
           </h2>
@@ -177,7 +181,7 @@ export function Writing() {
               onClick={() => setShowAll((v) => !v)}
               className="group inline-flex items-center gap-2 font-mono text-[12px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
             >
-              {showAll ? 'Show less' : `Show all ${posts.length} posts`}
+              {showAll ? 'Show less' : `Show all ${posts.length}`}
               <motion.span
                 animate={{ rotate: showAll ? 180 : 0 }}
                 transition={{ duration: 0.3 }}

@@ -1,107 +1,34 @@
 import { Post } from '@/models/Post'
+import { getAllPosts } from '@/data/postContent'
+import { featuredConfig } from '@/data/featuredConfig'
 
-/* ─── Posts Repository ───────────────────────────────────────────────────── */
-/* Single source of truth for all portfolio items. Ordered most-recent first. */
-/* Items with featured: true also appear in the Selected Work section.        */
+/* ─── Posts ──────────────────────────────────────────────────────────────── */
+/* Auto-loaded from posts/*.md frontmatter. Sorted most-recent first.         */
+/* Drop a new .md file in posts/ and it appears here automatically.           */
 
-export const posts = [
-  new Post({
-    id:       'equity-risk-2025',
-    title:    'Building Software for Equity Risk Management',
-    excerpt:  'Inside the Equity Risk Technology team at Morgan Stanley — building scalable, globally deployed systems for traders and risk managers across Java, Kafka, KDB+, and Spring Boot.',
-    date:     '2025-05-01',
-    category: 'Work',
-    image:    '/assets/img/25.04_hongkong.jpeg',
-    readTime: 6,
-    file:     '2025-05-01-morgan-stanley-equity-risk',
-    featured: true,
-    subtitle: 'Morgan Stanley',
-    tags:     ['Java', 'Kafka', 'KDB+', 'Spring Boot', 'Risk'],
-  }),
-  new Post({
-    id:       'cuhk-2020',
-    title:    'Studying Systems Engineering at CUHK',
-    excerpt:  'Four years at The Chinese University of Hong Kong — from opinion-dynamics research to engineering exchanges abroad, the HKIE delegation, and graduating with Honours.',
-    date:     '2020-06-30',
-    category: 'Education',
-    image:    '/assets/img/16.11_graduation.jpeg',
-    readTime: 4,
-    file:     '2020-06-30-cuhk-systems-engineering',
-  }),
-  new Post({
-    id:       'opinion-dynamics-2020',
-    title:    'Simulating the Spread of Opinions in Social Networks',
-    excerpt:  'Comparing DeGroot and Bounded Confidence models across five network topologies — and proposing a dynamic influence-based self-appraisal mechanism to make consensus modelling more realistic.',
-    date:     '2020-05-31',
-    category: 'Research',
-    image:    '/assets/img/17.12_heatmap.png',
-    readTime: 7,
-    link:     'https://github.com/dulangaj/Modelling-and-Simulating-Opinion-Dynamics-in-Social-Networks',
-    file:     '2020-05-31-social-network-opinion-dynamics',
-    featured: true,
-    subtitle: 'Research · CUHK',
-    tags:     ['Python', 'NumPy', 'NetworkX', 'Research'],
-  }),
-  new Post({
-    id:       'vbrands-2020',
-    title:    'VBrands — Technology Consultant & Digital Operations',
-    excerpt:  'Automating special-orders workflows, building catalog pipelines, and shipping e-commerce features at a multi-brand retail group — hands-on from backend scripts to stakeholder training.',
-    date:     '2020-12-31',
-    category: 'Work',
-    image:    '/assets/img/20.12_vbrands.jpeg',
-    readTime: 4,
-    file:     '2020-12-31-vbrands',
-    featured: true,
-    subtitle: 'VBrands',
-    tags:     ['Python', 'Flask', 'WordPress', 'REST API'],
-  }),
-  new Post({
-    id:       'litpak-2018',
-    title:    'LitPak — Designing a Safer Backpack for Nighttime Visibility',
-    excerpt:  'Over 75% of pedestrian fatalities happen after dark. We designed a backpack that fixes that — with embedded LEDs, conductive thread, gyroscope power management, and three full hardware iterations.',
-    date:     '2018-12-01',
-    category: 'Engineering',
-    image:    '/assets/img/litpak.jpeg',
-    readTime: 6,
-    file:     '2018-12-01-wearable-safety-backpack',
-    featured: true,
-    subtitle: 'Dartmouth Engineering Exchange',
-    tags:     ['Arduino', 'C', 'SolidWorks', 'IoT'],
-  }),
-  new Post({
-    id:       'dartmouth-2018',
-    title:    'Exchange Semester at Dartmouth College',
-    excerpt:  'Health technology, materials engineering, and the LitPak backpack project — six months at Thayer School of Engineering alongside some of the brightest engineers in the world.',
-    date:     '2018-12-01',
-    category: 'Education',
-    image:    '/assets/img/18.09_window.jpeg',
-    readTime: 4,
-    file:     '2018-12-01-dartmouth-engineering-exchange',
-  }),
-  new Post({
-    id:       'restaurant-recommender-2017',
-    title:    'Restaurant Recommender — Data-Driven Discovery',
-    excerpt:  'Built a customizable scoring engine on top of OpenRice data so my university friends and I could find great restaurants by our own weights — not the platform\'s algorithm. It worked.',
-    date:     '2017-12-01',
-    category: 'Engineering',
-    image:    '/assets/img/pilpil.jpeg',
-    readTime: 5,
-    link:     'https://github.com/RiceProjectTeam/RestaurantAnalyzer',
-    file:     '2017-12-01-restaurant-recommender',
-    featured: true,
-    subtitle: 'Academic Project',
-    tags:     ['Python', 'Tkinter', 'Machine Learning', 'Collaborative Filtering'],
-  }),
-  new Post({
-    id:       'elizabeth-moir-2015',
-    title:    'Excelling at Elizabeth Moir School',
-    excerpt:  'Top 30 in Sri Lanka at the Edexcel A Levels, in a class ranked among the highest-performing in the world. The math stream, Toastmasters, Rotaract, and a Science Summer School at NUS.',
-    date:     '2015-07-31',
-    category: 'Education',
-    image:    '/assets/img/15.02_moir.jpeg',
-    readTime: 3,
-    file:     '2015-07-31-elizabeth-moir',
-  }),
-]
+export const posts = getAllPosts()
 
-export const featuredPosts = posts.filter((p) => p.featured)
+/* ─── Featured Posts ─────────────────────────────────────────────────────── */
+/* Ordered as listed in featuredConfig. Each merges auto-loaded post data     */
+/* with the curated excerpt (and optional image override) from the config.    */
+
+export const featuredPosts: Post[] = featuredConfig
+  .map((cfg) => {
+    const base = posts.find((p) => p.id === cfg.id)
+    if (!base) return null
+    return new Post({
+      id:       base.id,
+      title:    base.title,
+      excerpt:  cfg.excerpt,
+      date:     base.date,
+      category: base.category,
+      subtitle: base.subtitle,
+      image:    cfg.image ?? base.image,
+      readTime: base.readTime,
+      link:     base.link,
+      tags:     base.tags,
+      file:     base.file,
+      featured: true,
+    })
+  })
+  .filter(Boolean) as Post[]

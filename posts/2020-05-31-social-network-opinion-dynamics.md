@@ -3,8 +3,12 @@ layout: post
 title: "Simulating the Spread of Opinions in Social Networks"
 author: "Dulanga Jayawardena"
 categories: projects
-tags: [projects, python]
+category: Research
+subtitle: "Research · CUHK"
+tags: [Python, NumPy, NetworkX, Research]
 image: leaves.jpeg
+read_time: 7
+link: https://github.com/dulangaj/Modelling-and-Simulating-Opinion-Dynamics-in-Social-Networks
 ---
 
 ## Overview

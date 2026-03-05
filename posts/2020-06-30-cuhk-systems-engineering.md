@@ -3,8 +3,10 @@ layout: post
 title: "Studying Systems Engineering at CUHK"
 author: "Dulanga Jayawardena"
 categories: profile
-tags: [profile, school]
+category: Education
+tags: [Systems Engineering, CUHK, Hong Kong]
 image: 16.11_graduation.jpeg
+read_time: 4
 ---
 
 ## 🎓 Overview

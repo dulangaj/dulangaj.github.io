@@ -3,8 +3,11 @@ layout: post
 title: "Building Software for Equity Risk Management at Morgan Stanley"
 author: "Dulanga Jayawardena"
 categories: profile
-tags: [profile, work]
+category: Work
+subtitle: Morgan Stanley
+tags: [Java, Kafka, KDB+, Spring Boot, Risk]
 image: 25.04_hongkong.jpeg
+read_time: 6
 ---
 
 ## 📝 Project Overview

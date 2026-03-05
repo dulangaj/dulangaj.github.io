@@ -3,8 +3,10 @@ layout: post
 title: "Doing my exchange semester at Dartmouth College"
 author: "Dulanga Jayawardena"
 categories: profile
-tags: [profile, school]
+category: Education
+tags: [Thayer School, Dartmouth, Engineering]
 image: 18.09_window.jpeg
+read_time: 4
 ---
 
 ## 📝 Overview
