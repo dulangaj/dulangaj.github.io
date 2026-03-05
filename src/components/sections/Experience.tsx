@@ -128,7 +128,7 @@ export function Experience() {
 
     const updateActiveFromScroll = () => {
       const viewportCenter = window.innerHeight * 0.5
-      const activeBand = 120
+      const activeBand = 90
 
       const candidates = experiences
         .map((exp) => {
