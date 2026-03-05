@@ -143,9 +143,8 @@ export function Writing() {
           </p>
         </FadeIn>
 
-        {/* Grid: featured spans full width (2 cols), rest fills in */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <PostCard post={featured} featured delay={0} />
+          <PostCard post={featured} delay={0} />
 
           <AnimatePresence initial={false}>
             {visibleRest.map((post, i) => (
