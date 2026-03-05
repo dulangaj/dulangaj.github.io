@@ -71,6 +71,44 @@ export function Hero() {
 
           {/* ── Side panel ────────────────────────────────────────────── */}
           <div className="md:col-span-3 flex flex-col justify-end gap-6">
+            {/* Profile photo */}
+            <motion.div
+              className="relative w-20 h-20 md:w-24 md:h-24"
+              variants={lineVariants}
+              transition={lineTransition}
+            >
+              {/* Crimson accent ring — offset slightly for depth */}
+              <div className="absolute -inset-[3px] rounded-full border border-[var(--color-crimson)] opacity-60" />
+              <div
+                className="
+                  w-full h-full rounded-full overflow-hidden
+                  bg-[var(--color-rule)]
+                  ring-2 ring-[var(--color-surface)]
+                  transition-transform duration-300 ease-out
+                  hover:scale-[1.04]
+                "
+              >
+                <img
+                  src="/profile.jpg"
+                  alt="Dulanga Jayawardena"
+                  className="w-full h-full object-cover"
+                  onError={(e) => {
+                    const el = e.currentTarget
+                    el.style.display = 'none'
+                    const fallback = el.nextElementSibling as HTMLElement | null
+                    if (fallback) fallback.style.display = 'flex'
+                  }}
+                />
+                {/* Initials fallback — hidden by default, shown via onError */}
+                <div
+                  className="w-full h-full items-center justify-center font-display text-lg text-[var(--color-muted)] select-none"
+                  style={{ display: 'none' }}
+                >
+                  DJ
+                </div>
+              </div>
+            </motion.div>
+
             {/* Bio */}
             <motion.p
               className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed"
