@@ -12,23 +12,23 @@ export interface FeaturedPostConfig {
 export const featuredConfig: FeaturedPostConfig[] = [
   {
     id:      '2025-05-01-morgan-stanley-equity-risk',
-    excerpt: 'Inside the Equity Risk Technology team at Morgan Stanley — production systems for traders and risk managers built in Java, Kafka, and KDB+.',
+    excerpt: "Inside Morgan Stanley's Equity Risk Technology team: building reliable platforms used by traders and risk managers across global desks.",
   },
   {
     id:      '2020-05-31-social-network-opinion-dynamics',
-    excerpt: 'Comparing consensus models across five network topologies — and proposing a dynamic self-appraisal mechanism to make opinion modelling more realistic.',
+    excerpt: 'How opinions spread in networks: comparing DeGroot and Bounded Confidence models, then proposing a dynamic self-appraisal mechanism.',
     image:   '/assets/img/17.12_heatmap.png',
   },
   {
     id:      '2020-12-31-vbrands',
-    excerpt: 'Technology consultant at a Hong Kong multi-brand retail group — automating special-orders, building catalog pipelines, and shipping e-commerce features.',
+    excerpt: 'At a Hong Kong multi-brand retailer, I modernized e-commerce operations with automation, integrations, and staff enablement.',
   },
   {
     id:      '2018-12-01-wearable-safety-backpack',
-    excerpt: 'Over 75% of pedestrian fatalities happen after dark. We designed a backpack to fix that — embedded LEDs, conductive thread, and gyroscope-managed power.',
+    excerpt: 'A Dartmouth project to make night walking safer: a visibility-first backpack with embedded LEDs, conductive thread, and smart power control.',
   },
   {
     id:      '2017-12-01-restaurant-recommender',
-    excerpt: "A custom scoring engine on OpenRice data — rank restaurants by your own weights, not the platform's algorithm. Built with my university friends. It worked.",
+    excerpt: "A restaurant discovery tool built with university friends: rank OpenRice results by your own priorities instead of the default algorithm.",
   },
 ]
