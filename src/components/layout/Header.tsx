@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { SiteConfig } from '@/models/SiteConfig'
 import { useScrollProgress } from '@/hooks/useScrollProgress'
 
@@ -10,6 +11,8 @@ import { useScrollProgress } from '@/hooks/useScrollProgress'
 export function Header() {
   const [scrolled,     setScrolled]     = useState(false)
   const [mobileOpen,   setMobileOpen]   = useState(false)
+  const navigate = useNavigate()
+  const location = useLocation()
   const scrollProgress = useScrollProgress()
 
   useEffect(() => {
@@ -36,6 +39,25 @@ export function Header() {
     }
   }, [mobileOpen])
 
+  const scrollToSection = (id: string) => {
+    const performScroll = () => {
+      if (id === 'top') {
+        window.scrollTo({ top: 0, behavior: 'smooth' })
+        return
+      }
+
+      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+    }
+
+    if (location.pathname !== '/') {
+      navigate('/')
+      requestAnimationFrame(() => requestAnimationFrame(performScroll))
+      return
+    }
+
+    performScroll()
+  }
+
   return (
     <motion.header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
@@ -55,7 +77,11 @@ export function Header() {
         <a
           href="#top"
           className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors duration-200"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={(event) => {
+            event.preventDefault()
+            setMobileOpen(false)
+            scrollToSection('top')
+          }}
         >
           {SiteConfig.initials}
           <span className="text-[var(--color-crimson)]">.</span>
@@ -67,6 +93,10 @@ export function Header() {
             <a
               key={item.href}
               href={item.href}
+              onClick={(event) => {
+                event.preventDefault()
+                scrollToSection(item.href.replace(/^#/, ''))
+              }}
               className="font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors duration-200 tracking-wide cursor-pointer bg-transparent border-none"
             >
               {item.label}
@@ -113,7 +143,11 @@ export function Header() {
                 <a
                   key={item.href}
                   href={item.href}
-                  onClick={() => setMobileOpen(false)}
+                  onClick={(event) => {
+                    event.preventDefault()
+                    setMobileOpen(false)
+                    scrollToSection(item.href.replace(/^#/, ''))
+                  }}
                   className="text-left font-body text-[15px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer"
                 >
                   {item.label}
