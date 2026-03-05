@@ -22,8 +22,9 @@ export function PostDetail() {
   if (!post) {
     return (
       <>
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <Header />
-        <main className="min-h-screen flex items-center justify-center px-6">
+        <main id="main-content" className="min-h-screen flex items-center justify-center px-6">
           <div className="text-center">
             <p className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)] mb-4">404</p>
             <h1 className="font-display text-4xl text-[var(--color-ink)] mb-6">Post not found.</h1>
@@ -44,9 +45,10 @@ export function PostDetail() {
 
   return (
     <>
+      <a href="#main-content" className="skip-link">Skip to content</a>
       <Header />
 
-      <main className="pt-24 pb-32 px-6 md:px-12">
+      <main id="main-content" className="pt-24 pb-32 px-6 md:px-12">
         <div className="max-w-3xl mx-auto">
 
           {/* Back link */}

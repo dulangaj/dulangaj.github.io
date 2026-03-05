@@ -26,6 +26,12 @@ html {
   font-size: 16px;
 }
 
+/* Keep fixed header from obscuring in-page anchor targets. */
+section[id],
+main[id] {
+  scroll-margin-top: 84px;
+}
+
 body {
   background-color: var(--color-paper);
   color: var(--color-ink);
@@ -52,6 +58,37 @@ body::before {
 ::selection {
   background-color: var(--color-crimson);
   color: white;
+}
+
+/* Keyboard focus treatment tuned for the editorial palette. */
+a:focus-visible,
+button:focus-visible,
+[role="button"]:focus-visible {
+  outline: 2px solid color-mix(in oklab, var(--color-crimson) 80%, white 20%);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Skip link stays hidden until keyboard users tab into it. */
+.skip-link {
+  position: fixed;
+  top: 8px;
+  left: 8px;
+  z-index: 10000;
+  transform: translateY(-200%);
+  padding: 0.4rem 0.6rem;
+  border: 1px solid var(--color-rule);
+  background: var(--color-surface);
+  color: var(--color-ink);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: transform 180ms ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
 }
 
 /* ─── Typography Utilities ───────────────────────────────────────────────── */

@@ -12,8 +12,9 @@ import { PostDetail } from '@/pages/PostDetail'
 function HomePage() {
   return (
     <>
+      <a href="#main-content" className="skip-link">Skip to content</a>
       <Header />
-      <main>
+      <main id="main-content">
         <Hero />
         <Projects />
         <Experience />
