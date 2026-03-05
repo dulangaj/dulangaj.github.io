@@ -147,7 +147,7 @@ export function Writing() {
             Notes from the field.
           </h2>
           <p className="font-body text-[15px] text-[var(--color-muted)] mb-16 max-w-xl">
-            Engineering war-stories, research summaries, and reflections on building things.
+            Build notes, research breakdowns, and reflections on engineering, teamwork, and learning in public.
           </p>
         </FadeIn>
 

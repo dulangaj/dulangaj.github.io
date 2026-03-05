@@ -61,8 +61,8 @@ class SiteConfigClass {
 export const SiteConfig = new SiteConfigClass({
   name:     'Dulanga Jayawardena',
   title:    'Software Engineer',
-  tagline:  'Building scalable systems for financial markets.',
-  bio:      'Software engineer with 4+ years of experience building production-grade systems for financial markets. Based in Hong Kong. Specialises in Java and Python, with hands-on experience across cloud platforms, event-driven architectures, and quantitative risk pipelines.',
+  tagline:  'Building reliable systems for global teams.',
+  bio:      'Software engineer with 4+ years building distributed systems in finance and retail tech. Based in Hong Kong, with experience across Sri Lanka, Hong Kong, and the U.S. Strong in Java and Python, with a focus on communication, mentorship, and end-to-end delivery.',
   location: 'Hong Kong',
   email:    'dulangajay@gmail.com',
   nav: [

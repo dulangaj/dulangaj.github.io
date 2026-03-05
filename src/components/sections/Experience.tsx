@@ -171,7 +171,7 @@ export function Experience() {
             Where I've built.
           </h2>
           <p className="font-body text-[15px] text-[var(--color-muted)] mb-16 max-w-xl">
-            4+ years across fintech, retail tech, and academic research — always shipping to production.
+            Experience across finance, retail tech, and product engineering, with a focus on reliability, clear communication, and mentoring.
           </p>
         </FadeIn>
 
