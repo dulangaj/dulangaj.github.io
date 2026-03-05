@@ -96,7 +96,11 @@ export function Header() {
               href={item.href}
               onClick={(event) => {
                 event.preventDefault()
-                scrollToSection(item.href.replace(/^#/, ''))
+                if (item.href.startsWith('/')) {
+                  navigate(item.href)
+                } else {
+                  scrollToSection(item.href.replace(/^#/, ''))
+                }
               }}
               className="font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors duration-200 tracking-wide cursor-pointer bg-transparent border-none"
             >
@@ -152,7 +156,11 @@ export function Header() {
                   onClick={(event) => {
                     event.preventDefault()
                     setMobileOpen(false)
-                    scrollToSection(item.href.replace(/^#/, ''))
+                    if (item.href.startsWith('/')) {
+                      navigate(item.href)
+                    } else {
+                      scrollToSection(item.href.replace(/^#/, ''))
+                    }
                   }}
                   className="text-left font-body text-[15px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer"
                 >

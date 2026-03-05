@@ -12,6 +12,11 @@ const PostDetail = lazy(async () => {
   return { default: module.PostDetail }
 })
 
+const MapPage = lazy(async () => {
+  const module = await import('@/pages/MapPage')
+  return { default: module.MapPage }
+})
+
 /* ─── App ────────────────────────────────────────────────────────────────── */
 
 function HomePage() {
@@ -37,6 +42,7 @@ export default function App() {
         <Routes>
           <Route path="/"         element={<HomePage />} />
           <Route path="/post/:id" element={<PostDetail />} />
+          <Route path="/map"      element={<MapPage />} />
         </Routes>
       </Suspense>
     </HashRouter>
