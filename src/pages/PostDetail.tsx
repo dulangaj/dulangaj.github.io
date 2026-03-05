@@ -19,11 +19,56 @@ export function PostDetail() {
 
   useEffect(() => { window.scrollTo(0, 0) }, [id])
 
+  useEffect(() => {
+    if (!post) return
+
+    const baseTitle = 'Dulanga Jayawardena | Software Engineer'
+    const title = `${post.title} | Dulanga Jayawardena`
+    const description = post.excerpt
+    const canonical = `https://dulangaj.github.io/#/post/${post.id}`
+
+    const descriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="description"]')
+    const ogTitleMeta = document.querySelector<HTMLMetaElement>('meta[property="og:title"]')
+    const ogDescriptionMeta = document.querySelector<HTMLMetaElement>('meta[property="og:description"]')
+    const twitterTitleMeta = document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')
+    const twitterDescriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')
+    const canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+
+    const previous = {
+      title: document.title,
+      description: descriptionMeta?.content,
+      ogTitle: ogTitleMeta?.content,
+      ogDescription: ogDescriptionMeta?.content,
+      twitterTitle: twitterTitleMeta?.content,
+      twitterDescription: twitterDescriptionMeta?.content,
+      canonical: canonicalLink?.href,
+    }
+
+    document.title = title
+    if (descriptionMeta) descriptionMeta.content = description
+    if (ogTitleMeta) ogTitleMeta.content = title
+    if (ogDescriptionMeta) ogDescriptionMeta.content = description
+    if (twitterTitleMeta) twitterTitleMeta.content = title
+    if (twitterDescriptionMeta) twitterDescriptionMeta.content = description
+    if (canonicalLink) canonicalLink.href = canonical
+
+    return () => {
+      document.title = previous.title || baseTitle
+      if (descriptionMeta && previous.description) descriptionMeta.content = previous.description
+      if (ogTitleMeta && previous.ogTitle) ogTitleMeta.content = previous.ogTitle
+      if (ogDescriptionMeta && previous.ogDescription) ogDescriptionMeta.content = previous.ogDescription
+      if (twitterTitleMeta && previous.twitterTitle) twitterTitleMeta.content = previous.twitterTitle
+      if (twitterDescriptionMeta && previous.twitterDescription) twitterDescriptionMeta.content = previous.twitterDescription
+      if (canonicalLink && previous.canonical) canonicalLink.href = previous.canonical
+    }
+  }, [post])
+
   if (!post) {
     return (
       <>
+        <a href="#main-content" className="skip-link">Skip to content</a>
         <Header />
-        <main className="min-h-screen flex items-center justify-center px-6">
+        <main id="main-content" className="min-h-screen flex items-center justify-center px-6">
           <div className="text-center">
             <p className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)] mb-4">404</p>
             <h1 className="font-display text-4xl text-[var(--color-ink)] mb-6">Post not found.</h1>
@@ -44,9 +89,10 @@ export function PostDetail() {
 
   return (
     <>
+      <a href="#main-content" className="skip-link">Skip to content</a>
       <Header />
 
-      <main className="pt-24 pb-32 px-6 md:px-12">
+      <main id="main-content" className="pt-24 pb-32 px-6 md:px-12">
         <div className="max-w-3xl mx-auto">
 
           {/* Back link */}
@@ -114,7 +160,14 @@ export function PostDetail() {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="relative overflow-hidden rounded-lg aspect-[16/9] bg-[var(--color-rule)] mb-12"
             >
-              <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+              <img
+                src={post.image}
+                alt={post.title}
+                className="w-full h-full object-cover"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+              />
             </motion.div>
           )}
 

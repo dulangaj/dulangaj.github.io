@@ -1,5 +1,5 @@
 import { type ReactNode } from 'react'
-import { motion, type HTMLMotionProps } from 'framer-motion'
+import { motion, type HTMLMotionProps, useReducedMotion } from 'framer-motion'
 
 /* ─── FadeIn ─────────────────────────────────────────────────────────────── */
 /* Scroll-triggered fade + upward slide. Use to reveal any block of content. */
@@ -39,7 +39,9 @@ export function FadeIn({
   className = '',
   ...rest
 }: FadeInProps) {
-  const variants = buildVariants(direction, distance)
+  const prefersReducedMotion = useReducedMotion()
+  const variants = buildVariants(direction, prefersReducedMotion ? 0 : distance)
+  const duration = prefersReducedMotion ? 0.01 : 0.65
 
   return (
     <motion.div
@@ -49,7 +51,7 @@ export function FadeIn({
       whileInView="visible"
       viewport={{ once, margin: viewportMargin }}
       transition={{
-        duration: 0.65,
+        duration,
         delay,
         ease: [0.22, 1, 0.36, 1] as [number, number, number, number],
       }}

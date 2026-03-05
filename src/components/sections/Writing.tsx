@@ -32,6 +32,8 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
                 src={post.image}
                 alt={post.title}
                 className="w-full h-full object-cover"
+                loading="lazy"
+                decoding="async"
                 whileHover={{ scale: 1.03 }}
                 transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
               />
@@ -88,6 +90,8 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
               src={post.image}
               alt={post.title}
               className="w-full h-full object-cover"
+              loading="lazy"
+              decoding="async"
               whileHover={{ scale: 1.04 }}
               transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
             />

@@ -92,6 +92,9 @@ export function Hero() {
                   src="/assets/img/profile.jpeg"
                   alt="Dulanga Jayawardena"
                   className="w-full h-full object-cover"
+                  loading="eager"
+                  decoding="async"
+                  fetchPriority="high"
                   onError={(e) => {
                     const el = e.currentTarget
                     el.style.display = 'none'
