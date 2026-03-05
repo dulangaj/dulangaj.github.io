@@ -9,8 +9,9 @@ export const experiences = [
     role:        'Software Engineer',
     company:     'Morgan Stanley',
     location:    'Hong Kong',
-    period:      '2021 – Present',
+    period:      '2021 – 2025',
     startYear:   2021,
+    endYear:     2025,
     description: 'Building production-grade risk and pricing systems for the Equity Derivatives desk. Working across the full stack from low-latency Java services to Python analytics pipelines.',
     highlights: [
       'Engineered a real-time P&L attribution engine processing 10M+ positions daily',
