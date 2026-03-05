@@ -116,7 +116,14 @@ export function PostDetail() {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="relative overflow-hidden rounded-lg aspect-[16/9] bg-[var(--color-rule)] mb-12"
             >
-              <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
+              <img
+                src={post.image}
+                alt={post.title}
+                className="w-full h-full object-cover"
+                loading="eager"
+                decoding="async"
+                fetchPriority="high"
+              />
             </motion.div>
           )}
 
