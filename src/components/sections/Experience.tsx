@@ -117,6 +117,8 @@ function TimelineItem({ experience, index, isOpen, onToggle, registerHeaderRef }
 export function Experience() {
   const [openId, setOpenId] = useState<string>(experiences[0]?.id ?? '')
   const headerRefs = useRef<Record<string, HTMLButtonElement | null>>({})
+  const lastScrollY = useRef(0)
+  const lastDirection = useRef<'up' | 'down' | 'none'>('none')
 
   const toggle = (id: string) => setOpenId((prev) => (prev === id ? '' : id))
   const registerHeaderRef = (id: string, node: HTMLButtonElement | null) => {
@@ -127,8 +129,24 @@ export function Experience() {
     let ticking = false
 
     const updateActiveFromScroll = () => {
-      const viewportCenter = window.innerHeight * 0.5
-      const activeBand = 90
+      const currentY = window.scrollY
+      const prevY = lastScrollY.current
+      const direction =
+        currentY > prevY ? 'down'
+          : currentY < prevY ? 'up'
+            : lastDirection.current
+
+      lastScrollY.current = currentY
+      if (direction !== 'none') lastDirection.current = direction
+
+      // Directional trigger line: switch a bit earlier when scrolling down,
+      // and a bit later when scrolling up to reduce flicker.
+      const viewportHeight = window.innerHeight
+      const triggerY =
+        direction === 'down' ? viewportHeight * 0.55
+          : direction === 'up' ? viewportHeight * 0.45
+            : viewportHeight * 0.5
+      const activeBand = Math.max(72, Math.min(140, viewportHeight * 0.16))
 
       const candidates = experiences
         .map((exp) => {
@@ -136,7 +154,7 @@ export function Experience() {
           if (!el) return null
           const rect = el.getBoundingClientRect()
           const center = rect.top + rect.height / 2
-          return { id: exp.id, distance: Math.abs(center - viewportCenter) }
+          return { id: exp.id, distance: Math.abs(center - triggerY) }
         })
         .filter((v): v is { id: string; distance: number } => v !== null)
         .sort((a, b) => a.distance - b.distance)
@@ -157,6 +175,7 @@ export function Experience() {
       })
     }
 
+    lastScrollY.current = window.scrollY
     window.addEventListener('scroll', onScroll, { passive: true })
     updateActiveFromScroll()
     return () => window.removeEventListener('scroll', onScroll)
