@@ -25,7 +25,7 @@ export function Footer() {
             {SiteConfig.name}
           </p>
           <p className="font-mono text-[12px] text-[var(--color-subtle)] tracking-wide">
-            {SiteConfig.location} &nbsp;·&nbsp; Open to relocation
+            {SiteConfig.location} &nbsp;
           </p>
           <a
             href={SiteConfig.mailtoLink}
