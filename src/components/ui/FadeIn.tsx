@@ -12,6 +12,7 @@ interface FadeInProps extends HTMLMotionProps<'div'> {
   direction?: Direction
   distance?: number
   once?: boolean
+  viewportMargin?: string
   className?: string
 }
 
@@ -34,6 +35,7 @@ export function FadeIn({
   direction = 'up',
   distance = 32,
   once = true,
+  viewportMargin = '-80px',
   className = '',
   ...rest
 }: FadeInProps) {
@@ -45,7 +47,7 @@ export function FadeIn({
       variants={variants}
       initial="hidden"
       whileInView="visible"
-      viewport={{ once, margin: '-80px' }}
+      viewport={{ once, margin: viewportMargin }}
       transition={{
         duration: 0.65,
         delay,

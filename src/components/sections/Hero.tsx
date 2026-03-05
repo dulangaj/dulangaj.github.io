@@ -89,7 +89,7 @@ export function Hero() {
                 "
               >
                 <img
-                  src="/profile.jpg"
+                  src="/assets/img/profile.jpeg"
                   alt="Dulanga Jayawardena"
                   className="w-full h-full object-cover"
                   onError={(e) => {

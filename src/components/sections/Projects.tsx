@@ -99,6 +99,11 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
 
 export function Projects() {
   const [lead, ...secondaries] = featuredPosts
+  const secondaryGridClass =
+    secondaries.length === 1 ? 'sm:grid-cols-1 md:grid-cols-1'
+      : secondaries.length === 2 ? 'sm:grid-cols-2 md:grid-cols-2'
+        : secondaries.length === 3 ? 'sm:grid-cols-2 md:grid-cols-3'
+          : 'sm:grid-cols-2 md:grid-cols-4'
 
   return (
     <section id="projects" className="px-6 md:px-12 py-24">
@@ -122,7 +127,7 @@ export function Projects() {
 
         {/* Secondary columns */}
         {secondaries.length > 0 && (
-          <div className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-${Math.min(secondaries.length, 4)} gap-8 pt-8`}>
+          <div className={`grid grid-cols-1 ${secondaryGridClass} gap-8 pt-8`}>
             {secondaries.map((post, i) => (
               <SecondaryStory key={post.id} post={post} index={i} />
             ))}
