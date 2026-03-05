@@ -18,6 +18,24 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
+  useEffect(() => {
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMobileOpen(false)
+    }
+
+    if (mobileOpen) {
+      document.body.style.overflow = 'hidden'
+      window.addEventListener('keydown', onKeyDown)
+    } else {
+      document.body.style.overflow = ''
+    }
+
+    return () => {
+      document.body.style.overflow = ''
+      window.removeEventListener('keydown', onKeyDown)
+    }
+  }, [mobileOpen])
+
   return (
     <motion.header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
@@ -61,6 +79,8 @@ export function Header() {
           className="md:hidden flex flex-col gap-[5px] cursor-pointer bg-transparent border-none p-1"
           onClick={() => setMobileOpen((v) => !v)}
           aria-label="Toggle menu"
+          aria-expanded={mobileOpen}
+          aria-controls="mobile-nav"
         >
           <motion.span
             className="block w-5 h-px bg-[var(--color-ink)]"
@@ -81,6 +101,7 @@ export function Header() {
       <AnimatePresence>
         {mobileOpen && (
           <motion.nav
+            id="mobile-nav"
             initial={{ height: 0, opacity: 0 }}
             animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
