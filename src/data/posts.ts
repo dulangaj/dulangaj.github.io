@@ -13,6 +13,7 @@ export const posts = [
     category: 'Work',
     image:    '/assets/img/25.04_hongkong.jpeg',
     readTime: 6,
+    file:     '2025-05-01-morgan-stanley-equity-risk',
     featured: true,
     subtitle: 'Morgan Stanley',
     tags:     ['Java', 'Kafka', 'KDB+', 'Spring Boot', 'Risk'],
@@ -25,6 +26,7 @@ export const posts = [
     category: 'Education',
     image:    '/assets/img/16.11_graduation.jpeg',
     readTime: 4,
+    file:     '2020-06-30-cuhk-systems-engineering',
   }),
   new Post({
     id:       'opinion-dynamics-2020',
@@ -35,6 +37,7 @@ export const posts = [
     image:    '/assets/img/17.12_heatmap.png',
     readTime: 7,
     link:     'https://github.com/dulangaj/Modelling-and-Simulating-Opinion-Dynamics-in-Social-Networks',
+    file:     '2020-05-31-social-network-opinion-dynamics',
     featured: true,
     subtitle: 'Research · CUHK',
     tags:     ['Python', 'NumPy', 'NetworkX', 'Research'],
@@ -47,6 +50,7 @@ export const posts = [
     category: 'Work',
     image:    '/assets/img/20.12_vbrands.jpeg',
     readTime: 4,
+    file:     '2020-12-31-vbrands',
     featured: true,
     subtitle: 'VBrands',
     tags:     ['Python', 'Flask', 'WordPress', 'REST API'],
@@ -59,6 +63,7 @@ export const posts = [
     category: 'Engineering',
     image:    '/assets/img/litpak.jpeg',
     readTime: 6,
+    file:     '2018-12-01-wearable-safety-backpack',
     featured: true,
     subtitle: 'Dartmouth Engineering Exchange',
     tags:     ['Arduino', 'C', 'SolidWorks', 'IoT'],
@@ -71,6 +76,7 @@ export const posts = [
     category: 'Education',
     image:    '/assets/img/18.09_window.jpeg',
     readTime: 4,
+    file:     '2018-12-01-dartmouth-engineering-exchange',
   }),
   new Post({
     id:       'restaurant-recommender-2017',
@@ -81,6 +87,7 @@ export const posts = [
     image:    '/assets/img/pilpil.jpeg',
     readTime: 5,
     link:     'https://github.com/RiceProjectTeam/RestaurantAnalyzer',
+    file:     '2017-12-01-restaurant-recommender',
     featured: true,
     subtitle: 'Academic Project',
     tags:     ['Python', 'Tkinter', 'Machine Learning', 'Collaborative Filtering'],
@@ -93,6 +100,7 @@ export const posts = [
     category: 'Education',
     image:    '/assets/img/15.02_moir.jpeg',
     readTime: 3,
+    file:     '2015-07-31-elizabeth-moir',
   }),
 ]
 

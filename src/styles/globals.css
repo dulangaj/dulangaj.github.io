@@ -59,6 +59,28 @@ body::before {
 .font-body     { font-family: var(--font-body); }
 .font-mono     { font-family: var(--font-mono); }
 
+/* ─── Post body prose ────────────────────────────────────────────────────── */
+.post-body { font-family: var(--font-body); color: var(--color-ink); }
+.post-body h2 { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; color: var(--color-ink); margin: 2.5rem 0 1rem; }
+.post-body h3 { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.3; color: var(--color-ink); margin: 2rem 0 0.75rem; }
+.post-body p  { font-size: 16px; line-height: 1.85; color: var(--color-ink); margin: 0 0 1.25rem; }
+.post-body ul, .post-body ol { padding-left: 1.5rem; margin: 0 0 1.25rem; }
+.post-body li { font-size: 15px; line-height: 1.7; color: var(--color-muted); margin-bottom: 0.4rem; }
+.post-body li strong { color: var(--color-ink); }
+.post-body a  { color: var(--color-crimson); text-decoration: underline; text-underline-offset: 3px; }
+.post-body a:hover { color: var(--color-crimson-hover); }
+.post-body strong { font-weight: 600; color: var(--color-ink); }
+.post-body em { font-style: italic; }
+.post-body hr { border: none; border-top: 1px solid var(--color-rule); margin: 2rem 0; }
+.post-body img { width: 100%; border-radius: 6px; margin: 1.5rem 0; }
+.post-body blockquote { border-left: 2px solid var(--color-crimson); padding-left: 1.25rem; margin: 1.5rem 0; color: var(--color-muted); font-style: italic; }
+.post-body code { font-family: var(--font-mono); font-size: 13px; background: var(--color-rule); padding: 0.15em 0.4em; border-radius: 3px; }
+.post-body pre { background: var(--color-surface); border: 1px solid var(--color-rule); border-radius: 6px; padding: 1.25rem; overflow-x: auto; margin: 1.5rem 0; }
+.post-body pre code { background: none; padding: 0; font-size: 13px; }
+.post-body table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 14px; }
+.post-body th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-subtle); border-bottom: 2px solid var(--color-rule); padding: 0.5rem 0.75rem; text-align: left; }
+.post-body td { border-bottom: 1px solid var(--color-rule); padding: 0.6rem 0.75rem; color: var(--color-muted); }
+
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
 ::-webkit-scrollbar         { width: 6px; }
 ::-webkit-scrollbar-track   { background: var(--color-paper); }

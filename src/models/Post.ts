@@ -11,6 +11,7 @@ export interface PostProps {
   image?:   string
   readTime?: number         // minutes
   link?:    string
+  file?:    string          // _posts filename stem, e.g. '2025-05-01-morgan-stanley-equity-risk'
   // Project-specific (only set when featured: true)
   featured?:  boolean
   subtitle?:  string        // e.g. "Morgan Stanley", "Academic Project"
@@ -29,6 +30,7 @@ export class Post {
   readonly featured: boolean
   readonly subtitle?: string
   readonly tags:     string[]
+  readonly file?:    string
 
   constructor(props: PostProps) {
     this.id       = props.id
@@ -42,6 +44,7 @@ export class Post {
     this.featured = props.featured ?? false
     this.subtitle = props.subtitle
     this.tags     = props.tags ?? []
+    this.file     = props.file
   }
 
   get formattedDate(): string {

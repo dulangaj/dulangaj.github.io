@@ -1,14 +1,17 @@
 import { useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import { FiArrowLeft, FiExternalLink } from 'react-icons/fi'
 import { posts } from '@/data/posts'
+import { getPostContent } from '@/data/postContent'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Tag } from '@/components/ui/Tag'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
-/* Full article page. Accessed via /post/:id from both Projects and Writing.   */
+/* Full article page rendered from _posts/*.md markdown files.                */
 
 export function PostDetail() {
   const { id } = useParams<{ id: string }>()
@@ -37,6 +40,8 @@ export function PostDetail() {
     )
   }
 
+  const body = post.file ? getPostContent(post.file) : null
+
   return (
     <>
       <Header />
@@ -64,7 +69,7 @@ export function PostDetail() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.05 }}
-            className="flex items-center gap-3 mb-6 pb-6 border-b border-[var(--color-rule)]"
+            className="flex flex-wrap items-center gap-3 mb-6 pb-6 border-b border-[var(--color-rule)]"
           >
             <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)]">
               {post.category}
@@ -101,7 +106,7 @@ export function PostDetail() {
             {post.title}
           </motion.h1>
 
-          {/* Full-bleed image */}
+          {/* Hero image */}
           {post.image && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
@@ -109,31 +114,36 @@ export function PostDetail() {
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="relative overflow-hidden rounded-lg aspect-[16/9] bg-[var(--color-rule)] mb-12"
             >
-              <img
-                src={post.image}
-                alt={post.title}
-                className="w-full h-full object-cover"
-              />
+              <img src={post.image} alt={post.title} className="w-full h-full object-cover" />
             </motion.div>
           )}
 
-          {/* Body — excerpt as article lead */}
-          <motion.p
+          {/* Article body — full markdown */}
+          <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
-            className="font-body text-[17px] leading-[1.85] text-[var(--color-ink)] mb-10 border-l-2 border-[var(--color-crimson)] pl-6"
+            className="post-body"
           >
-            {post.excerpt}
-          </motion.p>
+            {body ? (
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {body}
+              </ReactMarkdown>
+            ) : (
+              /* Fallback: excerpt as pull quote when no markdown file */
+              <p className="font-body text-[17px] leading-[1.85] text-[var(--color-ink)] border-l-2 border-[var(--color-crimson)] pl-6">
+                {post.excerpt}
+              </p>
+            )}
+          </motion.div>
 
           {/* Tags */}
           {post.tags.length > 0 && (
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ duration: 0.5, delay: 0.25 }}
-              className="flex flex-wrap gap-2 mb-10"
+              transition={{ duration: 0.5, delay: 0.3 }}
+              className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-[var(--color-rule)]"
             >
               {post.tags.map((tag) => <Tag key={tag} label={tag} />)}
             </motion.div>
@@ -144,8 +154,8 @@ export function PostDetail() {
             <motion.div
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.3 }}
-              className="border-t border-[var(--color-rule)] pt-8"
+              transition={{ duration: 0.5, delay: 0.35 }}
+              className="mt-8 pt-8 border-t border-[var(--color-rule)]"
             >
               <a
                 href={post.link}
