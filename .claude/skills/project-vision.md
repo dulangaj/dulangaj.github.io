@@ -10,11 +10,6 @@ Target audience: fintech/finance professionals.
 - **Print paradigm** — grid, columns, and spacing decisions should feel like a physical broadsheet
 - **Light** — predominantly light backgrounds; darkness used sparingly for contrast
 
-## Layout Patterns
-- Horizontal scroll section for the experience timeline
-- Parallax depth on scroll
-- Smooth page transitions between sections/routes
-
 ## Motion (Framer Motion)
 - Scroll-triggered reveals
 - Staggered text entrances
