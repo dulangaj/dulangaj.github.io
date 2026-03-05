@@ -19,6 +19,50 @@ export function PostDetail() {
 
   useEffect(() => { window.scrollTo(0, 0) }, [id])
 
+  useEffect(() => {
+    if (!post) return
+
+    const baseTitle = 'Dulanga Jayawardena | Software Engineer'
+    const title = `${post.title} | Dulanga Jayawardena`
+    const description = post.excerpt
+    const canonical = `https://dulangaj.github.io/#/post/${post.id}`
+
+    const descriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="description"]')
+    const ogTitleMeta = document.querySelector<HTMLMetaElement>('meta[property="og:title"]')
+    const ogDescriptionMeta = document.querySelector<HTMLMetaElement>('meta[property="og:description"]')
+    const twitterTitleMeta = document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')
+    const twitterDescriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')
+    const canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+
+    const previous = {
+      title: document.title,
+      description: descriptionMeta?.content,
+      ogTitle: ogTitleMeta?.content,
+      ogDescription: ogDescriptionMeta?.content,
+      twitterTitle: twitterTitleMeta?.content,
+      twitterDescription: twitterDescriptionMeta?.content,
+      canonical: canonicalLink?.href,
+    }
+
+    document.title = title
+    if (descriptionMeta) descriptionMeta.content = description
+    if (ogTitleMeta) ogTitleMeta.content = title
+    if (ogDescriptionMeta) ogDescriptionMeta.content = description
+    if (twitterTitleMeta) twitterTitleMeta.content = title
+    if (twitterDescriptionMeta) twitterDescriptionMeta.content = description
+    if (canonicalLink) canonicalLink.href = canonical
+
+    return () => {
+      document.title = previous.title || baseTitle
+      if (descriptionMeta && previous.description) descriptionMeta.content = previous.description
+      if (ogTitleMeta && previous.ogTitle) ogTitleMeta.content = previous.ogTitle
+      if (ogDescriptionMeta && previous.ogDescription) ogDescriptionMeta.content = previous.ogDescription
+      if (twitterTitleMeta && previous.twitterTitle) twitterTitleMeta.content = previous.twitterTitle
+      if (twitterDescriptionMeta && previous.twitterDescription) twitterDescriptionMeta.content = previous.twitterDescription
+      if (canonicalLink && previous.canonical) canonicalLink.href = previous.canonical
+    }
+  }, [post])
+
   if (!post) {
     return (
       <>
