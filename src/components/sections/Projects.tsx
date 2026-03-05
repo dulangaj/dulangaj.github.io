@@ -55,7 +55,7 @@ function LeadStory({ post }: { post: Post }) {
             <motion.img
               src={post.image}
               alt={post.title}
-              className="absolute inset-0 w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700"
+              className="absolute inset-0 w-full h-full object-cover"
               whileHover={{ scale: 1.03 }}
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
             />
