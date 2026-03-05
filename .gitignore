@@ -1,16 +1,24 @@
-# Jekyll build folders
-_site/
-.jekyll-cache/
-.jekyll-metadata
-.sass-cache/
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
 
-# Bundler
-vendor/
-.bundle/
-Gemfile.lock
+node_modules
+dist
+dist-ssr
+*.local
 
-# Ruby specific
-*.gem
-
-# macOS junk
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
 .DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
