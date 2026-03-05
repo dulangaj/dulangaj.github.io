@@ -66,9 +66,9 @@ export function PostDetail() {
 
           {/* Dateline */}
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5, delay: 0.05, ease: [0.22, 1, 0.36, 1] }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.05 }}
             className="flex flex-wrap items-center gap-3 mb-6 pb-6 border-b border-[var(--color-rule)]"
           >
             <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)]">
@@ -98,8 +98,8 @@ export function PostDetail() {
 
           {/* Headline */}
           <motion.h1
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
             className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[1.08] text-[var(--color-ink)] mb-8"
           >
@@ -109,8 +109,8 @@ export function PostDetail() {
           {/* Hero image */}
           {post.image && (
             <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
               className="relative overflow-hidden rounded-lg aspect-[16/9] bg-[var(--color-rule)] mb-12"
             >
@@ -120,8 +120,8 @@ export function PostDetail() {
 
           {/* Article body — full markdown */}
           <motion.div
-            initial={{ opacity: 0, x: 24 }}
-            animate={{ opacity: 1, x: 0 }}
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.2, ease: [0.22, 1, 0.36, 1] }}
             className="post-body"
           >
@@ -140,9 +140,9 @@ export function PostDetail() {
           {/* Tags */}
           {post.tags.length > 0 && (
             <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
               className="flex flex-wrap gap-2 mt-12 pt-8 border-t border-[var(--color-rule)]"
             >
               {post.tags.map((tag) => <Tag key={tag} label={tag} />)}
@@ -152,9 +152,9 @@ export function PostDetail() {
           {/* External link CTA */}
           {post.link && (
             <motion.div
-              initial={{ opacity: 0, x: 24 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.35, ease: [0.22, 1, 0.36, 1] }}
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.35 }}
               className="mt-8 pt-8 border-t border-[var(--color-rule)]"
             >
               <a
