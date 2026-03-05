@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FiChevronDown } from 'react-icons/fi'
 import { experiences } from '@/data/experiences'
@@ -15,20 +15,15 @@ interface TimelineItemProps {
   index: number
   isOpen: boolean
   onToggle: () => void
-  onEnterViewport: () => void
+  registerHeaderRef: (id: string, node: HTMLButtonElement | null) => void
 }
 
-function TimelineItem({ experience, index, isOpen, onToggle, onEnterViewport }: TimelineItemProps) {
+function TimelineItem({ experience, index, isOpen, onToggle, registerHeaderRef }: TimelineItemProps) {
   return (
-    <FadeIn
-      delay={0.08 * index}
-      className="border-b border-[var(--color-rule)] last:border-b-0"
-      once={false}
-      viewportMargin="-45% 0px -45% 0px"
-      onViewportEnter={onEnterViewport}
-    >
+    <FadeIn delay={0.08 * index} className="border-b border-[var(--color-rule)] last:border-b-0">
       {/* Header row — always visible, click to toggle */}
       <button
+        ref={(node) => registerHeaderRef(experience.id, node)}
         className="w-full grid grid-cols-12 gap-4 md:gap-8 py-6 text-left cursor-pointer bg-transparent border-none group"
         onClick={onToggle}
         aria-expanded={isOpen}
@@ -121,9 +116,51 @@ function TimelineItem({ experience, index, isOpen, onToggle, onEnterViewport }: 
 
 export function Experience() {
   const [openId, setOpenId] = useState<string>(experiences[0]?.id ?? '')
+  const headerRefs = useRef<Record<string, HTMLButtonElement | null>>({})
 
   const toggle = (id: string) => setOpenId((prev) => (prev === id ? '' : id))
-  const openOnScroll = (id: string) => setOpenId((prev) => (prev === id ? prev : id))
+  const registerHeaderRef = (id: string, node: HTMLButtonElement | null) => {
+    headerRefs.current[id] = node
+  }
+
+  useEffect(() => {
+    let ticking = false
+
+    const updateActiveFromScroll = () => {
+      const viewportCenter = window.innerHeight * 0.5
+      const activeBand = 120
+
+      const candidates = experiences
+        .map((exp) => {
+          const el = headerRefs.current[exp.id]
+          if (!el) return null
+          const rect = el.getBoundingClientRect()
+          const center = rect.top + rect.height / 2
+          return { id: exp.id, distance: Math.abs(center - viewportCenter) }
+        })
+        .filter((v): v is { id: string; distance: number } => v !== null)
+        .sort((a, b) => a.distance - b.distance)
+
+      const nearest = candidates[0]
+      if (!nearest) return
+      if (nearest.distance > activeBand) return
+
+      setOpenId((prev) => (prev === nearest.id ? prev : nearest.id))
+    }
+
+    const onScroll = () => {
+      if (ticking) return
+      ticking = true
+      requestAnimationFrame(() => {
+        updateActiveFromScroll()
+        ticking = false
+      })
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true })
+    updateActiveFromScroll()
+    return () => window.removeEventListener('scroll', onScroll)
+  }, [])
 
   return (
     <section id="experience" className="px-6 md:px-12 py-24 bg-[var(--color-surface)]">
@@ -147,7 +184,7 @@ export function Experience() {
               index={i}
               isOpen={openId === exp.id}
               onToggle={() => toggle(exp.id)}
-              onEnterViewport={() => openOnScroll(exp.id)}
+              registerHeaderRef={registerHeaderRef}
             />
           ))}
         </div>
