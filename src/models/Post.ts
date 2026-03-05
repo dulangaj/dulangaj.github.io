@@ -5,13 +5,13 @@
 export interface PostProps {
   id:       string
   title:    string
-  excerpt:  string
+  excerpt?: string          // optional; auto-extracted from body for blog cards
   date:     string          // ISO format: YYYY-MM-DD
   category: string
   image?:   string
   readTime?: number         // minutes
   link?:    string
-  file?:    string          // _posts filename stem, e.g. '2025-05-01-morgan-stanley-equity-risk'
+  file?:    string          // posts/ filename stem, e.g. '2025-05-01-morgan-stanley-equity-risk'
   // Project-specific (only set when featured: true)
   featured?:  boolean
   subtitle?:  string        // e.g. "Morgan Stanley", "Academic Project"
@@ -21,7 +21,7 @@ export interface PostProps {
 export class Post {
   readonly id:       string
   readonly title:    string
-  readonly excerpt:  string
+  readonly excerpt?: string
   readonly date:     string
   readonly category: string
   readonly image?:   string
@@ -35,7 +35,7 @@ export class Post {
   constructor(props: PostProps) {
     this.id       = props.id
     this.title    = props.title
-    this.excerpt  = props.excerpt
+    this.excerpt  = props.excerpt ?? undefined
     this.date     = props.date
     this.category = props.category
     this.image    = props.image

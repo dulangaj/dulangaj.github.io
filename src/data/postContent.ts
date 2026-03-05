@@ -1,21 +1,98 @@
 /* ─── Post Content Loader ────────────────────────────────────────────────── */
-/* Loads all _posts/*.md files at build time via Vite glob import.            */
-/* Returns a map from filename stem → markdown body (frontmatter stripped).  */
+/* Loads all posts/*.md files at build time via Vite glob import.             */
+/* Parses frontmatter for metadata and exports auto-loaded Post objects.      */
 
-const rawFiles = import.meta.glob('../../_posts/*.md', {
+import { Post } from '@/models/Post'
+
+const rawFiles = import.meta.glob('../../posts/*.md', {
   query:  '?raw',
   import: 'default',
   eager:  true,
 }) as Record<string, string>
 
+/* ── Minimal frontmatter parser (handles our YAML subset) ───────────────── */
+
+type FMValue = string | string[] | number
+
+function parseFrontmatter(raw: string): Record<string, FMValue> {
+  const match = raw.match(/^---\r?\n([\s\S]*?)\r?\n---/)
+  if (!match) return {}
+  const result: Record<string, FMValue> = {}
+  for (const line of match[1].split('\n')) {
+    const m = line.match(/^([\w_]+):\s*(.+)$/)
+    if (!m) continue
+    const [, key, val] = m
+    const trimmed = val.trim()
+    if (trimmed.startsWith('[')) {
+      result[key] = trimmed
+        .slice(1, -1)
+        .split(',')
+        .map((s) => s.trim().replace(/^["']|["']$/g, ''))
+    } else if (/^\d+$/.test(trimmed)) {
+      result[key] = parseInt(trimmed, 10)
+    } else {
+      result[key] = trimmed.replace(/^["']|["']$/g, '')
+    }
+  }
+  return result
+}
+
 function stripFrontmatter(content: string): string {
   return content.replace(/^---[\s\S]*?---\r?\n/, '').trim()
 }
 
+/* ── Auto-extract first prose paragraph as excerpt ──────────────────────── */
+
+function extractExcerpt(body: string, maxLen = 200): string {
+  for (const line of body.split('\n')) {
+    const t = line.trim()
+    if (t && !t.startsWith('#') && !t.startsWith('-') && !t.startsWith('*') &&
+        !t.startsWith('|') && !t.startsWith('!') && !t.startsWith('>') && t.length > 20) {
+      return t.length > maxLen ? t.slice(0, maxLen).trimEnd() + '…' : t
+    }
+  }
+  return ''
+}
+
+/* ── Build all posts from filesystem ────────────────────────────────────── */
+
+export function getAllPosts(): Post[] {
+  const result: Post[] = []
+
+  for (const [path, raw] of Object.entries(rawFiles)) {
+    const stem = path.split('/').pop()!.replace(/\.md$/, '')
+    const dateMatch = stem.match(/^(\d{4}-\d{2}-\d{2})/)
+    if (!dateMatch) continue
+
+    const date = dateMatch[1]
+    const fm   = parseFrontmatter(raw)
+    const body = stripFrontmatter(raw)
+
+    const imageFile = typeof fm.image === 'string' ? fm.image : undefined
+
+    result.push(new Post({
+      id:       stem,
+      title:    typeof fm.title    === 'string' ? fm.title    : stem,
+      excerpt:  extractExcerpt(body),
+      date,
+      category: typeof fm.category === 'string' ? fm.category : 'Uncategorized',
+      subtitle: typeof fm.subtitle === 'string' ? fm.subtitle : undefined,
+      image:    imageFile ? `/assets/img/${imageFile}` : undefined,
+      readTime: typeof fm.read_time === 'number' ? fm.read_time : undefined,
+      link:     typeof fm.link     === 'string' ? fm.link     : undefined,
+      tags:     Array.isArray(fm.tags) ? fm.tags as string[] : [],
+      file:     stem,
+    }))
+  }
+
+  return result.sort((a, b) => b.date.localeCompare(a.date))
+}
+
+/* ── Content map for markdown body loading ──────────────────────────────── */
+
 const contentMap: Record<string, string> = {}
 
 for (const [path, raw] of Object.entries(rawFiles)) {
-  // path is like '../../_posts/2025-05-01-morgan-stanley-equity-risk.md'
   const stem = path.split('/').pop()!.replace(/\.md$/, '')
   contentMap[stem] = stripFrontmatter(raw)
 }

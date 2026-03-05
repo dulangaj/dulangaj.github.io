@@ -11,7 +11,7 @@ import { Footer } from '@/components/layout/Footer'
 import { Tag } from '@/components/ui/Tag'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
-/* Full article page rendered from _posts/*.md markdown files.                */
+/* Full article page rendered from posts/*.md markdown files.                 */
 
 export function PostDetail() {
   const { id } = useParams<{ id: string }>()
@@ -24,7 +24,7 @@ export function PostDetail() {
 
     const baseTitle = 'Dulanga Jayawardena | Software Engineer'
     const title = `${post.title} | Dulanga Jayawardena`
-    const description = post.excerpt
+    const description = post.excerpt ?? post.title
     const canonical = `https://dulangaj.github.io/#/post/${post.id}`
 
     const descriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="description"]')

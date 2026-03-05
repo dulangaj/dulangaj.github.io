@@ -3,8 +3,10 @@ layout: post
 title: "Excelling at Elizabeth Moir School"
 author: "Dulanga Jayawardena"
 categories: profile
-tags: [profile, school]
+category: Education
+tags: [A Levels, Edexcel, Mathematics]
 image: 15.02_moir.jpeg
+read_time: 3
 ---
 
 ## 📝 Overview
