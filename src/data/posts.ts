@@ -1,7 +1,8 @@
 import { Post } from '@/models/Post'
 
 /* ─── Posts Repository ───────────────────────────────────────────────────── */
-/* Ordered most-recent first. All 8 posts ported from Jekyll _posts/.        */
+/* Single source of truth for all portfolio items. Ordered most-recent first. */
+/* Items with featured: true also appear in the Selected Work section.        */
 
 export const posts = [
   new Post({
@@ -12,6 +13,9 @@ export const posts = [
     category: 'Work',
     image:    '/assets/img/25.04_hongkong.jpeg',
     readTime: 6,
+    featured: true,
+    subtitle: 'Morgan Stanley',
+    tags:     ['Java', 'Kafka', 'KDB+', 'Spring Boot', 'Risk'],
   }),
   new Post({
     id:       'cuhk-2020',
@@ -28,9 +32,12 @@ export const posts = [
     excerpt:  'Comparing DeGroot and Bounded Confidence models across five network topologies — and proposing a dynamic influence-based self-appraisal mechanism to make consensus modelling more realistic.',
     date:     '2020-05-31',
     category: 'Research',
-    image:    '/assets/img/leaves.jpeg',
+    image:    '/assets/img/17.12_heatmap.png',
     readTime: 7,
     link:     'https://github.com/dulangaj/Modelling-and-Simulating-Opinion-Dynamics-in-Social-Networks',
+    featured: true,
+    subtitle: 'Research · CUHK',
+    tags:     ['Python', 'NumPy', 'NetworkX', 'Research'],
   }),
   new Post({
     id:       'vbrands-2020',
@@ -40,6 +47,9 @@ export const posts = [
     category: 'Work',
     image:    '/assets/img/20.12_vbrands.jpeg',
     readTime: 4,
+    featured: true,
+    subtitle: 'VBrands',
+    tags:     ['Python', 'Flask', 'WordPress', 'REST API'],
   }),
   new Post({
     id:       'litpak-2018',
@@ -49,6 +59,9 @@ export const posts = [
     category: 'Engineering',
     image:    '/assets/img/litpak.jpeg',
     readTime: 6,
+    featured: true,
+    subtitle: 'Dartmouth Engineering Exchange',
+    tags:     ['Arduino', 'C', 'SolidWorks', 'IoT'],
   }),
   new Post({
     id:       'dartmouth-2018',
@@ -68,6 +81,9 @@ export const posts = [
     image:    '/assets/img/pilpil.jpeg',
     readTime: 5,
     link:     'https://github.com/RiceProjectTeam/RestaurantAnalyzer',
+    featured: true,
+    subtitle: 'Academic Project',
+    tags:     ['Python', 'Tkinter', 'Machine Learning', 'Collaborative Filtering'],
   }),
   new Post({
     id:       'elizabeth-moir-2015',
@@ -79,3 +95,5 @@ export const posts = [
     readTime: 3,
   }),
 ]
+
+export const featuredPosts = posts.filter((p) => p.featured)
