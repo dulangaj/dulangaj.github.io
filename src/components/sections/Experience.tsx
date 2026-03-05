@@ -15,11 +15,17 @@ interface TimelineItemProps {
   index: number
   isOpen: boolean
   onToggle: () => void
+  onEnterViewport: () => void
 }
 
-function TimelineItem({ experience, index, isOpen, onToggle }: TimelineItemProps) {
+function TimelineItem({ experience, index, isOpen, onToggle, onEnterViewport }: TimelineItemProps) {
   return (
-    <FadeIn delay={0.08 * index} className="border-b border-[var(--color-rule)] last:border-b-0">
+    <FadeIn
+      delay={0.08 * index}
+      className="border-b border-[var(--color-rule)] last:border-b-0"
+      once={false}
+      onViewportEnter={onEnterViewport}
+    >
       {/* Header row — always visible, click to toggle */}
       <button
         className="w-full grid grid-cols-12 gap-4 md:gap-8 py-6 text-left cursor-pointer bg-transparent border-none group"
@@ -116,6 +122,7 @@ export function Experience() {
   const [openId, setOpenId] = useState<string>(experiences[0]?.id ?? '')
 
   const toggle = (id: string) => setOpenId((prev) => (prev === id ? '' : id))
+  const openOnScroll = (id: string) => setOpenId((prev) => (prev === id ? prev : id))
 
   return (
     <section id="experience" className="px-6 md:px-12 py-24 bg-[var(--color-surface)]">
@@ -139,6 +146,7 @@ export function Experience() {
               index={i}
               isOpen={openId === exp.id}
               onToggle={() => toggle(exp.id)}
+              onEnterViewport={() => openOnScroll(exp.id)}
             />
           ))}
         </div>
