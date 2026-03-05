@@ -18,11 +18,6 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  const handleNavClick = (href: string) => {
-    setMobileOpen(false)
-    document.querySelector(href)?.scrollIntoView({ behavior: 'smooth' })
-  }
-
   return (
     <motion.header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
@@ -51,13 +46,13 @@ export function Header() {
         {/* Desktop Nav */}
         <nav className="hidden md:flex items-center gap-8">
           {SiteConfig.nav.map((item) => (
-            <button
+            <a
               key={item.href}
-              onClick={() => handleNavClick(item.href)}
+              href={item.href}
               className="font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors duration-200 tracking-wide cursor-pointer bg-transparent border-none"
             >
               {item.label}
-            </button>
+            </a>
           ))}
         </nav>
 
@@ -94,13 +89,14 @@ export function Header() {
           >
             <div className="px-6 pb-6 pt-2 flex flex-col gap-4">
               {SiteConfig.nav.map((item) => (
-                <button
+                <a
                   key={item.href}
-                  onClick={() => handleNavClick(item.href)}
-                  className="text-left font-body text-[15px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer bg-transparent border-none"
+                  href={item.href}
+                  onClick={() => setMobileOpen(false)}
+                  className="text-left font-body text-[15px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer"
                 >
                   {item.label}
-                </button>
+                </a>
               ))}
             </div>
           </motion.nav>
