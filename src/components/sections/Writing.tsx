@@ -6,10 +6,11 @@ import { Post } from '@/models/Post'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
 
-const VISIBLE_INITIAL = 5  // featured (counts as 1 row) + 4 grid cards
+const VISIBLE_INITIAL = 5
 
 /* ─── Writing ────────────────────────────────────────────────────────────── */
-/* Editorial grid of blog post cards — featured large card + row of smaller. */
+/* Editorial rhythmic grid: every 3rd card (0, 3, 6…) spans full width,      */
+/* the rest fill two equal columns — the pattern used by The Atlantic, Wired. */
 
 interface PostCardProps {
   post: Post
@@ -124,11 +125,9 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
 
 export function Writing() {
   const [showAll, setShowAll] = useState(false)
-  const [featured, ...rest] = posts
 
-  // Show 4 grid cards initially; reveal the rest on "Show more"
-  const visibleRest = showAll ? rest : rest.slice(0, VISIBLE_INITIAL - 1)
-  const hasMore = rest.length > VISIBLE_INITIAL - 1
+  const visible = showAll ? posts : posts.slice(0, VISIBLE_INITIAL)
+  const hasMore = posts.length > VISIBLE_INITIAL
 
   return (
     <section id="writing" className="px-6 md:px-12 py-24">
@@ -144,20 +143,21 @@ export function Writing() {
         </FadeIn>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <PostCard post={featured} featured delay={0} />
-
           <AnimatePresence initial={false}>
-            {visibleRest.map((post, i) => (
-              <motion.div
-                key={post.id}
-                className="h-full"
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-              >
-                <PostCard post={post} delay={0} />
-              </motion.div>
-            ))}
+            {visible.map((post, i) => {
+              const isFeatured = i % 3 === 0
+              return (
+                <motion.div
+                  key={post.id}
+                  className={isFeatured ? 'md:col-span-2' : 'h-full'}
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.5, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+                >
+                  <PostCard post={post} featured={isFeatured} delay={0} />
+                </motion.div>
+              )
+            })}
           </AnimatePresence>
         </div>
 
