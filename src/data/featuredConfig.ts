@@ -12,23 +12,23 @@ export interface FeaturedPostConfig {
 export const featuredConfig: FeaturedPostConfig[] = [
   {
     id:      '2025-05-01-morgan-stanley-equity-risk',
-    excerpt: 'Inside the Equity Risk Technology team at Morgan Stanley — building scalable, globally deployed systems for traders and risk managers across Java, Kafka, KDB+, and Spring Boot.',
+    excerpt: 'Inside the Equity Risk Technology team at Morgan Stanley — production systems for traders and risk managers built in Java, Kafka, and KDB+.',
   },
   {
     id:      '2020-05-31-social-network-opinion-dynamics',
-    excerpt: 'Comparing DeGroot and Bounded Confidence models across five network topologies — and proposing a dynamic influence-based self-appraisal mechanism to make consensus modelling more realistic.',
+    excerpt: 'Comparing consensus models across five network topologies — and proposing a dynamic self-appraisal mechanism to make opinion modelling more realistic.',
     image:   '/assets/img/17.12_heatmap.png',
   },
   {
     id:      '2020-12-31-vbrands',
-    excerpt: 'Automating special-orders workflows, building catalog pipelines, and shipping e-commerce features at a multi-brand retail group — hands-on from backend scripts to stakeholder training.',
+    excerpt: 'Technology consultant at a Hong Kong multi-brand retail group — automating special-orders, building catalog pipelines, and shipping e-commerce features.',
   },
   {
     id:      '2018-12-01-wearable-safety-backpack',
-    excerpt: 'Over 75% of pedestrian fatalities happen after dark. We designed a backpack that fixes that — with embedded LEDs, conductive thread, gyroscope power management, and three full hardware iterations.',
+    excerpt: 'Over 75% of pedestrian fatalities happen after dark. We designed a backpack to fix that — embedded LEDs, conductive thread, and gyroscope-managed power.',
   },
   {
     id:      '2017-12-01-restaurant-recommender',
-    excerpt: "Built a customizable scoring engine on top of OpenRice data so my university friends and I could find great restaurants by our own weights — not the platform's algorithm. It worked.",
+    excerpt: "A custom scoring engine on OpenRice data — rank restaurants by your own weights, not the platform's algorithm. Built with my university friends. It worked.",
   },
 ]
