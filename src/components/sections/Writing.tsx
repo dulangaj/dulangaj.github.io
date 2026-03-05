@@ -1,9 +1,12 @@
-import { motion } from 'framer-motion'
-import { FiArrowRight } from 'react-icons/fi'
+import { useState } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
+import { FiArrowRight, FiChevronDown } from 'react-icons/fi'
 import { posts } from '@/data/posts'
 import { Post } from '@/models/Post'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
+
+const VISIBLE_INITIAL = 5  // featured (counts as 1 row) + 4 grid cards
 
 /* ─── Writing ────────────────────────────────────────────────────────────── */
 /* Editorial grid of blog post cards — featured large card + row of smaller. */
@@ -120,7 +123,12 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
 }
 
 export function Writing() {
+  const [showAll, setShowAll] = useState(false)
   const [featured, ...rest] = posts
+
+  // Show 4 grid cards initially; reveal the rest on "Show more"
+  const visibleRest = showAll ? rest : rest.slice(0, VISIBLE_INITIAL - 1)
+  const hasMore = rest.length > VISIBLE_INITIAL - 1
 
   return (
     <section id="writing" className="px-6 md:px-12 py-24">
@@ -135,13 +143,41 @@ export function Writing() {
           </p>
         </FadeIn>
 
-        {/* Grid: featured full-width, then 3-column row */}
+        {/* Grid: featured spans full width (2 cols), rest fills in */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <PostCard post={featured} featured delay={0} />
-          {rest.map((post, i) => (
-            <PostCard key={post.id} post={post} delay={0.1 + 0.08 * i} />
-          ))}
+
+          <AnimatePresence initial={false}>
+            {visibleRest.map((post, i) => (
+              <motion.div
+                key={post.id}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+              >
+                <PostCard post={post} delay={0} />
+              </motion.div>
+            ))}
+          </AnimatePresence>
         </div>
+
+        {/* Show more / show less */}
+        {hasMore && (
+          <FadeIn className="mt-10 flex justify-center">
+            <button
+              onClick={() => setShowAll((v) => !v)}
+              className="group inline-flex items-center gap-2 font-mono text-[12px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
+            >
+              {showAll ? 'Show less' : `Show all ${posts.length} posts`}
+              <motion.span
+                animate={{ rotate: showAll ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <FiChevronDown size={13} />
+              </motion.span>
+            </button>
+          </FadeIn>
+        )}
       </div>
     </section>
   )
