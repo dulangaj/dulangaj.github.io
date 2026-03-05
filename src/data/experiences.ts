@@ -15,8 +15,6 @@ export const experiences = [
     description: 'Building production-grade risk and pricing systems for the Equity Derivatives desk. Working across the full stack from low-latency Java services to Python analytics pipelines.',
     highlights: [
       'Engineered a real-time P&L attribution engine processing 10M+ positions daily',
-      'Reduced end-of-day risk report generation time by 40% through Kafka-based parallelisation',
-      'Led migration of legacy Sybase procedures to a modern SQL + KDB+ time-series stack',
       'Mentored two junior engineers through onboarding and first production deployments',
     ],
     tags: ['Java', 'Python', 'Kafka', 'KDB+', 'Spring Boot', 'SQL'],
@@ -32,8 +30,7 @@ export const experiences = [
     endYear:     2021,
     description: 'Drove digital transformation for a multi-brand retail group, shipping a B2B inventory and operations platform from zero to production.',
     highlights: [
-      'Built a Python/Flask microservice backend with REST API consumed by 200+ retail partners',
-      'Migrated manual order workflows to an automated pipeline, cutting processing time by 60%',
+      'Migrated manual order workflows to automated pipelines, cutting processing time by 60%',
       'Developed the client-facing WordPress storefront and custom WooCommerce integrations',
     ],
     tags: ['Python', 'Flask', 'WordPress', 'REST API', 'WooCommerce'],
@@ -49,8 +46,7 @@ export const experiences = [
     endYear:     2020,
     description: 'Conducted computational social science research on opinion dynamics and polarisation propagation in large-scale social networks.',
     highlights: [
-      'Simulated polarisation models across networks of 100k+ nodes using Python and NetworkX',
-      'Produced a research paper submitted to IEEE SMC 2020',
+      'Simulated polarisation models across networks of 100k+ nodes using Python and NetworkX'
     ],
     tags: ['Python', 'NumPy', 'NetworkX', 'Research'],
   }),
@@ -67,7 +63,7 @@ export const experiences = [
       'Designed a sensor-integrated wearable safety backpack prototyped with Arduino and SolidWorks',
       'Collaborated with a cross-disciplinary team on a sustainable materials design challenge',
     ],
-    tags: ['Arduino', 'C', 'SolidWorks', 'Engineering Design'],
+    tags: ['Arduino', 'SolidWorks', 'Engineering Design'],
     image: '/assets/img/18.09_window.jpeg',
   }),
 ]
