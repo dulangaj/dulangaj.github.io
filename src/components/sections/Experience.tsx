@@ -24,6 +24,7 @@ function TimelineItem({ experience, index, isOpen, onToggle, onEnterViewport }: 
       delay={0.08 * index}
       className="border-b border-[var(--color-rule)] last:border-b-0"
       once={false}
+      viewportMargin="-45% 0px -45% 0px"
       onViewportEnter={onEnterViewport}
     >
       {/* Header row — always visible, click to toggle */}
