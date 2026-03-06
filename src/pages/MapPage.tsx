@@ -81,8 +81,8 @@ function FitBounds({ locations, enabled }: { locations: PhotoLocation[], enabled
 
 /* ─── Map state in URL ───────────────────────────────────────────────────── */
 
-const DEFAULT_CENTER: [number, number] = [25, 60]
-const DEFAULT_ZOOM = 3
+const DEFAULT_CENTER: [number, number] = [15, 97]
+const DEFAULT_ZOOM = 5
 const MIN_ZOOM = 2
 const MAX_ZOOM = 5
 
