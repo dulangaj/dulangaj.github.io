@@ -82,7 +82,7 @@ function FitBounds({ locations }: { locations: PhotoLocation[] }) {
 /* ─── Custom photo pin marker icon ──────────────────────────────────────── */
 
 function createPhotoIcon(photo: PhotoLocation, selected = false) {
-  const size = selected ? 60 : 50
+  const size = selected ? 70 : 56
   const border = selected ? 3 : 2.5
   return L.divIcon({
     html: `<div class="map-photo-pin${selected ? ' map-photo-pin--selected' : ''}" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
@@ -110,7 +110,7 @@ function createClusterIcon(cluster: any) {
     .sort((a, b) => b.date.localeCompare(a.date))
 
   const top  = photos[0]
-  const size = 54  // same visual weight as individual pins
+  const size = 60  // same visual weight as individual pins
 
   if (!top) {
     // Fallback: plain count bubble (should never occur in practice)
@@ -258,6 +258,7 @@ export function MapPage() {
           animate={true}
           iconCreateFunction={createClusterIcon}
           spiderfyOnMaxZoom={true}
+          spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={true}
         >
           {photoLocations.map((photo) => (
