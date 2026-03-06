@@ -184,6 +184,51 @@ const FILTER_OPTIONS = [
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
 
+interface ClusterMarker {
+  spiderfy: () => void
+}
+
+function PhotoMarkerClusters({
+  photos,
+  selectedId,
+  onMarkerClick,
+}: {
+  photos: PhotoLocation[]
+  selectedId?: string
+  onMarkerClick: (photo: PhotoLocation) => void
+}) {
+  const handleClusterClick = useCallback((event: unknown) => {
+    const cluster = (event as { layer?: ClusterMarker }).layer
+    if (!cluster) return
+    cluster.spiderfy()
+  }, [])
+
+  return (
+    <MarkerClusterGroup
+      chunkedLoading
+      showCoverageOnHover={false}
+      maxClusterRadius={80}
+      animate={true}
+      iconCreateFunction={createClusterIcon}
+      zoomToBoundsOnClick={false}
+      spiderfyOnMaxZoom={false}
+      spiderfyDistanceMultiplier={2}
+      removeOutsideVisibleBounds={true}
+      onClick={handleClusterClick}
+    >
+      {photos.map((photo) => (
+        <Marker
+          key={photo.id}
+          position={[photo.lat, photo.lng]}
+          icon={createPhotoIcon(photo, selectedId === photo.id)}
+          eventHandlers={{ click: () => onMarkerClick(photo) }}
+          ref={(m) => { if (m) (m as L.Marker & { __photo?: PhotoLocation }).__photo = photo }}
+        />
+      ))}
+    </MarkerClusterGroup>
+  )
+}
+
 /* ─── MapPage ────────────────────────────────────────────────────────────── */
 
 export function MapPage() {
@@ -364,29 +409,11 @@ export function MapPage() {
         <ThemeAwareTiles />
         <ZoomControls />
         <FitBounds locations={filteredPhotos} />
-
-        <MarkerClusterGroup
-          chunkedLoading
-          showCoverageOnHover={false}
-          maxClusterRadius={80}
-          animate={true}
-          iconCreateFunction={createClusterIcon}
-          spiderfyOnMaxZoom={true}
-          spiderfyDistanceMultiplier={2}
-          removeOutsideVisibleBounds={true}
-        >
-          {filteredPhotos.map((photo) => (
-            <Marker
-              key={photo.id}
-              position={[photo.lat, photo.lng]}
-              icon={createPhotoIcon(photo, visibleSelected?.id === photo.id)}
-              eventHandlers={{ click: () => handleMarkerClick(photo) }}
-              // Stamp photo data onto the Leaflet marker in the commit phase,
-              // before useEffect/addLayer runs — so createClusterIcon can read it.
-              ref={(m) => { if (m) (m as L.Marker & { __photo?: PhotoLocation }).__photo = photo }}
-            />
-          ))}
-        </MarkerClusterGroup>
+        <PhotoMarkerClusters
+          photos={filteredPhotos}
+          selectedId={visibleSelected?.id}
+          onMarkerClick={handleMarkerClick}
+        />
       </MapContainer>
 
       {/* ── Bottom sheet ────────────────────────────────────────────────── */}
