@@ -46,6 +46,7 @@ function ThemeAwareTiles() {
       key={tile.url}
       url={tile.url}
       attribution={tile.attribution}
+      minZoom={2}
       maxZoom={8}
       maxNativeZoom={7}
     />
@@ -239,6 +240,7 @@ export function MapPage() {
       <MapContainer
         center={[25, 60]}
         zoom={3}
+        minZoom={2}
         maxZoom={8}
         zoomControl={false}
         scrollWheelZoom={true}
