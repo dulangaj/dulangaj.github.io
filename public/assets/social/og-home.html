@@ -3,22 +3,17 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Dulanga Jayawardena Social Card</title>
+    <title>Social Card Option A</title>
     <style>
       :root {
         --paper: #f7f2ea;
-        --surface: rgba(255, 252, 247, 0.72);
         --ink: #171411;
-        --muted: #665d54;
         --line: rgba(124, 92, 56, 0.18);
         --accent: #b42318;
-        --accent-soft: rgba(180, 35, 24, 0.14);
         --shadow: rgba(21, 16, 11, 0.18);
       }
 
-      * {
-        box-sizing: border-box;
-      }
+      * { box-sizing: border-box; }
 
       body {
         margin: 0;
@@ -46,8 +41,7 @@
 
       .grain {
         opacity: 0.05;
-        background-image:
-          radial-gradient(rgba(20, 16, 12, 0.14) 0.7px, transparent 0.7px);
+        background-image: radial-gradient(rgba(20, 16, 12, 0.14) 0.7px, transparent 0.7px);
         background-size: 12px 12px;
         mix-blend-mode: multiply;
       }
@@ -71,18 +65,18 @@
         position: relative;
         z-index: 1;
         display: grid;
-        grid-template-columns: minmax(0, 1.18fr) 392px;
-        gap: 28px;
+        grid-template-columns: minmax(0, 1fr) 470px;
+        gap: 8px;
         align-items: center;
         height: 100%;
-        padding: 58px 72px;
+        padding: 58px 64px 58px 72px;
       }
 
       .eyebrow {
         display: inline-flex;
         align-items: center;
         gap: 16px;
-        margin-bottom: 28px;
+        margin-bottom: 26px;
         font-size: 17px;
         font-weight: 700;
         letter-spacing: 0.34em;
@@ -102,56 +96,39 @@
         margin: 0;
         max-width: 560px;
         font-family: Georgia, "Times New Roman", serif;
-        font-size: 86px;
-        line-height: 0.9;
-        letter-spacing: -0.04em;
+        font-size: 96px;
+        line-height: 0.88;
+        letter-spacing: -0.05em;
       }
 
-      .pills {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        margin-top: 26px;
-      }
-
-      .pill {
-        padding: 10px 16px;
-        border-radius: 999px;
-        background: var(--surface);
-        border: 1px solid rgba(126, 96, 67, 0.16);
-        box-shadow: 0 10px 24px rgba(255, 255, 255, 0.24) inset;
-        font-size: 15px;
-        font-weight: 600;
-        color: #433b33;
-        backdrop-filter: blur(14px);
+      .copy {
+        transform: translateX(14px);
       }
 
       .portrait-wrap {
         position: relative;
         justify-self: end;
+        transform: translateX(-28px);
       }
 
       .portrait-wrap::before {
         content: "";
         position: absolute;
-        inset: -22px -20px auto auto;
-        width: 150px;
-        height: 150px;
+        inset: -26px -22px auto auto;
+        width: 168px;
+        height: 168px;
         border-radius: 50%;
         background: radial-gradient(circle, rgba(180, 35, 24, 0.22), transparent 70%);
-        filter: blur(1px);
       }
 
       .portrait-panel {
         position: relative;
-        width: 392px;
-        height: 470px;
+        width: 470px;
+        height: 504px;
         overflow: hidden;
-        border-radius: 28px;
+        border-radius: 30px;
         border: 1px solid rgba(255, 255, 255, 0.55);
-        box-shadow:
-          0 22px 40px var(--shadow),
-          0 1px 0 rgba(255, 255, 255, 0.4) inset;
+        box-shadow: 0 22px 40px var(--shadow), 0 1px 0 rgba(255, 255, 255, 0.4) inset;
         background: #251f1a;
       }
 
@@ -169,18 +146,11 @@
       <div class="grain"></div>
       <div class="grid"></div>
       <div class="frame"></div>
-
       <div class="content">
-        <section>
+        <section class="copy">
           <div class="eyebrow">Dulanga Jayawardena</div>
           <h1>Builds financial systems.</h1>
-          <div class="pills">
-            <span class="pill">Risk</span>
-            <span class="pill">Trading</span>
-            <span class="pill">Platform</span>
-          </div>
         </section>
-
         <div class="portrait-wrap">
           <div class="portrait-panel">
             <img src="../img/profile.jpeg" alt="Portrait of Dulanga Jayawardena" />
