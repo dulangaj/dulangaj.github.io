@@ -19,6 +19,7 @@
  */
 
 import { rawExifData } from './generatedExif'
+import { generatedPhotoPostLinks, type GeneratedPhotoPostLink } from './generatedPhotoPostLinks'
 
 /* ─── Public types ───────────────────────────────────────────────────────── */
 
@@ -33,6 +34,7 @@ export interface PhotoLocation {
   location:       string   // Human-readable label shown on the map
   date:           string   // YYYY-MM-DD
   postId?:        string   // Route param for /post/:id (if linked to a post)
+  relatedPosts?:  GeneratedPhotoPostLink[]
   tags?:          string[]
   category?:      string
   locationSource: 'gps' | 'inferred'
@@ -231,6 +233,30 @@ function locationFromCoordinates(lat: number, lng: number): string {
   return `${formatCoordinate(lat, 'N', 'S')}, ${formatCoordinate(lng, 'E', 'W')}`
 }
 
+function titleFromPostId(postId: string): string {
+  const stem = postId.replace(/^\d{4}-\d{2}-\d{2}-/, '')
+  return stem.replace(/[-_]+/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
+}
+
+function relatedPostsFor(filename: string, overridePostId?: string): GeneratedPhotoPostLink[] {
+  const related = new Map<string, GeneratedPhotoPostLink>()
+  const generated = generatedPhotoPostLinks[filename] ?? []
+
+  if (overridePostId) {
+    const matchingGenerated = generated.find((post) => post.postId === overridePostId)
+    related.set(
+      overridePostId,
+      matchingGenerated ?? { postId: overridePostId, title: titleFromPostId(overridePostId) },
+    )
+  }
+
+  for (const post of generated) {
+    related.set(post.postId, post)
+  }
+
+  return Array.from(related.values()).sort((left, right) => right.postId.localeCompare(left.postId))
+}
+
 /* ─── Merged export ──────────────────────────────────────────────────────── */
 
 const filenames = Array.from(new Set([
@@ -250,6 +276,7 @@ export const photoLocations: PhotoLocation[] = filenames
 
     const lat = hasGPS ? exif.lat! : ov!.lat
     const lng = hasGPS ? exif.lng! : ov!.lng
+    const relatedPosts = relatedPostsFor(filename, ov?.postId)
 
     photos.push({
       id:             stripExtension(filename),
@@ -261,7 +288,8 @@ export const photoLocations: PhotoLocation[] = filenames
       subtitle:       ov?.subtitle,
       location:       ov?.location ?? locationFromCoordinates(lat, lng),
       date:           exif.date ?? dateFromFilename(filename),
-      postId:         ov?.postId,
+      postId:         ov?.postId ?? relatedPosts[0]?.postId,
+      relatedPosts:   relatedPosts.length > 0 ? relatedPosts : undefined,
       tags:           ov?.tags,
       category:       ov?.category,
       locationSource: hasGPS ? 'gps' : 'inferred',

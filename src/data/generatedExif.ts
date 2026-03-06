@@ -10,6 +10,16 @@ export interface ExifEntry {
 }
 
 export const rawExifData: Record<string, ExifEntry> = {
+  "15.02_moir.jpeg": {
+    "date": "2015-06-08",
+    "make": "Google",
+    "model": "Nexus 5"
+  },
+  "15.07_edexcel.jpeg": {
+    "date": "2015-12-14",
+    "make": "NIKON CORPORATION",
+    "model": "NIKON D90"
+  },
   "16.11_graduation.jpeg": {
     "date": "2016-11-17"
   },
@@ -18,13 +28,10 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 7"
   },
-  "15.02_moir.jpeg": {
-    "date": "2015-06-08"
-  },
-  "15.07_edexcel.jpeg": {
-    "date": "2015-12-14",
-    "make": "NIKON CORPORATION",
-    "model": "NIKON D90"
+  "18.10_canoe.jpeg": {
+    "date": "2018-10-06",
+    "make": "LG Electronics",
+    "model": "LG-F800L"
   },
   "18.10_roadTest.jpeg": {
     "date": "2018-10-15"
@@ -32,22 +39,10 @@ export const rawExifData: Record<string, ExifEntry> = {
   "18.11_stitching.jpeg": {
     "date": "2018-11-09"
   },
-  "18.10_canoe.jpeg": {
-    "date": "2018-10-06",
-    "make": "LG Electronics",
-    "model": "LG-F800L"
-  },
   "20.12_vbrands.jpeg": {
     "date": "1899-11-29",
     "make": "OLYMPUS IMAGING CORP.",
     "model": "E-PL3"
-  },
-  "25.04_torres_del_paine.jpeg": {
-    "lat": -50.942299999999996,
-    "lng": -72.93674722222222,
-    "date": "2025-05-01",
-    "make": "Apple",
-    "model": "iPhone 15 Pro Max"
   },
   "23.10_icc.jpeg": {
     "lat": 22.303725,
@@ -56,10 +51,10 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
-  "25.04_easter_island.jpeg": {
-    "lat": -27.125611111111112,
-    "lng": -109.27727777777778,
-    "date": "2025-05-04",
+  "25.04_torres_del_paine.jpeg": {
+    "lat": -50.942299999999996,
+    "lng": -72.93674722222222,
+    "date": "2025-05-01",
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
@@ -67,6 +62,13 @@ export const rawExifData: Record<string, ExifEntry> = {
     "date": "2022-05-03",
     "make": "Apple",
     "model": "iPhone 13 Pro"
+  },
+  "25.04_easter_island.jpeg": {
+    "lat": -27.125611111111112,
+    "lng": -109.27727777777778,
+    "date": "2025-05-04",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max"
   },
   "leaves.jpeg": {
     "date": "2023-03-31",

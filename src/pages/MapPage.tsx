@@ -418,25 +418,36 @@ export function MapPage() {
                     </div>
                   )}
 
-                  {/* Read post CTA */}
-                  {selected.postId && (
-                    <button
-                      onClick={() => navigate(`/post/${selected.postId}`)}
-                      className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-body text-[13px] font-medium transition-all duration-200 cursor-pointer border-none"
-                      style={{
-                        background: 'var(--color-crimson)',
-                        color:      '#fff',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.background = 'var(--color-crimson-hover)'
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.background = 'var(--color-crimson)'
-                      }}
-                    >
-                      <FiBookOpen size={14} />
-                      Read Post
-                    </button>
+                  {/* Related posts */}
+                  {selected.relatedPosts && selected.relatedPosts.length > 0 && (
+                    <div className="flex flex-col gap-2">
+                      <p
+                        className="font-mono text-[10px] tracking-[0.18em] uppercase"
+                        style={{ color: 'var(--color-subtle)' }}
+                      >
+                        {selected.relatedPosts.length === 1 ? 'Related Article' : 'Related Articles'}
+                      </p>
+                      {selected.relatedPosts.map((post) => (
+                        <button
+                          key={post.postId}
+                          onClick={() => navigate(`/post/${post.postId}`)}
+                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-body text-[13px] font-medium transition-all duration-200 cursor-pointer border-none"
+                          style={{
+                            background: 'var(--color-crimson)',
+                            color:      '#fff',
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.background = 'var(--color-crimson-hover)'
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.background = 'var(--color-crimson)'
+                          }}
+                        >
+                          <FiBookOpen size={14} />
+                          {post.title}
+                        </button>
+                      ))}
+                    </div>
                   )}
                 </div>
               </div>
