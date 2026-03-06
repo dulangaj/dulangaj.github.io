@@ -1,8 +1,16 @@
-import { useState, useEffect } from 'react'
+import { useSyncExternalStore } from 'react'
 
 type ThemePreference = 'light' | 'dark'
 
 const STORAGE_KEY = 'theme-preference'
+const THEME_EVENT = 'theme-preference-change'
+
+interface ThemeSnapshot {
+  preference: ThemePreference | null
+  isDark: boolean
+}
+
+let cachedSnapshot: ThemeSnapshot | null = null
 
 function getSystemDark(): boolean {
   return window.matchMedia('(prefers-color-scheme: dark)').matches
@@ -10,65 +18,105 @@ function getSystemDark(): boolean {
 
 function readStoredPreference(): ThemePreference | null {
   try {
-    const v = localStorage.getItem(STORAGE_KEY)
-    return v === 'light' || v === 'dark' ? v : null
+    const value = localStorage.getItem(STORAGE_KEY)
+    return value === 'light' || value === 'dark' ? value : null
   } catch {
     return null
   }
 }
 
+function readSnapshot(): ThemeSnapshot {
+  const preference = readStoredPreference()
+  const nextSnapshot = {
+    preference,
+    isDark: preference !== null ? preference === 'dark' : getSystemDark(),
+  }
+
+  if (
+    cachedSnapshot &&
+    cachedSnapshot.preference === nextSnapshot.preference &&
+    cachedSnapshot.isDark === nextSnapshot.isDark
+  ) {
+    return cachedSnapshot
+  }
+
+  cachedSnapshot = nextSnapshot
+  return nextSnapshot
+}
+
+function applyPreference(preference: ThemePreference | null) {
+  const root = document.documentElement
+
+  if (preference === null) {
+    root.removeAttribute('data-theme')
+  } else {
+    root.setAttribute('data-theme', preference)
+  }
+
+  try {
+    if (preference === null) {
+      localStorage.removeItem(STORAGE_KEY)
+    } else {
+      localStorage.setItem(STORAGE_KEY, preference)
+    }
+  } catch {
+    // Storage can be unavailable in privacy modes.
+  }
+
+  window.dispatchEvent(new Event(THEME_EVENT))
+}
+
+function subscribe(onStoreChange: () => void) {
+  const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)')
+  const handleThemeChange = () => onStoreChange()
+  const handleStorage = (event: StorageEvent) => {
+    if (event.key === STORAGE_KEY) {
+      onStoreChange()
+    }
+  }
+
+  window.addEventListener(THEME_EVENT, handleThemeChange)
+  window.addEventListener('storage', handleStorage)
+  mediaQuery.addEventListener('change', handleThemeChange)
+
+  return () => {
+    window.removeEventListener(THEME_EVENT, handleThemeChange)
+    window.removeEventListener('storage', handleStorage)
+    mediaQuery.removeEventListener('change', handleThemeChange)
+  }
+}
+
+function getServerSnapshot(): ThemeSnapshot {
+  return {
+    preference: null,
+    isDark: false,
+  }
+}
+
 /**
- * Manages light/dark theme.
+ * Shared light/dark theme state.
  *
  * Priority:
  *   1. Explicit user preference (stored in localStorage + data-theme on <html>)
- *   2. OS / system prefers-color-scheme (CSS handles this automatically)
+ *   2. OS / system prefers-color-scheme
  *
- * `isDark` reflects the currently active visual state regardless of source.
- * `toggle` switches between dark and light, saving the choice to localStorage.
- * Calling `reset` removes the explicit choice and defers back to system.
+ * All hook consumers subscribe to the same external snapshot so UI elements
+ * and the Leaflet tile layer stay in sync immediately.
  */
 export function useTheme() {
-  const [preference, setPreference] = useState<ThemePreference | null>(readStoredPreference)
-  const [isDark, setIsDark] = useState<boolean>(() => {
-    const stored = readStoredPreference()
-    return stored !== null ? stored === 'dark' : getSystemDark()
-  })
-
-  // Apply data-theme attribute and keep isDark in sync whenever preference changes
-  useEffect(() => {
-    const root = document.documentElement
-    if (preference === null) {
-      root.removeAttribute('data-theme')
-      setIsDark(getSystemDark())
-    } else {
-      root.setAttribute('data-theme', preference)
-      setIsDark(preference === 'dark')
-    }
-    try {
-      if (preference === null) {
-        localStorage.removeItem(STORAGE_KEY)
-      } else {
-        localStorage.setItem(STORAGE_KEY, preference)
-      }
-    } catch { /* storage unavailable */ }
-  }, [preference])
-
-  // Track system preference changes (only matters when no explicit preference)
-  useEffect(() => {
-    if (preference !== null) return
-    const mq = window.matchMedia('(prefers-color-scheme: dark)')
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches)
-    mq.addEventListener('change', handler)
-    return () => mq.removeEventListener('change', handler)
-  }, [preference])
+  const snapshot = useSyncExternalStore(subscribe, readSnapshot, getServerSnapshot)
 
   const toggle = () => {
-    setPreference((current) => {
-      if (current === null) return isDark ? 'light' : 'dark'
-      return current === 'dark' ? 'light' : 'dark'
-    })
+    const nextPreference =
+      snapshot.preference === null
+        ? (snapshot.isDark ? 'light' : 'dark')
+        : (snapshot.preference === 'dark' ? 'light' : 'dark')
+
+    applyPreference(nextPreference)
   }
 
-  return { isDark, toggle }
+  return {
+    isDark: snapshot.isDark,
+    toggle,
+  }
 }
