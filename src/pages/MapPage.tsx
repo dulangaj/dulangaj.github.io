@@ -77,14 +77,6 @@ function FitBounds({ locations }: { locations: PhotoLocation[] }) {
   return null
 }
 
-/* ─── Position → photo lookup (used by cluster icon creator) ────────────── */
-/* Each photo has a unique lat/lng (small offsets applied to nearby shots),  */
-/* so a 6-decimal-place key is collision-free across this dataset.           */
-
-const photoByKey = new Map<string, PhotoLocation>(
-  photoLocations.map((p) => [`${p.lat.toFixed(6)},${p.lng.toFixed(6)}`, p]),
-)
-
 /* ─── Custom photo pin marker icon ──────────────────────────────────────── */
 
 function createPhotoIcon(photo: PhotoLocation, selected = false) {
@@ -101,18 +93,17 @@ function createPhotoIcon(photo: PhotoLocation, selected = false) {
 /* ─── Custom cluster icon ────────────────────────────────────────────────── */
 /* Shows the most-recent photo in the cluster as a circular thumbnail,       */
 /* with a small crimson count badge at the bottom-right — Apple Photos style.*/
+/* Photo data is stamped onto each L.Marker via a ref callback (commit phase)*/
+/* so it is guaranteed present when addLayer triggers icon creation.         */
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createClusterIcon(cluster: any) {
   const count   = cluster.getChildCount()
-  const markers = cluster.getAllChildMarkers() as { getLatLng(): { lat: number; lng: number } }[]
+  const markers = cluster.getAllChildMarkers() as Array<{ __photo?: PhotoLocation }>
 
-  // Resolve each child marker to its PhotoLocation, then pick the most recent
+  // Each marker has __photo set via the ref callback before addLayer runs.
   const photos = markers
-    .map((m) => {
-      const ll = m.getLatLng()
-      return photoByKey.get(`${ll.lat.toFixed(6)},${ll.lng.toFixed(6)}`)
-    })
+    .map((m) => m.__photo)
     .filter((p): p is PhotoLocation => p !== undefined)
     .sort((a, b) => b.date.localeCompare(a.date))
 
@@ -260,7 +251,7 @@ export function MapPage() {
         <MarkerClusterGroup
           chunkedLoading
           showCoverageOnHover={false}
-          maxClusterRadius={55}
+          maxClusterRadius={80}
           animate={true}
           createClusterCustomIcon={createClusterIcon}
           spiderfyOnMaxZoom={true}
@@ -272,6 +263,9 @@ export function MapPage() {
               position={[photo.lat, photo.lng]}
               icon={createPhotoIcon(photo, selected?.id === photo.id)}
               eventHandlers={{ click: () => handleMarkerClick(photo) }}
+              // Stamp photo data onto the Leaflet marker in the commit phase,
+              // before useEffect/addLayer runs — so createClusterIcon can read it.
+              ref={(m) => { if (m) (m as L.Marker & { __photo?: PhotoLocation }).__photo = photo }}
             />
           ))}
         </MarkerClusterGroup>
