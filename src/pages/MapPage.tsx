@@ -621,7 +621,12 @@ export function MapPage() {
                       {visibleSelected.relatedPosts.map((post) => (
                         <button
                           key={post.postId}
-                          onClick={() => navigate(`/post/${post.postId}`)}
+                          onClick={() => navigate(`/post/${post.postId}`, {
+                            state: {
+                              backTo: '/map',
+                              backLabel: 'Back to map',
+                            },
+                          })}
                           className="w-full flex items-center gap-3 px-3 py-3 rounded-xl font-body text-[13px] font-medium transition-all duration-200 cursor-pointer"
                           style={{
                             background: 'var(--color-paper)',

@@ -44,7 +44,7 @@ export const rawExifData: Record<string, ExifEntry> = {
     "lng": 121.5396
   },
   "20.12_vbrands.jpeg": {
-    "date": "1899-11-29",
+    "date": "2020-11-30",
     "make": "OLYMPUS IMAGING CORP.",
     "model": "E-PL3"
   },
