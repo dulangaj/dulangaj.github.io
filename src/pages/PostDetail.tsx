@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import { useParams, Link } from 'react-router-dom'
+import { useParams, Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
@@ -15,7 +15,11 @@ import { Tag } from '@/components/ui/Tag'
 
 export function PostDetail() {
   const { id } = useParams<{ id: string }>()
+  const location = useLocation()
   const post = posts.find((p) => p.id === id)
+  const navigationState = location.state as { backTo?: string, backLabel?: string } | null
+  const backTo = navigationState?.backTo ?? '/'
+  const backLabel = navigationState?.backLabel ?? 'Back to portfolio'
 
   useEffect(() => { window.scrollTo(0, 0) }, [id])
 
@@ -73,10 +77,10 @@ export function PostDetail() {
             <p className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)] mb-4">404</p>
             <h1 className="font-display text-4xl text-[var(--color-ink)] mb-6">Post not found.</h1>
             <Link
-              to="/"
+              to={backTo}
               className="inline-flex items-center gap-2 font-mono text-[12px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
             >
-              <FiArrowLeft size={12} /> Back to portfolio
+              <FiArrowLeft size={12} /> {backLabel}
             </Link>
           </div>
         </main>
@@ -103,10 +107,10 @@ export function PostDetail() {
             className="mb-12"
           >
             <Link
-              to="/"
+              to={backTo}
               className="inline-flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
             >
-              <FiArrowLeft size={11} /> Back to portfolio
+              <FiArrowLeft size={11} /> {backLabel}
             </Link>
           </motion.div>
 

@@ -70,6 +70,7 @@ export const SiteConfig = new SiteConfigClass({
     { label: 'Experience',  href: '#experience'  },
     { label: 'Blog',        href: '#blog'        },
     { label: 'Contact',     href: '#contact'     },
+    { label: 'Map',         href: '/map'         },
   ],
   socials: [
     { platform: 'LinkedIn', url: 'https://linkedin.com/in/dulangaj', ariaLabel: 'LinkedIn profile' },

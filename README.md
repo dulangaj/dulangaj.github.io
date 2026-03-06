@@ -57,7 +57,7 @@ Each entry is a `Post` object. Fields:
 | `excerpt` | `string` | Short teaser shown on cards |
 | `date` | `string` | ISO date (`YYYY-MM-DD`) — controls ordering |
 | `category` | `string` | Label shown on cards (e.g. `'Work'`, `'Research'`) |
-| `image` | `string?` | Path to image in `assets/img/` |
+| `image` | `string?` | Path to image in `public/assets/img/` |
 | `readTime` | `number?` | Minutes — shown as "X min read" |
 | `link` | `string?` | External URL shown as CTA on detail page |
 | `file` | `string?` | Markdown filename stem in `_posts/` (see below) |
@@ -141,7 +141,7 @@ Drop a file at **`public/profile.jpg`**. The Hero section displays it in a circu
 
 ### 6. Images
 
-Place images in **`assets/img/`** and reference them as `/assets/img/filename.jpg`.
+Place images in **`public/assets/img/`** and reference them as `/assets/img/filename.jpg`.
 
 ---
 
@@ -153,7 +153,7 @@ Place images in **`assets/img/`** and reference them as `/assets/img/filename.jp
 | `src/data/posts.ts` | All posts and projects (single source of truth) |
 | `src/data/experiences.ts` | Work experience timeline |
 | `_posts/*.md` | Full article body for each post |
-| `assets/img/` | All images |
+| `public/assets/img/` | All images |
 | `public/profile.jpg` | Hero profile photo |
 
 ---
@@ -163,7 +163,7 @@ Place images in **`assets/img/`** and reference them as `/assets/img/filename.jp
 ```
 .
 ├── _posts/              # Markdown article bodies (loaded at build time via Vite glob)
-├── assets/img/          # Images referenced by posts and experiences
+├── public/assets/img/   # Images referenced by posts and experiences
 ├── public/              # Static assets served as-is (place profile.jpg here)
 ├── src/
 │   ├── components/

@@ -19,7 +19,7 @@ export const experiences = [
       'Automated end-of-day and QA workflows with Python, Perl, Bash, and SQL, while providing Level 3 support for JVM and C++ systems across four regions',
     ],
     tags: ['Java', 'Spring', 'Python', 'Perl', 'Bash', 'SQL', 'Kafka', 'MQ', 'Jenkins'],
-    image: '/assets/img/25.04_hongkong.jpeg',
+    image: '/assets/img/22_icc.jpeg',
   }),
   new Experience({
     id:          'vbrands',

@@ -6,7 +6,7 @@ categories: profile
 category: Work
 subtitle: Morgan Stanley
 tags: [Java, Kafka, KDB+, Spring Boot, Risk]
-image: 25.04_hongkong.jpeg
+image: 22_icc.jpeg
 read_time: 6
 ---
 
