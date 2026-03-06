@@ -7,8 +7,8 @@
  *
  * Markers:   circular photo thumbnails with a crimson brand ring.
  * Clusters:  count badge that groups nearby pins (react-leaflet-cluster).
- * Selection: clicking a pin slides up a Framer Motion bottom sheet with
- *            the full photo, metadata, and a link to the associated post.
+ * Selection: clicking a pin opens a responsive detail view with the full
+ *            photo, metadata, and related article links.
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react'
@@ -81,16 +81,31 @@ function FitBounds({ locations }: { locations: PhotoLocation[] }) {
 
 /* ─── Custom photo pin marker icon ──────────────────────────────────────── */
 
-function createPhotoIcon(photo: PhotoLocation, selected = false) {
-  const size = selected ? 70 : 56
-  const border = selected ? 3 : 2.5
-  return L.divIcon({
-    html: `<div class="map-photo-pin${selected ? ' map-photo-pin--selected' : ''}" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
-    className: '',
-    iconSize:   [size, size],
-    iconAnchor: [size / 2, size / 2],
-  })
+class PhotoIconFactory {
+  private readonly cache = new Map<string, L.DivIcon>()
+
+  get(photo: PhotoLocation, selected = false): L.DivIcon {
+    const state = selected ? 'selected' : 'default'
+    const cacheKey = `${photo.id}:${state}:${photo.thumbnail}`
+    const cached = this.cache.get(cacheKey)
+
+    if (cached) return cached
+
+    const size = selected ? 70 : 56
+    const border = selected ? 3 : 2.5
+    const icon = L.divIcon({
+      html: `<div class="map-photo-pin${selected ? ' map-photo-pin--selected' : ''}" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
+      className: '',
+      iconSize:   [size, size],
+      iconAnchor: [size / 2, size / 2],
+    })
+
+    this.cache.set(cacheKey, icon)
+    return icon
+  }
 }
+
+const photoIconFactory = new PhotoIconFactory()
 
 /* ─── Custom cluster icon ────────────────────────────────────────────────── */
 /* Shows the most-recent photo in the cluster as a circular thumbnail,       */
@@ -98,18 +113,38 @@ function createPhotoIcon(photo: PhotoLocation, selected = false) {
 /* Photo data is stamped onto each L.Marker via a ref callback (commit phase)*/
 /* so it is guaranteed present when addLayer triggers icon creation.         */
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-function createClusterIcon(cluster: any) {
-  const count   = cluster.getChildCount()
-  const markers = cluster.getAllChildMarkers() as Array<{ __photo?: PhotoLocation }>
+interface PhotoMarker extends L.Marker {
+  __photo?: PhotoLocation
+}
 
-  // Each marker has __photo set via the ref callback before addLayer runs.
-  const photos = markers
-    .map((m) => m.__photo)
-    .filter((p): p is PhotoLocation => p !== undefined)
-    .sort((a, b) => b.date.localeCompare(a.date))
+interface MarkerClusterLike {
+  getChildCount: () => number
+  getAllChildMarkers: () => PhotoMarker[]
+  spiderfy: () => void
+}
 
-  const top  = photos[0]
+interface MarkerClusterClickEvent {
+  layer?: MarkerClusterLike
+}
+
+function mostRecentPhoto(markers: PhotoMarker[]): PhotoLocation | null {
+  let latest: PhotoLocation | null = null
+
+  for (const marker of markers) {
+    const photo = marker.__photo
+    if (!photo) continue
+    if (!latest || photo.date > latest.date) {
+      latest = photo
+    }
+  }
+
+  return latest
+}
+
+function createClusterIcon(cluster: MarkerClusterLike) {
+  const count = cluster.getChildCount()
+  const top = mostRecentPhoto(cluster.getAllChildMarkers())
+
   const size = 60  // same visual weight as individual pins
 
   if (!top) {
@@ -184,10 +219,6 @@ const FILTER_OPTIONS = [
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
 
-interface ClusterMarker {
-  spiderfy: () => void
-}
-
 function PhotoMarkerClusters({
   photos,
   selectedId,
@@ -197,8 +228,8 @@ function PhotoMarkerClusters({
   selectedId?: string
   onMarkerClick: (photo: PhotoLocation) => void
 }) {
-  const handleClusterClick = useCallback((event: unknown) => {
-    const cluster = (event as { layer?: ClusterMarker }).layer
+  const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
+    const cluster = event.layer
     if (!cluster) return
     cluster.spiderfy()
   }, [])
@@ -220,9 +251,9 @@ function PhotoMarkerClusters({
         <Marker
           key={photo.id}
           position={[photo.lat, photo.lng]}
-          icon={createPhotoIcon(photo, selectedId === photo.id)}
+          icon={photoIconFactory.get(photo, selectedId === photo.id)}
           eventHandlers={{ click: () => onMarkerClick(photo) }}
-          ref={(m) => { if (m) (m as L.Marker & { __photo?: PhotoLocation }).__photo = photo }}
+          ref={(marker) => { if (marker) (marker as PhotoMarker).__photo = photo }}
         />
       ))}
     </MarkerClusterGroup>
