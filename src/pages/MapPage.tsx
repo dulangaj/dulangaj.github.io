@@ -47,8 +47,8 @@ function ThemeAwareTiles() {
       url={tile.url}
       attribution={tile.attribution}
       minZoom={2}
-      maxZoom={8}
-      maxNativeZoom={7}
+      maxZoom={5}
+      maxNativeZoom={5}
     />
   )
 }
@@ -440,7 +440,7 @@ export function MapPage() {
         center={[25, 60]}
         zoom={3}
         minZoom={2}
-        maxZoom={8}
+        maxZoom={5}
         zoomControl={false}
         scrollWheelZoom={true}
         style={{ width: '100%', height: '100%' }}
