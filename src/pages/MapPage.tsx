@@ -498,7 +498,7 @@ export function MapPage() {
                 <button
                   ref={closeButtonRef}
                   onClick={handleClose}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10 lg:top-3 lg:right-3 lg:translate-y-0"
                   style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                   aria-label="Close"
                 >
