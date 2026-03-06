@@ -14,7 +14,7 @@
  * marked locationSource: 'gps'. Otherwise the override coordinates are used and
  * the entry is marked locationSource: 'inferred'.
  *
- * To add a new photo: drop it in assets/img/, rebuild (EXIF is re-extracted
+ * To add a new photo: drop it in public/assets/img/, rebuild (EXIF is re-extracted
  * automatically), then add a matching entry to locationOverrides below.
  */
 
@@ -24,7 +24,7 @@ import { rawExifData } from './generatedExif'
 
 export interface PhotoLocation {
   id:             string
-  image:          string   // /assets/img/<filename>
+  image:          string   // /assets/img/<filename> served from public/assets/img/
   lat:            number
   lng:            number
   title:          string

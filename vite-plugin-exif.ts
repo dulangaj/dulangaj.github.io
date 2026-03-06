@@ -2,7 +2,7 @@
  * vite-plugin-exif.ts
  *
  * Build-time Vite plugin that reads EXIF metadata from every image in
- * assets/img/ and writes the results to src/data/generatedExif.ts.
+ * public/assets/img/ and writes the results to src/data/generatedExif.ts.
  *
  * This runs once when the Vite dev server starts and once at build time.
  * If a photo later gets proper GPS coordinates embedded, it will
@@ -23,16 +23,16 @@ interface ExifEntry {
 }
 
 async function extractAndWrite(root: string) {
-  const imgDir = path.join(root, 'assets', 'img')
+  const imgDir = path.join(root, 'public', 'assets', 'img')
   const outFile = path.join(root, 'src', 'data', 'generatedExif.ts')
 
   let files: string[]
   try {
-    files = (await fs.readdir(imgDir)).filter((f) =>
-      /\.(jpe?g|png|heic|webp)$/i.test(f),
-    )
+    files = (await fs.readdir(imgDir))
+      .filter((f) => /\.(jpe?g|png|heic|webp)$/i.test(f))
+      .sort((a, b) => a.localeCompare(b))
   } catch {
-    return // assets/img doesn't exist yet during first install
+    return // public/assets/img doesn't exist yet during first install
   }
 
   const entries: Record<string, ExifEntry> = {}
@@ -76,6 +76,9 @@ async function extractAndWrite(root: string) {
     `  model?: string\n` +
     `}\n\n` +
     `export const rawExifData: Record<string, ExifEntry> = ${body}\n`
+
+  const current = await fs.readFile(outFile, 'utf8').catch(() => null)
+  if (current === source) return
 
   await fs.writeFile(outFile, source, 'utf8')
   console.log(`[vite-plugin-exif] Wrote EXIF data for ${files.length} images → generatedExif.ts`)
