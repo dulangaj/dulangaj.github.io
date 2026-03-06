@@ -42,7 +42,7 @@ async function extractAndWrite(root: string) {
       try {
         const data = await exifr.parse(path.join(imgDir, file), {
           gps: true,
-          pick: ['GPSLatitude', 'GPSLongitude', 'latitude', 'longitude',
+          pick: ['GPSLatitude', 'GPSLongitude', 'GPSLatitudeRef', 'GPSLongitudeRef', 'latitude', 'longitude',
                  'DateTimeOriginal', 'CreateDate', 'Make', 'Model'],
         })
         if (!data) return

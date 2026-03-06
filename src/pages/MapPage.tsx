@@ -191,8 +191,7 @@ export function MapPage() {
     return () => window.removeEventListener('keydown', handler)
   }, [handleClose])
 
-  const countries = countUnique(photoLocations.map((p) => p.location.split(', ').at(-1) ?? ''))
-  const cities    = countUnique(photoLocations.map((p) => p.location.split(', ')[0]))
+  const mappedLocations = countUnique(photoLocations.map((p) => `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`))
 
   return (
     <div
@@ -227,7 +226,7 @@ export function MapPage() {
             My World
           </h1>
           <p className="font-body text-[11px] text-[var(--color-muted)] mt-0.5 leading-none">
-            {photoLocations.length} moments · {cities} cities · {countries} countries
+            {photoLocations.length} moments · {mappedLocations} mapped locations
           </p>
         </div>
 

@@ -8,11 +8,11 @@
  *
  *   2. locationOverrides below — manually maintained.
  *      Supplies coordinates for photos whose GPS was stripped (common when resizing
- *      for web), plus human-readable titles, location labels, and post links.
+ *      for web), plus nicer titles, location labels, and post links.
  *
- * When a photo has real EXIF GPS coordinates, those are used and the entry is
- * marked locationSource: 'gps'. Otherwise the override coordinates are used and
- * the entry is marked locationSource: 'inferred'.
+ * Any photo with real EXIF GPS metadata is included on the map automatically.
+ * Manual overrides are optional enrichment: they provide better labels and can
+ * also supply fallback coordinates when a photo has no embedded GPS.
  *
  * To add a new photo: drop it in public/assets/img/, rebuild (EXIF is re-extracted
  * automatically), then add a matching entry to locationOverrides below.
@@ -206,28 +206,70 @@ function dateFromFilename(filename: string): string {
   return `20${m[1]}-${m[2]}-01`
 }
 
+function stripExtension(filename: string): string {
+  return filename.replace(/\.[^.]+$/, '')
+}
+
+function labelFromFilename(filename: string): string {
+  const stem = stripExtension(filename)
+    .replace(/^\d{2}\.\d{2}_/, '')
+    .replace(/[_-]+/g, ' ')
+    .trim()
+
+  if (!stem) return 'Untitled Photo'
+
+  return stem.replace(/\b\w/g, (char) => char.toUpperCase())
+}
+
+function formatCoordinate(value: number, positive: string, negative: string): string {
+  const hemisphere = value >= 0 ? positive : negative
+  return `${Math.abs(value).toFixed(4)}° ${hemisphere}`
+}
+
+function locationFromCoordinates(lat: number, lng: number): string {
+  return `${formatCoordinate(lat, 'N', 'S')}, ${formatCoordinate(lng, 'E', 'W')}`
+}
+
 /* ─── Merged export ──────────────────────────────────────────────────────── */
 
-export const photoLocations: PhotoLocation[] = Object.entries(overrides).map(
-  ([filename, ov]) => {
+const filenames = Array.from(new Set([
+  ...Object.keys(overrides),
+  ...Object.entries(rawExifData)
+    .filter(([, exif]) => typeof exif.lat === 'number' && typeof exif.lng === 'number')
+    .map(([filename]) => filename),
+])).sort((a, b) => a.localeCompare(b))
+
+export const photoLocations: PhotoLocation[] = filenames
+  .reduce<PhotoLocation[]>((photos, filename) => {
+    const ov = overrides[filename]
     const exif = rawExifData[filename] ?? {}
     const hasGPS = typeof exif.lat === 'number' && typeof exif.lng === 'number'
 
-    return {
-      id:             filename.replace(/\.[^.]+$/, ''),
+    if (!ov && !hasGPS) return photos
+
+    const lat = hasGPS ? exif.lat! : ov!.lat
+    const lng = hasGPS ? exif.lng! : ov!.lng
+
+    photos.push({
+      id:             stripExtension(filename),
       image:          `/assets/img/${filename}`,
-      lat:            hasGPS ? exif.lat! : ov.lat,
-      lng:            hasGPS ? exif.lng! : ov.lng,
-      title:          ov.title,
-      subtitle:       ov.subtitle,
-      location:       ov.location,
+      lat,
+      lng,
+      title:          ov?.title ?? labelFromFilename(filename),
+      subtitle:       ov?.subtitle,
+      location:       ov?.location ?? locationFromCoordinates(lat, lng),
       date:           exif.date ?? dateFromFilename(filename),
-      postId:         ov.postId,
-      tags:           ov.tags,
-      category:       ov.category,
+      postId:         ov?.postId,
+      tags:           ov?.tags,
+      category:       ov?.category,
       locationSource: hasGPS ? 'gps' : 'inferred',
       cameraMake:     exif.make,
       cameraModel:    exif.model,
-    }
-  },
-)
+    })
+
+    return photos
+  }, [])
+  .sort((a, b) => {
+    if (a.date !== b.date) return b.date.localeCompare(a.date)
+    return a.title.localeCompare(b.title)
+  })
