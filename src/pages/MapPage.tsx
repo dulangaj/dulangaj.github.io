@@ -323,17 +323,6 @@ export function MapPage() {
                     className="w-full h-full object-cover"
                   />
 
-                  {/* GPS badge */}
-                  {selected.locationSource === 'gps' && (
-                    <div
-                      className="absolute top-3 left-3 flex items-center gap-1 px-2 py-1 rounded-full font-body text-[10px] font-medium text-white"
-                      style={{ background: 'rgba(220,38,38,0.85)', backdropFilter: 'blur(8px)' }}
-                    >
-                      <FiMapPin size={9} />
-                      GPS
-                    </div>
-                  )}
-
                   {/* Camera badge */}
                   {selected.cameraModel && (
                     <div
