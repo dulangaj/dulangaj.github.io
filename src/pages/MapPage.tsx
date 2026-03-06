@@ -77,6 +77,14 @@ function FitBounds({ locations }: { locations: PhotoLocation[] }) {
   return null
 }
 
+/* ─── Position → photo lookup (used by cluster icon creator) ────────────── */
+/* Each photo has a unique lat/lng (small offsets applied to nearby shots),  */
+/* so a 6-decimal-place key is collision-free across this dataset.           */
+
+const photoByKey = new Map<string, PhotoLocation>(
+  photoLocations.map((p) => [`${p.lat.toFixed(6)},${p.lng.toFixed(6)}`, p]),
+)
+
 /* ─── Custom photo pin marker icon ──────────────────────────────────────── */
 
 function createPhotoIcon(photo: PhotoLocation, selected = false) {
@@ -91,16 +99,49 @@ function createPhotoIcon(photo: PhotoLocation, selected = false) {
 }
 
 /* ─── Custom cluster icon ────────────────────────────────────────────────── */
+/* Shows the most-recent photo in the cluster as a circular thumbnail,       */
+/* with a small crimson count badge at the bottom-right — Apple Photos style.*/
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function createClusterIcon(cluster: any) {
-  const count = cluster.getChildCount()
-  const size  = count < 10 ? 44 : count < 100 ? 50 : 56
+  const count   = cluster.getChildCount()
+  const markers = cluster.getAllChildMarkers() as { getLatLng(): { lat: number; lng: number } }[]
+
+  // Resolve each child marker to its PhotoLocation, then pick the most recent
+  const photos = markers
+    .map((m) => {
+      const ll = m.getLatLng()
+      return photoByKey.get(`${ll.lat.toFixed(6)},${ll.lng.toFixed(6)}`)
+    })
+    .filter((p): p is PhotoLocation => p !== undefined)
+    .sort((a, b) => b.date.localeCompare(a.date))
+
+  const top  = photos[0]
+  const size = 54  // same visual weight as individual pins
+
+  if (!top) {
+    // Fallback: plain count bubble (should never occur in practice)
+    return L.divIcon({
+      html: `<div class="map-cluster-pin map-cluster-pin--fallback" style="width:${size}px;height:${size}px"><span>${count}</span></div>`,
+      className: '',
+      iconSize:   [size + 10, size + 10],
+      iconAnchor: [(size + 10) / 2, (size + 10) / 2],
+    })
+  }
+
+  // Outer div is slightly larger to accommodate the badge overhang
+  const outer = size + 10
   return L.divIcon({
-    html: `<div class="map-cluster-pin" style="width:${size}px;height:${size}px"><span>${count}</span></div>`,
+    html: `
+      <div class="map-cluster-wrap" style="width:${outer}px;height:${outer}px">
+        <div class="map-cluster-photo" style="width:${size}px;height:${size}px">
+          <img src="${top.image}" alt="" loading="lazy" />
+        </div>
+        <div class="map-cluster-badge">${count}</div>
+      </div>`,
     className: '',
-    iconSize:   [size, size],
-    iconAnchor: [size / 2, size / 2],
+    iconSize:   [outer, outer],
+    iconAnchor: [outer / 2, outer / 2],
   })
 }
 
