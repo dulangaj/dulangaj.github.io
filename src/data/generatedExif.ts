@@ -26,13 +26,13 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 7"
   },
+  "18.10_roadTest.jpeg": {
+    "date": "2018-10-15"
+  },
   "18.10_canoe.jpeg": {
     "date": "2018-10-06",
     "make": "LG Electronics",
     "model": "LG-F800L"
-  },
-  "18.10_roadTest.jpeg": {
-    "date": "2018-10-15"
   },
   "18.11_stitching.jpeg": {
     "date": "2018-11-09"
@@ -56,6 +56,13 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
+  "25.04_torres_del_paine.jpeg": {
+    "lat": -50.942299999999996,
+    "lng": -72.93674722222222,
+    "date": "2025-05-01",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max"
+  },
   "25.04_hongkong.jpeg": {
     "date": "2022-05-03",
     "make": "Apple",
@@ -68,13 +75,6 @@ export const rawExifData: Record<string, ExifEntry> = {
   },
   "litpak.jpeg": {
     "date": "2018-11-12"
-  },
-  "25.04_torres_del_paine.jpeg": {
-    "lat": -50.942299999999996,
-    "lng": -72.93674722222222,
-    "date": "2025-05-01",
-    "make": "Apple",
-    "model": "iPhone 15 Pro Max"
   },
   "pilpil.jpeg": {
     "date": "2025-04-30",

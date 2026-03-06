@@ -252,7 +252,7 @@ export function MapPage() {
           showCoverageOnHover={false}
           maxClusterRadius={80}
           animate={true}
-          createClusterCustomIcon={createClusterIcon}
+          iconCreateFunction={createClusterIcon}
           spiderfyOnMaxZoom={true}
           removeOutsideVisibleBounds={true}
         >
