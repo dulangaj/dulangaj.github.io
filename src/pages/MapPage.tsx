@@ -12,10 +12,10 @@
  */
 
 import { useState, useCallback, useEffect, useRef } from 'react'
-import { MapContainer, TileLayer, Marker, useMap } from 'react-leaflet'
+import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { motion, AnimatePresence } from 'framer-motion'
-import { useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight } from 'react-icons/fi'
@@ -67,15 +67,79 @@ function ZoomControls() {
 
 /* ─── Fit map to show all pins on first load ─────────────────────────────── */
 
-function FitBounds({ locations }: { locations: PhotoLocation[] }) {
+function FitBounds({ locations, enabled }: { locations: PhotoLocation[], enabled: boolean }) {
   const map = useMap()
   const fitted = useRef(false)
   useEffect(() => {
-    if (fitted.current || locations.length === 0) return
+    if (!enabled || fitted.current || locations.length === 0) return
     fitted.current = true
     const bounds = L.latLngBounds(locations.map((p) => [p.lat, p.lng]))
     map.fitBounds(bounds, { padding: [80, 80], maxZoom: 4 })
-  }, [map, locations])
+  }, [enabled, map, locations])
+  return null
+}
+
+/* ─── Map state in URL ───────────────────────────────────────────────────── */
+
+const DEFAULT_CENTER: [number, number] = [25, 60]
+const DEFAULT_ZOOM = 3
+const MIN_ZOOM = 2
+const MAX_ZOOM = 5
+
+interface MapViewport {
+  lat: number
+  lng: number
+  zoom: number
+}
+
+function parseCoordinate(value: string | null, fallback: number): number {
+  if (value === null) return fallback
+  const parsed = Number(value)
+  return Number.isFinite(parsed) ? parsed : fallback
+}
+
+function parseZoom(value: string | null, fallback: number): number {
+  const parsed = Number(value)
+  if (!Number.isFinite(parsed)) return fallback
+  return Math.min(MAX_ZOOM, Math.max(MIN_ZOOM, parsed))
+}
+
+function isFilterId(value: string | null): value is FilterId {
+  return value === 'all' || value === 'linked'
+}
+
+function initialPhotoFromId(id: string | null): PhotoLocation | null {
+  if (!id) return null
+  return photoLocations.find((photo) => photo.id === id) ?? null
+}
+
+function MapViewportSync({
+  onViewportChange,
+}: {
+  onViewportChange: (viewport: MapViewport) => void
+}) {
+  const updateViewport = useCallback((map: L.Map) => {
+    const center = map.getCenter()
+    onViewportChange({
+      lat: center.lat,
+      lng: center.lng,
+      zoom: map.getZoom(),
+    })
+  }, [onViewportChange])
+
+  const map = useMapEvents({
+    moveend() {
+      updateViewport(map)
+    },
+    zoomend() {
+      updateViewport(map)
+    },
+  })
+
+  useEffect(() => {
+    updateViewport(map)
+  }, [map, updateViewport])
+
   return null
 }
 
@@ -278,9 +342,23 @@ function PhotoMarkerClusters({
 /* ─── MapPage ────────────────────────────────────────────────────────────── */
 
 export function MapPage() {
+  const location = useLocation()
   const navigate = useNavigate()
-  const [selected, setSelected] = useState<PhotoLocation | null>(null)
-  const [activeFilter, setActiveFilter] = useState<FilterId>('all')
+  const [searchParams, setSearchParams] = useSearchParams()
+  const hasSavedViewport =
+    searchParams.has('lat') &&
+    searchParams.has('lng') &&
+    searchParams.has('z')
+  const filterParam = searchParams.get('filter')
+  const initialFilter: FilterId = isFilterId(filterParam) ? filterParam : 'all'
+  const initialSelected = initialPhotoFromId(searchParams.get('selected'))
+  const [selected, setSelected] = useState<PhotoLocation | null>(initialSelected)
+  const [activeFilter, setActiveFilter] = useState<FilterId>(initialFilter)
+  const [viewport, setViewport] = useState<MapViewport>({
+    lat: parseCoordinate(searchParams.get('lat'), DEFAULT_CENTER[0]),
+    lng: parseCoordinate(searchParams.get('lng'), DEFAULT_CENTER[1]),
+    zoom: parseZoom(searchParams.get('z'), DEFAULT_ZOOM),
+  })
   const [imageLoaded, setImageLoaded] = useState(false)
   const panelRef = useRef<HTMLDivElement | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
@@ -304,6 +382,24 @@ export function MapPage() {
   const visibleSelected = selected && filteredPhotos.some((photo) => photo.id === selected.id)
     ? selected
     : null
+
+  useEffect(() => {
+    const nextParams = new URLSearchParams()
+    nextParams.set('lat', viewport.lat.toFixed(5))
+    nextParams.set('lng', viewport.lng.toFixed(5))
+    nextParams.set('z', String(viewport.zoom))
+
+    if (activeFilter !== 'all') {
+      nextParams.set('filter', activeFilter)
+    }
+
+    if (visibleSelected) {
+      nextParams.set('selected', visibleSelected.id)
+    }
+
+    if (nextParams.toString() === searchParams.toString()) return
+    setSearchParams(nextParams, { replace: true })
+  }, [activeFilter, searchParams, setSearchParams, viewport, visibleSelected])
 
   useEffect(() => {
     if (!selected) return
@@ -437,10 +533,10 @@ export function MapPage() {
 
       {/* ── Map ─────────────────────────────────────────────────────────── */}
       <MapContainer
-        center={[25, 60]}
-        zoom={3}
-        minZoom={2}
-        maxZoom={5}
+        center={[viewport.lat, viewport.lng]}
+        zoom={viewport.zoom}
+        minZoom={MIN_ZOOM}
+        maxZoom={MAX_ZOOM}
         zoomControl={false}
         scrollWheelZoom={true}
         style={{ width: '100%', height: '100%' }}
@@ -448,7 +544,8 @@ export function MapPage() {
       >
         <ThemeAwareTiles />
         <ZoomControls />
-        <FitBounds locations={filteredPhotos} />
+        <MapViewportSync onViewportChange={setViewport} />
+        <FitBounds locations={filteredPhotos} enabled={!hasSavedViewport} />
         <PhotoMarkerClusters
           photos={filteredPhotos}
           selectedId={visibleSelected?.id}
@@ -623,7 +720,7 @@ export function MapPage() {
                           key={post.postId}
                           onClick={() => navigate(`/post/${post.postId}`, {
                             state: {
-                              backTo: '/map',
+                              backTo: `${location.pathname}${location.search}`,
                               backLabel: 'Back to map',
                             },
                           })}
