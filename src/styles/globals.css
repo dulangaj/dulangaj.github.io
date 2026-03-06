@@ -341,3 +341,12 @@ button:focus-visible,
    our React UI elements that float above the map */
 .leaflet-pane { z-index: auto; }
 .leaflet-marker-pane { z-index: 600; }
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}

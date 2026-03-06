@@ -18,7 +18,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera } from 'react-icons/fi'
+import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight } from 'react-icons/fi'
 import { useTheme } from '@/hooks/useTheme'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { photoLocations, type PhotoLocation } from '@/data/photoLocations'
@@ -172,28 +172,106 @@ function countUnique<T>(arr: T[]): number {
   return new Set(arr).size
 }
 
+const FILTER_OPTIONS = [
+  { id: 'all', label: 'All' },
+  { id: 'linked', label: 'Articles' },
+  { id: 'Work', label: 'Work' },
+  { id: 'Education', label: 'Education' },
+  { id: 'Engineering', label: 'Engineering' },
+  { id: 'Research', label: 'Research' },
+  { id: 'Personal', label: 'Personal' },
+] as const
+
+type FilterId = typeof FILTER_OPTIONS[number]['id']
+
 /* ─── MapPage ────────────────────────────────────────────────────────────── */
 
 export function MapPage() {
   const navigate = useNavigate()
   const [selected, setSelected] = useState<PhotoLocation | null>(null)
+  const [activeFilter, setActiveFilter] = useState<FilterId>('all')
+  const [imageLoaded, setImageLoaded] = useState(false)
+  const panelRef = useRef<HTMLDivElement | null>(null)
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
 
   const handleMarkerClick = useCallback((photo: PhotoLocation) => {
+    setImageLoaded(false)
     setSelected(photo)
   }, [])
 
-  const handleClose = useCallback(() => setSelected(null), [])
+  const handleClose = useCallback(() => {
+    setImageLoaded(false)
+    setSelected(null)
+  }, [])
 
-  // Close bottom sheet on Escape
+  const visibleFilters = FILTER_OPTIONS.filter((filter) => {
+    if (filter.id === 'all' || filter.id === 'linked') return true
+    return photoLocations.some((photo) => photo.category === filter.id)
+  })
+
+  const filteredPhotos = photoLocations.filter((photo) => {
+    if (activeFilter === 'all') return true
+    if (activeFilter === 'linked') return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
+    return photo.category === activeFilter
+  })
+  const visibleSelected = selected && filteredPhotos.some((photo) => photo.id === selected.id)
+    ? selected
+    : null
+
   useEffect(() => {
-    const handler = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') handleClose()
-    }
-    window.addEventListener('keydown', handler)
-    return () => window.removeEventListener('keydown', handler)
-  }, [handleClose])
+    if (!selected) return
 
-  const mappedLocations = countUnique(photoLocations.map((p) => `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`))
+    previousFocusRef.current = document.activeElement instanceof HTMLElement
+      ? document.activeElement
+      : null
+
+    closeButtonRef.current?.focus()
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        handleClose()
+        return
+      }
+
+      if (event.key !== 'Tab') return
+
+      const panel = panelRef.current
+      if (!panel) return
+
+      const focusable = Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((element) => !element.hasAttribute('disabled') && !element.getAttribute('aria-hidden'))
+
+      if (focusable.length === 0) {
+        event.preventDefault()
+        return
+      }
+
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      const active = document.activeElement
+
+      if (event.shiftKey && active === first) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault()
+        first.focus()
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown)
+      previousFocusRef.current?.focus()
+    }
+  }, [selected, handleClose])
+
+  const mappedLocations = countUnique(filteredPhotos.map((p) => `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`))
 
   return (
     <div
@@ -202,7 +280,7 @@ export function MapPage() {
     >
       {/* ── Header overlay ──────────────────────────────────────────────── */}
       <div
-        className="absolute top-0 left-0 right-0 z-[1000] flex items-center gap-4 px-6 py-3"
+        className="absolute top-0 left-0 right-0 z-[1000] flex flex-col gap-3 px-4 py-3 sm:px-6"
         style={{
           background:      'color-mix(in srgb, var(--color-paper) 88%, transparent)',
           backdropFilter:  'blur(14px)',
@@ -210,30 +288,66 @@ export function MapPage() {
           borderBottom:    '1px solid var(--color-rule)',
         }}
       >
-        {/* Back */}
-        <button
-          onClick={() => navigate('/')}
-          className="flex items-center gap-1.5 font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors cursor-pointer bg-transparent border-none"
-          aria-label="Back to home"
-        >
-          <FiArrowLeft size={15} />
-          <span className="hidden sm:inline">Back</span>
-        </button>
-
-        {/* Title */}
-        <div className="flex-1 min-w-0">
-          <h1
-            className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] leading-none"
+        <div className="flex items-center gap-4 w-full">
+          <button
+            onClick={() => navigate('/')}
+            className="flex items-center gap-1.5 font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors cursor-pointer bg-transparent border-none"
+            aria-label="Back to home"
           >
-            My World
-          </h1>
-          <p className="font-body text-[11px] text-[var(--color-muted)] mt-0.5 leading-none">
-            {photoLocations.length} moments · {mappedLocations} mapped locations
-          </p>
+            <FiArrowLeft size={15} />
+            <span className="hidden sm:inline">Back</span>
+          </button>
+
+          <div className="flex-1 min-w-0">
+            <h1
+              className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] leading-none"
+            >
+              My World
+            </h1>
+            <p className="font-body text-[11px] text-[var(--color-muted)] mt-0.5 leading-none">
+              {filteredPhotos.length} visible moments · {mappedLocations} mapped locations
+            </p>
+          </div>
+
+          <ThemeToggle />
         </div>
 
-        {/* Theme toggle */}
-        <ThemeToggle />
+        <div className="w-full overflow-x-auto no-scrollbar">
+          <div className="flex items-center gap-2 min-w-max">
+            {visibleFilters.map((filter) => {
+              const active = activeFilter === filter.id
+              return (
+                <button
+                  key={filter.id}
+                  onClick={() => {
+                    const nextFilter = filter.id
+                    setActiveFilter(nextFilter)
+                    if (selected) {
+                      const willRemainVisible = photoLocations.some((photo) => {
+                        if (photo.id !== selected.id) return false
+                        if (nextFilter === 'all') return true
+                        if (nextFilter === 'linked') return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
+                        return photo.category === nextFilter
+                      })
+
+                      if (!willRemainVisible) {
+                        handleClose()
+                      }
+                    }
+                  }}
+                  className="px-3 py-1.5 rounded-full font-body text-[12px] transition-colors duration-200 cursor-pointer"
+                  style={{
+                    background: active ? 'var(--color-crimson)' : 'var(--color-surface)',
+                    color: active ? '#fff' : 'var(--color-muted)',
+                    border: `1px solid ${active ? 'var(--color-crimson)' : 'var(--color-rule)'}`,
+                  }}
+                >
+                  {filter.label}
+                </button>
+              )
+            })}
+          </div>
+        </div>
       </div>
 
       {/* ── Map ─────────────────────────────────────────────────────────── */}
@@ -249,7 +363,7 @@ export function MapPage() {
       >
         <ThemeAwareTiles />
         <ZoomControls />
-        <FitBounds locations={photoLocations} />
+        <FitBounds locations={filteredPhotos} />
 
         <MarkerClusterGroup
           chunkedLoading
@@ -261,11 +375,11 @@ export function MapPage() {
           spiderfyDistanceMultiplier={2}
           removeOutsideVisibleBounds={true}
         >
-          {photoLocations.map((photo) => (
+          {filteredPhotos.map((photo) => (
             <Marker
               key={photo.id}
               position={[photo.lat, photo.lng]}
-              icon={createPhotoIcon(photo, selected?.id === photo.id)}
+              icon={createPhotoIcon(photo, visibleSelected?.id === photo.id)}
               eventHandlers={{ click: () => handleMarkerClick(photo) }}
               // Stamp photo data onto the Leaflet marker in the commit phase,
               // before useEffect/addLayer runs — so createClusterIcon can read it.
@@ -277,7 +391,7 @@ export function MapPage() {
 
       {/* ── Bottom sheet ────────────────────────────────────────────────── */}
       <AnimatePresence>
-        {selected && (
+        {visibleSelected && (
           <>
             {/* Scrim — tap to close */}
             <motion.div
@@ -286,8 +400,7 @@ export function MapPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-0 z-[1001]"
-              style={{ background: 'rgba(0,0,0,0.25)' }}
+              className="absolute inset-0 z-[1001] bg-black/25 lg:bg-transparent"
               onClick={handleClose}
               aria-hidden="true"
             />
@@ -296,35 +409,66 @@ export function MapPage() {
             <motion.div
               key="sheet"
               initial={{ y: '100%' }}
-              animate={{ y: 0 }}
-              exit={{ y: '100%' }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 28, stiffness: 260, mass: 0.8 }}
-              className="absolute bottom-0 left-0 right-0 z-[1002] max-h-[85vh] flex flex-col rounded-t-2xl overflow-hidden shadow-2xl"
-              style={{ background: 'var(--color-surface)', borderTop: '1px solid var(--color-rule)' }}
+              className="absolute bottom-0 left-0 right-0 z-[1002] max-h-[85vh] flex flex-col rounded-t-2xl overflow-hidden shadow-2xl lg:top-24 lg:right-6 lg:left-auto lg:w-[min(440px,38vw)] lg:max-h-[calc(100vh-7rem)] lg:rounded-2xl"
+              style={{
+                background: 'var(--color-surface)',
+                borderTop: '1px solid var(--color-rule)',
+                borderLeft: '1px solid var(--color-rule)',
+                borderRight: '1px solid var(--color-rule)',
+                borderBottom: '1px solid var(--color-rule)',
+              }}
               onClick={(e) => e.stopPropagation()}
               role="dialog"
-              aria-label={selected.title}
+              aria-modal="true"
+              aria-labelledby={`map-photo-title-${visibleSelected.id}`}
+              ref={panelRef}
             >
-              {/* Drag pill */}
-              <div className="flex justify-center pt-3 pb-1 flex-shrink-0">
-                <div
-                  className="w-9 h-1 rounded-full"
-                  style={{ background: 'var(--color-rule)' }}
-                />
+              <div className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)]">
+                <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
+                <button
+                  ref={closeButtonRef}
+                  onClick={handleClose}
+                  className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
+                  style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
+                  aria-label="Close"
+                >
+                  <FiX size={15} />
+                </button>
               </div>
 
               {/* Scrollable content */}
               <div className="overflow-y-auto overscroll-contain">
                 {/* Photo */}
-                <div className="relative w-full" style={{ aspectRatio: '16/9', background: 'var(--color-rule)' }}>
+                <div
+                  className="relative w-full overflow-hidden"
+                  style={{ aspectRatio: '16/9', background: 'var(--color-rule)' }}
+                >
                   <img
-                    src={selected.image}
-                    alt={selected.title}
-                    className="w-full h-full object-cover"
+                    src={visibleSelected.thumbnail}
+                    alt=""
+                    aria-hidden="true"
+                    className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-60"
+                  />
+                  <div className="absolute inset-0 bg-black/8" />
+                  {!imageLoaded && (
+                    <div
+                      className="absolute inset-0 animate-pulse"
+                      style={{ background: 'color-mix(in srgb, var(--color-rule) 78%, transparent)' }}
+                    />
+                  )}
+                  <img
+                    src={visibleSelected.image}
+                    alt={visibleSelected.title}
+                    className="relative z-[1] w-full h-full object-cover transition-opacity duration-300"
+                    style={{ opacity: imageLoaded ? 1 : 0 }}
+                    onLoad={() => setImageLoaded(true)}
                   />
 
                   {/* Camera badge */}
-                  {selected.cameraModel && (
+                  {visibleSelected.cameraModel && (
                     <div
                       className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full font-body text-[10px] font-medium"
                       style={{
@@ -334,7 +478,7 @@ export function MapPage() {
                       }}
                     >
                       <FiCamera size={9} />
-                      {selected.cameraModel}
+                      {visibleSelected.cameraModel}
                     </div>
                   )}
                 </div>
@@ -343,11 +487,11 @@ export function MapPage() {
                 <div className="px-5 pt-4 pb-6">
                   {/* Category + location */}
                   <div className="flex items-center gap-2 mb-2 flex-wrap">
-                    {selected.category && (
+                    {visibleSelected.category && (
                       <span
-                        className={`font-body text-[11px] font-medium px-2 py-0.5 rounded-full ${categoryColour(selected.category)}`}
+                        className={`font-body text-[11px] font-medium px-2 py-0.5 rounded-full ${categoryColour(visibleSelected.category)}`}
                       >
-                        {selected.category}
+                        {visibleSelected.category}
                       </span>
                     )}
                     <span
@@ -355,43 +499,53 @@ export function MapPage() {
                       style={{ color: 'var(--color-muted)' }}
                     >
                       <FiMapPin size={11} />
-                      {selected.location}
+                      {visibleSelected.location}
                     </span>
                   </div>
 
                   {/* Title */}
                   <h2
+                    id={`map-photo-title-${visibleSelected.id}`}
                     className="font-display text-[20px] sm:text-[22px] font-semibold leading-snug mb-1"
                     style={{ color: 'var(--color-ink)' }}
                   >
-                    {selected.title}
+                    {visibleSelected.title}
                   </h2>
 
                   {/* Subtitle */}
-                  {selected.subtitle && (
+                  {visibleSelected.subtitle && (
                     <p
                       className="font-body text-[13px] mb-3"
                       style={{ color: 'var(--color-muted)' }}
                     >
-                      {selected.subtitle}
+                      {visibleSelected.subtitle}
+                    </p>
+                  )}
+
+                  {visibleSelected.description && (
+                    <p
+                      className="font-body text-[13px] leading-relaxed mb-4"
+                      style={{ color: 'var(--color-muted)' }}
+                    >
+                      {visibleSelected.description}
                     </p>
                   )}
 
                   {/* Date */}
-                  {selected.date && (
+                  {visibleSelected.date && (
                     <div
                       className="flex items-center gap-1.5 font-body text-[12px] mb-4"
                       style={{ color: 'var(--color-subtle)' }}
                     >
                       <FiCalendar size={11} />
-                      {formatDate(selected.date)}
+                      {formatDate(visibleSelected.date)}
                     </div>
                   )}
 
                   {/* Tags */}
-                  {selected.tags && selected.tags.length > 0 && (
+                  {visibleSelected.tags && visibleSelected.tags.length > 0 && (
                     <div className="flex flex-wrap gap-1.5 mb-5">
-                      {selected.tags.map((tag) => (
+                      {visibleSelected.tags.map((tag) => (
                         <span
                           key={tag}
                           className="font-mono text-[10px] px-2 py-0.5 rounded"
@@ -408,48 +562,47 @@ export function MapPage() {
                   )}
 
                   {/* Related posts */}
-                  {selected.relatedPosts && selected.relatedPosts.length > 0 && (
+                  {visibleSelected.relatedPosts && visibleSelected.relatedPosts.length > 0 && (
                     <div className="flex flex-col gap-2">
                       <p
                         className="font-mono text-[10px] tracking-[0.18em] uppercase"
                         style={{ color: 'var(--color-subtle)' }}
                       >
-                        {selected.relatedPosts.length === 1 ? 'Related Article' : 'Related Articles'}
+                        {visibleSelected.relatedPosts.length === 1 ? 'Related Article' : 'Related Articles'}
                       </p>
-                      {selected.relatedPosts.map((post) => (
+                      {visibleSelected.relatedPosts.map((post) => (
                         <button
                           key={post.postId}
                           onClick={() => navigate(`/post/${post.postId}`)}
-                          className="w-full flex items-center justify-center gap-2 py-3 rounded-xl font-body text-[13px] font-medium transition-all duration-200 cursor-pointer border-none"
+                          className="w-full flex items-center gap-3 px-3 py-3 rounded-xl font-body text-[13px] font-medium transition-all duration-200 cursor-pointer"
                           style={{
-                            background: 'var(--color-crimson)',
-                            color:      '#fff',
+                            background: 'var(--color-paper)',
+                            color:      'var(--color-ink)',
+                            border:     '1px solid var(--color-rule)',
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--color-crimson-hover)'
+                            e.currentTarget.style.background = 'var(--color-surface)'
+                            e.currentTarget.style.borderColor = 'var(--color-crimson)'
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'var(--color-crimson)'
+                            e.currentTarget.style.background = 'var(--color-paper)'
+                            e.currentTarget.style.borderColor = 'var(--color-rule)'
                           }}
                         >
-                          <FiBookOpen size={14} />
-                          {post.title}
+                          <span
+                            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                            style={{ background: 'color-mix(in srgb, var(--color-crimson) 12%, transparent)', color: 'var(--color-crimson)' }}
+                          >
+                            <FiBookOpen size={14} />
+                          </span>
+                          <span className="flex-1 text-left">{post.title}</span>
+                          <FiArrowUpRight size={14} style={{ color: 'var(--color-subtle)' }} />
                         </button>
                       ))}
                     </div>
                   )}
                 </div>
               </div>
-
-              {/* Close button */}
-              <button
-                onClick={handleClose}
-                className="absolute top-4 right-4 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
-                style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
-                aria-label="Close"
-              >
-                <FiX size={15} />
-              </button>
             </motion.div>
           </>
         )}

@@ -20,6 +20,7 @@
 
 import { rawExifData } from './generatedExif'
 import { generatedPhotoPostLinks, type GeneratedPhotoPostLink } from './generatedPhotoPostLinks'
+import { photoMetadata, type PhotoMetadata } from './photoMetadata'
 
 /* ─── Public types ───────────────────────────────────────────────────────── */
 
@@ -31,6 +32,7 @@ export interface PhotoLocation {
   lng:            number
   title:          string
   subtitle?:      string
+  description?:   string
   location:       string   // Human-readable label shown on the map
   date:           string   // YYYY-MM-DD
   postId?:        string   // Route param for /post/:id (if linked to a post)
@@ -40,164 +42,6 @@ export interface PhotoLocation {
   locationSource: 'gps' | 'inferred'
   cameraMake?:    string
   cameraModel?:   string
-}
-
-/* ─── Manual location overrides ─────────────────────────────────────────── */
-/* Coordinates here are used only when the photo has no embedded GPS.        */
-/* They are derived from post/experience metadata or well-known landmarks.   */
-
-interface Override {
-  lat:       number
-  lng:       number
-  title:     string
-  subtitle?: string
-  location:  string
-  postId?:   string
-  tags?:     string[]
-  category?: string
-}
-
-const overrides: Record<string, Override> = {
-  '15.02_moir.jpeg': {
-    lat: 6.8778, lng: 79.8769,
-    title: 'Excelling at Elizabeth Moir School',
-    subtitle: 'Elizabeth Moir School',
-    location: 'Colombo, Sri Lanka',
-    postId: '2015-07-31-elizabeth-moir',
-    category: 'Education',
-    tags: ['A Levels', 'Edexcel', 'Mathematics'],
-  },
-  '15.07_edexcel.jpeg': {
-    lat: 6.9271, lng: 79.8612,
-    title: 'A Level Examinations',
-    subtitle: 'Edexcel · Sri Lanka',
-    location: 'Colombo, Sri Lanka',
-    category: 'Education',
-    tags: ['A Levels', 'Edexcel'],
-  },
-  '16.11_graduation.jpeg': {
-    lat: 22.4194, lng: 114.2063,
-    title: 'Studying Systems Engineering at CUHK',
-    subtitle: 'The Chinese University of Hong Kong',
-    location: 'Shatin, Hong Kong',
-    postId: '2020-06-30-cuhk-systems-engineering',
-    category: 'Education',
-    tags: ['Systems Engineering', 'CUHK', 'Hong Kong'],
-  },
-  '17.12_heatmap.png': {
-    lat: 22.4196, lng: 114.2060,
-    title: 'Restaurant Recommender — Heatmap Analysis',
-    subtitle: 'Academic Project · CUHK',
-    location: 'Shatin, Hong Kong',
-    postId: '2017-12-01-restaurant-recommender',
-    category: 'Engineering',
-    tags: ['Python', 'Machine Learning', 'Data Visualization'],
-  },
-  '18.09_window.jpeg': {
-    lat: 43.7022, lng: -72.2896,
-    title: 'Exchange Semester at Dartmouth College',
-    subtitle: 'Dartmouth College',
-    location: 'Hanover, NH, USA',
-    postId: '2018-12-01-dartmouth-engineering-exchange',
-    category: 'Education',
-    tags: ['Dartmouth', 'Engineering', 'Exchange'],
-  },
-  '18.10_canoe.jpeg': {
-    lat: 43.6983, lng: -72.3067,
-    title: 'Canoeing on the Connecticut River',
-    subtitle: 'Hanover, New Hampshire',
-    location: 'Hanover, NH, USA',
-    category: 'Personal',
-    tags: ['Dartmouth', 'Outdoors'],
-  },
-  '18.10_roadTest.jpeg': {
-    lat: 43.7035, lng: -72.2889,
-    title: 'Road Test',
-    subtitle: 'Hanover, New Hampshire',
-    location: 'Hanover, NH, USA',
-    category: 'Personal',
-    tags: ['Dartmouth'],
-  },
-  '18.11_stitching.jpeg': {
-    lat: 43.7042, lng: -72.2897,
-    title: 'Lit Pak — Stitching the Prototype',
-    subtitle: 'Thayer School of Engineering',
-    location: 'Hanover, NH, USA',
-    postId: '2018-12-01-wearable-safety-backpack',
-    category: 'Engineering',
-    tags: ['Arduino', 'IoT', 'Design'],
-  },
-  '18.12_cad.png': {
-    lat: 43.7048, lng: -72.2885,
-    title: 'CAD Design at Thayer School',
-    subtitle: 'Dartmouth Engineering Exchange',
-    location: 'Hanover, NH, USA',
-    postId: '2018-12-01-dartmouth-engineering-exchange',
-    category: 'Engineering',
-    tags: ['SolidWorks', 'CAD', 'Dartmouth'],
-  },
-  '19.05_hkie.jpeg': {
-    lat: 22.3193, lng: 114.1694,
-    title: 'HKIE Annual Dinner',
-    subtitle: 'Hong Kong Institution of Engineers',
-    location: 'Kowloon, Hong Kong',
-    category: 'Work',
-    tags: ['Engineering', 'Hong Kong'],
-  },
-  '20.12_vbrands.jpeg': {
-    lat: 22.2800, lng: 114.1838,
-    title: 'VBrands — Technology Consultant',
-    subtitle: 'VBrands',
-    location: 'Causeway Bay, Hong Kong',
-    postId: '2020-12-31-vbrands',
-    category: 'Work',
-    tags: ['Python', 'E-commerce', 'Automation'],
-  },
-  '23.10_icc.jpeg': {
-    // Real GPS in EXIF — these coords used only if EXIF extraction fails
-    lat: 22.303725, lng: 114.16009,
-    title: 'ICC — International Commerce Centre',
-    subtitle: 'West Kowloon, Hong Kong',
-    location: 'West Kowloon, Hong Kong',
-    category: 'Personal',
-    tags: ['Hong Kong', 'Architecture'],
-  },
-  '25.04_hongkong.jpeg': {
-    lat: 22.2796, lng: 114.1666,
-    title: 'Building Software for Equity Risk Management at Morgan Stanley',
-    subtitle: 'Morgan Stanley',
-    location: 'Central, Hong Kong',
-    postId: '2025-05-01-morgan-stanley-equity-risk',
-    category: 'Work',
-    tags: ['Java', 'Kafka', 'KDB+', 'Spring Boot', 'Risk'],
-  },
-  'leaves.jpeg': {
-    lat: 22.4190, lng: 114.2075,
-    title: 'Simulating Opinion Dynamics in Social Networks',
-    subtitle: 'Research · CUHK',
-    location: 'Shatin, Hong Kong',
-    postId: '2020-05-31-social-network-opinion-dynamics',
-    category: 'Research',
-    tags: ['Python', 'NumPy', 'NetworkX', 'Research'],
-  },
-  'litpak.jpeg': {
-    lat: 43.7055, lng: -72.2901,
-    title: 'Lit Pak — Wearable Safety Backpack',
-    subtitle: 'Dartmouth Engineering Exchange',
-    location: 'Hanover, NH, USA',
-    postId: '2018-12-01-wearable-safety-backpack',
-    category: 'Engineering',
-    tags: ['Arduino', 'IoT', 'SolidWorks'],
-  },
-  'pilpil.jpeg': {
-    lat: 22.4478, lng: 114.1684,
-    title: 'Restaurant Recommender — Data-Driven Discovery',
-    subtitle: 'Open Rice · Tai Po',
-    location: 'Tai Po, Hong Kong',
-    postId: '2017-12-01-restaurant-recommender',
-    category: 'Engineering',
-    tags: ['Python', 'Machine Learning', 'Collaborative Filtering'],
-  },
 }
 
 /* ─── Date helpers ───────────────────────────────────────────────────────── */
@@ -238,15 +82,15 @@ function titleFromPostId(postId: string): string {
   return stem.replace(/[-_]+/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
 }
 
-function relatedPostsFor(filename: string, overridePostId?: string): GeneratedPhotoPostLink[] {
+function relatedPostsFor(filename: string, metadata?: PhotoMetadata): GeneratedPhotoPostLink[] {
   const related = new Map<string, GeneratedPhotoPostLink>()
-  const generated = generatedPhotoPostLinks[filename] ?? []
+  const generated = metadata?.disableGeneratedPosts ? [] : generatedPhotoPostLinks[filename] ?? []
 
-  if (overridePostId) {
-    const matchingGenerated = generated.find((post) => post.postId === overridePostId)
+  if (metadata?.postId) {
+    const matchingGenerated = generated.find((post) => post.postId === metadata.postId)
     related.set(
-      overridePostId,
-      matchingGenerated ?? { postId: overridePostId, title: titleFromPostId(overridePostId) },
+      metadata.postId,
+      matchingGenerated ?? { postId: metadata.postId, title: titleFromPostId(metadata.postId) },
     )
   }
 
@@ -260,7 +104,7 @@ function relatedPostsFor(filename: string, overridePostId?: string): GeneratedPh
 /* ─── Merged export ──────────────────────────────────────────────────────── */
 
 const filenames = Array.from(new Set([
-  ...Object.keys(overrides),
+  ...Object.keys(photoMetadata),
   ...Object.entries(rawExifData)
     .filter(([, exif]) => typeof exif.lat === 'number' && typeof exif.lng === 'number')
     .map(([filename]) => filename),
@@ -268,15 +112,16 @@ const filenames = Array.from(new Set([
 
 export const photoLocations: PhotoLocation[] = filenames
   .reduce<PhotoLocation[]>((photos, filename) => {
-    const ov = overrides[filename]
+    const metadata = photoMetadata[filename]
     const exif = rawExifData[filename] ?? {}
     const hasGPS = typeof exif.lat === 'number' && typeof exif.lng === 'number'
 
-    if (!ov && !hasGPS) return photos
+    if (!metadata && !hasGPS) return photos
+    if (!hasGPS && (typeof metadata?.lat !== 'number' || typeof metadata?.lng !== 'number')) return photos
 
-    const lat = hasGPS ? exif.lat! : ov!.lat
-    const lng = hasGPS ? exif.lng! : ov!.lng
-    const relatedPosts = relatedPostsFor(filename, ov?.postId)
+    const lat = hasGPS ? exif.lat! : metadata!.lat!
+    const lng = hasGPS ? exif.lng! : metadata!.lng!
+    const relatedPosts = relatedPostsFor(filename, metadata)
 
     photos.push({
       id:             stripExtension(filename),
@@ -284,14 +129,15 @@ export const photoLocations: PhotoLocation[] = filenames
       thumbnail:      `/assets/img/thumbs/${filename}`,
       lat,
       lng,
-      title:          ov?.title ?? labelFromFilename(filename),
-      subtitle:       ov?.subtitle,
-      location:       ov?.location ?? locationFromCoordinates(lat, lng),
+      title:          metadata?.title ?? labelFromFilename(filename),
+      subtitle:       metadata?.subtitle,
+      description:    metadata?.description,
+      location:       metadata?.location ?? locationFromCoordinates(lat, lng),
       date:           exif.date ?? dateFromFilename(filename),
-      postId:         ov?.postId ?? relatedPosts[0]?.postId,
+      postId:         metadata?.postId ?? relatedPosts[0]?.postId,
       relatedPosts:   relatedPosts.length > 0 ? relatedPosts : undefined,
-      tags:           ov?.tags,
-      category:       ov?.category,
+      tags:           metadata?.tags,
+      category:       metadata?.category,
       locationSource: hasGPS ? 'gps' : 'inferred',
       cameraMake:     exif.make,
       cameraModel:    exif.model,

@@ -15,13 +15,11 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Google",
     "model": "Nexus 5"
   },
-  "15.07_edexcel.jpeg": {
-    "date": "2015-12-14",
-    "make": "NIKON CORPORATION",
-    "model": "NIKON D90"
-  },
   "16.11_graduation.jpeg": {
     "date": "2016-11-17"
+  },
+  "18.11_stitching.jpeg": {
+    "date": "2018-11-09"
   },
   "18.09_window.jpeg": {
     "date": "2018-09-07",
@@ -36,12 +34,21 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "LG Electronics",
     "model": "LG-F800L"
   },
-  "18.11_stitching.jpeg": {
-    "date": "2018-11-09"
+  "15.07_edexcel.jpeg": {
+    "date": "2015-12-14",
+    "make": "NIKON CORPORATION",
+    "model": "NIKON D90"
   },
   "19.05_hkie.jpeg": {
     "lat": 25.0174,
     "lng": 121.5396
+  },
+  "25.04_easter_island.jpeg": {
+    "lat": -27.125611111111112,
+    "lng": -109.27727777777778,
+    "date": "2025-05-04",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max"
   },
   "20.12_vbrands.jpeg": {
     "date": "1899-11-29",
@@ -55,12 +62,10 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
-  "25.04_easter_island.jpeg": {
-    "lat": -27.125611111111112,
-    "lng": -109.27727777777778,
-    "date": "2025-05-04",
+  "25.04_hongkong.jpeg": {
+    "date": "2022-05-03",
     "make": "Apple",
-    "model": "iPhone 15 Pro Max"
+    "model": "iPhone 13 Pro"
   },
   "25.04_torres_del_paine.jpeg": {
     "lat": -50.942299999999996,
@@ -69,16 +74,6 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
-  "leaves.jpeg": {
-    "date": "2023-03-31",
-    "make": "Apple",
-    "model": "iPhone 13 Pro"
-  },
-  "25.04_hongkong.jpeg": {
-    "date": "2022-05-03",
-    "make": "Apple",
-    "model": "iPhone 13 Pro"
-  },
   "litpak.jpeg": {
     "date": "2018-11-12"
   },
@@ -86,6 +81,11 @@ export const rawExifData: Record<string, ExifEntry> = {
     "date": "2025-04-30",
     "make": "Apple",
     "model": "iPhone 13 Pro Max"
+  },
+  "leaves.jpeg": {
+    "date": "2023-03-31",
+    "make": "Apple",
+    "model": "iPhone 13 Pro"
   },
   "profile.jpeg": {
     "date": "2022-12-16",
