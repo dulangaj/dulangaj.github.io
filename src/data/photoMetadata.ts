@@ -111,10 +111,10 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     category: 'Travel',
   },
   '25.04_easter_island.jpeg': {
-    title: 'Ahu Tongariki at Sunrise',
+    title: 'Ahu Tongariki',
     subtitle: 'Rapa Nui',
     location: 'Easter Island, Chile',
-    description: 'A dawn view across the moai at Ahu Tongariki on Easter Island.',
+    description: 'A view across the moai at Ahu Tongariki on Easter Island.',
     category: 'Travel',
   },
   '22_icc.jpeg': {
