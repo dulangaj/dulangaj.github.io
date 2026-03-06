@@ -8,7 +8,7 @@
  *
  *   2. locationOverrides below — manually maintained.
  *      Supplies coordinates for photos whose GPS was stripped (common when resizing
- *      for web), plus nicer titles, location labels, and post links.
+ *      for web), plus nicer titles and location labels.
  *
  * Any photo with real EXIF GPS metadata is included on the map automatically.
  * Manual overrides are optional enrichment: they provide better labels and can
@@ -20,7 +20,7 @@
 
 import { rawExifData } from './generatedExif'
 import { generatedPhotoPostLinks, type GeneratedPhotoPostLink } from './generatedPhotoPostLinks'
-import { photoMetadata, type PhotoMetadata } from './photoMetadata'
+import { photoMetadata, type PhotoCategory, type PhotoMetadata } from './photoMetadata'
 
 /* ─── Public types ───────────────────────────────────────────────────────── */
 
@@ -35,10 +35,8 @@ export interface PhotoLocation {
   description?:   string
   location:       string   // Human-readable label shown on the map
   date:           string   // YYYY-MM-DD
-  postId?:        string   // Route param for /post/:id (if linked to a post)
   relatedPosts?:  GeneratedPhotoPostLink[]
-  tags?:          string[]
-  category?:      string
+  category?:      PhotoCategory
   locationSource: 'gps' | 'inferred'
   cameraMake?:    string
   cameraModel?:   string
@@ -77,28 +75,10 @@ function locationFromCoordinates(lat: number, lng: number): string {
   return `${formatCoordinate(lat, 'N', 'S')}, ${formatCoordinate(lng, 'E', 'W')}`
 }
 
-function titleFromPostId(postId: string): string {
-  const stem = postId.replace(/^\d{4}-\d{2}-\d{2}-/, '')
-  return stem.replace(/[-_]+/g, ' ').replace(/\b\w/g, (char) => char.toUpperCase())
-}
-
 function relatedPostsFor(filename: string, metadata?: PhotoMetadata): GeneratedPhotoPostLink[] {
-  const related = new Map<string, GeneratedPhotoPostLink>()
-  const generated = metadata?.disableGeneratedPosts ? [] : generatedPhotoPostLinks[filename] ?? []
-
-  if (metadata?.postId) {
-    const matchingGenerated = generated.find((post) => post.postId === metadata.postId)
-    related.set(
-      metadata.postId,
-      matchingGenerated ?? { postId: metadata.postId, title: titleFromPostId(metadata.postId) },
-    )
-  }
-
-  for (const post of generated) {
-    related.set(post.postId, post)
-  }
-
-  return Array.from(related.values()).sort((left, right) => right.postId.localeCompare(left.postId))
+  if (metadata?.disableGeneratedPosts) return []
+  return [...(generatedPhotoPostLinks[filename] ?? [])]
+    .sort((left, right) => right.postId.localeCompare(left.postId))
 }
 
 /* ─── Merged export ──────────────────────────────────────────────────────── */
@@ -134,9 +114,7 @@ export const photoLocations: PhotoLocation[] = filenames
       description:    metadata?.description,
       location:       metadata?.location ?? locationFromCoordinates(lat, lng),
       date:           exif.date ?? dateFromFilename(filename),
-      postId:         metadata?.postId ?? relatedPosts[0]?.postId,
       relatedPosts:   relatedPosts.length > 0 ? relatedPosts : undefined,
-      tags:           metadata?.tags,
       category:       metadata?.category,
       locationSource: hasGPS ? 'gps' : 'inferred',
       cameraMake:     exif.make,

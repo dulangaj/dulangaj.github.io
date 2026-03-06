@@ -1,3 +1,5 @@
+export type PhotoCategory = 'Education' | 'Work' | 'Travel'
+
 export interface PhotoMetadata {
   lat?: number
   lng?: number
@@ -5,9 +7,7 @@ export interface PhotoMetadata {
   subtitle?: string
   location?: string
   description?: string
-  postId?: string
-  tags?: string[]
-  category?: string
+  category?: PhotoCategory
   disableGeneratedPosts?: boolean
 }
 
@@ -18,9 +18,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Excelling at Elizabeth Moir School',
     subtitle: 'Elizabeth Moir School',
     location: 'Colombo, Sri Lanka',
-    postId: '2015-07-31-elizabeth-moir',
     category: 'Education',
-    tags: ['A Levels', 'Edexcel', 'Mathematics'],
   },
   '15.07_edexcel.jpeg': {
     lat: 6.9271,
@@ -29,7 +27,6 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Edexcel · Sri Lanka',
     location: 'Colombo, Sri Lanka',
     category: 'Education',
-    tags: ['A Levels', 'Edexcel'],
   },
   '16.11_graduation.jpeg': {
     lat: 22.4194,
@@ -37,9 +34,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Studying Systems Engineering at CUHK',
     subtitle: 'The Chinese University of Hong Kong',
     location: 'Shatin, Hong Kong',
-    postId: '2020-06-30-cuhk-systems-engineering',
     category: 'Education',
-    tags: ['Systems Engineering', 'CUHK', 'Hong Kong'],
   },
   '17.12_heatmap.png': {
     lat: 22.4196,
@@ -47,9 +42,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Restaurant Recommender — Heatmap Analysis',
     subtitle: 'Academic Project · CUHK',
     location: 'Shatin, Hong Kong',
-    postId: '2017-12-01-restaurant-recommender',
-    category: 'Engineering',
-    tags: ['Python', 'Machine Learning', 'Data Visualization'],
+    category: 'Education',
   },
   '18.09_window.jpeg': {
     lat: 43.7022,
@@ -57,9 +50,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Exchange Semester at Dartmouth College',
     subtitle: 'Dartmouth College',
     location: 'Hanover, NH, USA',
-    postId: '2018-12-01-dartmouth-engineering-exchange',
     category: 'Education',
-    tags: ['Dartmouth', 'Engineering', 'Exchange'],
   },
   '18.10_canoe.jpeg': {
     lat: 43.6983,
@@ -67,8 +58,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Canoeing on the Connecticut River',
     subtitle: 'Hanover, New Hampshire',
     location: 'Hanover, NH, USA',
-    category: 'Personal',
-    tags: ['Dartmouth', 'Outdoors'],
+    category: 'Travel',
   },
   '18.10_roadTest.jpeg': {
     lat: 43.7035,
@@ -76,8 +66,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Road Test',
     subtitle: 'Hanover, New Hampshire',
     location: 'Hanover, NH, USA',
-    category: 'Personal',
-    tags: ['Dartmouth'],
+    category: 'Travel',
   },
   '18.11_stitching.jpeg': {
     lat: 43.7042,
@@ -85,9 +74,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Lit Pak — Stitching the Prototype',
     subtitle: 'Thayer School of Engineering',
     location: 'Hanover, NH, USA',
-    postId: '2018-12-01-wearable-safety-backpack',
-    category: 'Engineering',
-    tags: ['Arduino', 'IoT', 'Design'],
+    category: 'Education',
   },
   '18.12_cad.png': {
     lat: 43.7048,
@@ -95,9 +82,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'CAD Design at Thayer School',
     subtitle: 'Dartmouth Engineering Exchange',
     location: 'Hanover, NH, USA',
-    postId: '2018-12-01-dartmouth-engineering-exchange',
-    category: 'Engineering',
-    tags: ['SolidWorks', 'CAD', 'Dartmouth'],
+    category: 'Education',
   },
   '19.05_hkie.jpeg': {
     lat: 22.3193,
@@ -106,7 +91,6 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Hong Kong Institution of Engineers',
     location: 'Kowloon, Hong Kong',
     category: 'Work',
-    tags: ['Engineering', 'Hong Kong'],
   },
   '20.12_vbrands.jpeg': {
     lat: 22.2800,
@@ -114,9 +98,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'VBrands — Technology Consultant',
     subtitle: 'VBrands',
     location: 'Causeway Bay, Hong Kong',
-    postId: '2020-12-31-vbrands',
     category: 'Work',
-    tags: ['Python', 'E-commerce', 'Automation'],
   },
   '23.10_icc.jpeg': {
     lat: 22.303725,
@@ -124,16 +106,14 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'ICC — International Commerce Centre',
     subtitle: 'West Kowloon, Hong Kong',
     location: 'West Kowloon, Hong Kong',
-    category: 'Personal',
-    tags: ['Hong Kong', 'Architecture'],
+    category: 'Travel',
   },
   '25.04_easter_island.jpeg': {
     title: 'Ahu Tongariki at Sunrise',
     subtitle: 'Rapa Nui',
     location: 'Easter Island, Chile',
     description: 'A dawn view across the moai at Ahu Tongariki on Easter Island.',
-    category: 'Personal',
-    tags: ['Chile', 'Rapa Nui', 'Travel'],
+    category: 'Travel',
   },
   '25.04_hongkong.jpeg': {
     lat: 22.2796,
@@ -141,17 +121,14 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Building Software for Equity Risk Management at Morgan Stanley',
     subtitle: 'Morgan Stanley',
     location: 'Central, Hong Kong',
-    postId: '2025-05-01-morgan-stanley-equity-risk',
     category: 'Work',
-    tags: ['Java', 'Kafka', 'KDB+', 'Spring Boot', 'Risk'],
   },
   '25.04_torres_del_paine.jpeg': {
     title: 'Torres del Paine',
     subtitle: 'Patagonia',
     location: 'Torres del Paine National Park, Chile',
     description: 'A Patagonia landscape from Torres del Paine National Park.',
-    category: 'Personal',
-    tags: ['Chile', 'Patagonia', 'Travel'],
+    category: 'Travel',
   },
   'leaves.jpeg': {
     lat: 22.4190,
@@ -159,9 +136,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Simulating Opinion Dynamics in Social Networks',
     subtitle: 'Research · CUHK',
     location: 'Shatin, Hong Kong',
-    postId: '2020-05-31-social-network-opinion-dynamics',
-    category: 'Research',
-    tags: ['Python', 'NumPy', 'NetworkX', 'Research'],
+    category: 'Education',
   },
   'litpak.jpeg': {
     lat: 43.7055,
@@ -169,17 +144,14 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Lit Pak — Wearable Safety Backpack',
     subtitle: 'Dartmouth Engineering Exchange',
     location: 'Hanover, NH, USA',
-    postId: '2018-12-01-wearable-safety-backpack',
-    category: 'Engineering',
-    tags: ['Arduino', 'IoT', 'SolidWorks'],
+    category: 'Education',
   },
   'pilpil.jpeg': {
     title: 'Patagonia',
     subtitle: 'Southern Chile',
     location: 'Patagonia, Chile',
     description: 'A Patagonia travel photograph that currently reuses an older filename.',
-    category: 'Personal',
-    tags: ['Chile', 'Patagonia', 'Travel'],
+    category: 'Travel',
     disableGeneratedPosts: true,
   },
 }

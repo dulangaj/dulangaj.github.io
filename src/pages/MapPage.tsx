@@ -212,11 +212,9 @@ function formatDate(iso: string): string {
 /* ─── Category colour pill ───────────────────────────────────────────────── */
 
 const CATEGORY_COLOURS: Record<string, string> = {
-  Work:        'bg-blue-500/15  text-blue-600  dark:text-blue-400',
-  Education:   'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
-  Engineering: 'bg-purple-500/15 text-purple-600 dark:text-purple-400',
-  Research:    'bg-amber-500/15  text-amber-600  dark:text-amber-400',
-  Personal:    'bg-rose-500/15   text-rose-600   dark:text-rose-400',
+  Work:      'bg-blue-500/15 text-blue-600 dark:text-blue-400',
+  Education: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
+  Travel:    'bg-amber-500/15 text-amber-600 dark:text-amber-400',
 }
 
 function categoryColour(cat: string | undefined) {
@@ -608,25 +606,6 @@ export function MapPage() {
                     >
                       <FiCalendar size={11} />
                       {formatDate(visibleSelected.date)}
-                    </div>
-                  )}
-
-                  {/* Tags */}
-                  {visibleSelected.tags && visibleSelected.tags.length > 0 && (
-                    <div className="flex flex-wrap gap-1.5 mb-5">
-                      {visibleSelected.tags.map((tag) => (
-                        <span
-                          key={tag}
-                          className="font-mono text-[10px] px-2 py-0.5 rounded"
-                          style={{
-                            background: 'var(--color-paper)',
-                            color:      'var(--color-muted)',
-                            border:     '1px solid var(--color-rule)',
-                          }}
-                        >
-                          {tag}
-                        </span>
-                      ))}
                     </div>
                   )}
 
