@@ -141,14 +141,27 @@ function mostRecentPhoto(markers: PhotoMarker[]): PhotoLocation | null {
   return latest
 }
 
-function createClusterIcon(cluster: MarkerClusterLike) {
-  const count = cluster.getChildCount()
-  const top = mostRecentPhoto(cluster.getAllChildMarkers())
+class ClusterIconFactory {
+  private readonly cache = new Map<string, L.DivIcon>()
 
-  const size = 60  // same visual weight as individual pins
+  get(count: number, photo: PhotoLocation | null): L.DivIcon {
+    const key = photo
+      ? `${photo.id}:${photo.thumbnail}:${count}`
+      : `fallback:${count}`
+    const cached = this.cache.get(key)
 
-  if (!top) {
-    // Fallback: plain count bubble (should never occur in practice)
+    if (cached) return cached
+
+    const size = 60  // same visual weight as individual pins
+    const icon = photo
+      ? this.createPhotoClusterIcon(count, photo, size)
+      : this.createFallbackClusterIcon(count, size)
+
+    this.cache.set(key, icon)
+    return icon
+  }
+
+  private createFallbackClusterIcon(count: number, size: number): L.DivIcon {
     return L.divIcon({
       html: `<div class="map-cluster-pin map-cluster-pin--fallback" style="width:${size}px;height:${size}px"><span>${count}</span></div>`,
       className: '',
@@ -157,20 +170,29 @@ function createClusterIcon(cluster: MarkerClusterLike) {
     })
   }
 
-  // Outer div is slightly larger to accommodate the badge overhang
-  const outer = size + 10
-  return L.divIcon({
-    html: `
+  private createPhotoClusterIcon(count: number, photo: PhotoLocation, size: number): L.DivIcon {
+    const outer = size + 10
+    return L.divIcon({
+      html: `
       <div class="map-cluster-wrap" style="width:${outer}px;height:${outer}px">
         <div class="map-cluster-photo" style="width:${size}px;height:${size}px">
-          <img src="${top.thumbnail}" alt="" loading="lazy" decoding="async" />
+          <img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" />
         </div>
         <div class="map-cluster-badge">${count}</div>
       </div>`,
-    className: '',
-    iconSize:   [outer, outer],
-    iconAnchor: [outer / 2, outer / 2],
-  })
+      className: '',
+      iconSize:   [outer, outer],
+      iconAnchor: [outer / 2, outer / 2],
+    })
+  }
+}
+
+const clusterIconFactory = new ClusterIconFactory()
+
+function createClusterIcon(cluster: MarkerClusterLike) {
+  const count = cluster.getChildCount()
+  const top = mostRecentPhoto(cluster.getAllChildMarkers())
+  return clusterIconFactory.get(count, top)
 }
 
 /* ─── Date formatting ────────────────────────────────────────────────────── */
@@ -210,11 +232,6 @@ function countUnique<T>(arr: T[]): number {
 const FILTER_OPTIONS = [
   { id: 'all', label: 'All' },
   { id: 'linked', label: 'Articles' },
-  { id: 'Work', label: 'Work' },
-  { id: 'Education', label: 'Education' },
-  { id: 'Engineering', label: 'Engineering' },
-  { id: 'Research', label: 'Research' },
-  { id: 'Personal', label: 'Personal' },
 ] as const
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
@@ -281,15 +298,10 @@ export function MapPage() {
     setSelected(null)
   }, [])
 
-  const visibleFilters = FILTER_OPTIONS.filter((filter) => {
-    if (filter.id === 'all' || filter.id === 'linked') return true
-    return photoLocations.some((photo) => photo.category === filter.id)
-  })
-
   const filteredPhotos = photoLocations.filter((photo) => {
     if (activeFilter === 'all') return true
     if (activeFilter === 'linked') return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
-    return photo.category === activeFilter
+    return true
   })
   const visibleSelected = selected && filteredPhotos.some((photo) => photo.id === selected.id)
     ? selected
@@ -390,7 +402,7 @@ export function MapPage() {
 
         <div className="w-full overflow-x-auto no-scrollbar">
           <div className="flex items-center gap-2 min-w-max">
-            {visibleFilters.map((filter) => {
+            {FILTER_OPTIONS.map((filter) => {
               const active = activeFilter === filter.id
               return (
                 <button
@@ -402,8 +414,7 @@ export function MapPage() {
                       const willRemainVisible = photoLocations.some((photo) => {
                         if (photo.id !== selected.id) return false
                         if (nextFilter === 'all') return true
-                        if (nextFilter === 'linked') return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
-                        return photo.category === nextFilter
+                        return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
                       })
 
                       if (!willRemainVisible) {

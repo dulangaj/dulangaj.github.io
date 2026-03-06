@@ -15,13 +15,23 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Google",
     "model": "Nexus 5"
   },
-  "16.11_graduation.jpeg": {
-    "date": "2016-11-17"
-  },
   "15.07_edexcel.jpeg": {
     "date": "2015-12-14",
     "make": "NIKON CORPORATION",
     "model": "NIKON D90"
+  },
+  "16.11_graduation.jpeg": {
+    "date": "2016-11-17"
+  },
+  "18.09_window.jpeg": {
+    "date": "2018-09-07",
+    "make": "Apple",
+    "model": "iPhone 7"
+  },
+  "18.10_canoe.jpeg": {
+    "date": "2018-10-06",
+    "make": "LG Electronics",
+    "model": "LG-F800L"
   },
   "18.10_roadTest.jpeg": {
     "date": "2018-10-15"
@@ -38,16 +48,6 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "OLYMPUS IMAGING CORP.",
     "model": "E-PL3"
   },
-  "18.09_window.jpeg": {
-    "date": "2018-09-07",
-    "make": "Apple",
-    "model": "iPhone 7"
-  },
-  "18.10_canoe.jpeg": {
-    "date": "2018-10-06",
-    "make": "LG Electronics",
-    "model": "LG-F800L"
-  },
   "23.10_icc.jpeg": {
     "lat": 22.303725,
     "lng": 114.16009444444445,
@@ -62,17 +62,17 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
+  "25.04_hongkong.jpeg": {
+    "date": "2022-05-03",
+    "make": "Apple",
+    "model": "iPhone 13 Pro"
+  },
   "25.04_torres_del_paine.jpeg": {
     "lat": -50.942299999999996,
     "lng": -72.93674722222222,
     "date": "2025-05-01",
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
-  },
-  "25.04_hongkong.jpeg": {
-    "date": "2022-05-03",
-    "make": "Apple",
-    "model": "iPhone 13 Pro"
   },
   "leaves.jpeg": {
     "date": "2023-03-31",
