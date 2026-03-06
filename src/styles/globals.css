@@ -188,6 +188,10 @@ button:focus-visible,
 /* ─── Map overrides (Leaflet + custom markers) ───────────────────────────── */
 
 /* Reset Leaflet's link styling so it inherits ours cleanly */
+.leaflet-container {
+  background: var(--color-surface);
+}
+
 .leaflet-container a {
   color: var(--color-crimson);
 }

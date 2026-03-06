@@ -49,6 +49,7 @@ function ThemeAwareTiles() {
       minZoom={2}
       maxZoom={5}
       maxNativeZoom={5}
+      noWrap={true}
     />
   )
 }
@@ -65,6 +66,36 @@ function ZoomControls() {
   return null
 }
 
+function ResponsiveMinZoom() {
+  const map = useMap()
+
+  useEffect(() => {
+    const updateMinZoom = () => {
+      const width = map.getSize().x
+      const rawMinZoom = Math.log2(width / WORLD_TILE_SIZE)
+      const nextMinZoom = Math.min(
+        MAX_ZOOM,
+        Math.max(MIN_ZOOM, Math.ceil(rawMinZoom)),
+      )
+
+      map.setMinZoom(nextMinZoom)
+
+      if (map.getZoom() < nextMinZoom) {
+        map.setZoom(nextMinZoom)
+      }
+    }
+
+    updateMinZoom()
+    map.on('resize', updateMinZoom)
+
+    return () => {
+      map.off('resize', updateMinZoom)
+    }
+  }, [map])
+
+  return null
+}
+
 /* ─── Map state in URL ───────────────────────────────────────────────────── */
 
 // Leaflet uses Web Mercator, so the visual midpoint is slightly north of the
@@ -73,6 +104,20 @@ const DEFAULT_CENTER: [number, number] = [14.7876, 97.0344]
 const DEFAULT_ZOOM = 4
 const MIN_ZOOM = 2
 const MAX_ZOOM = 5
+const MAX_LATITUDE = 85.05112878
+const WORLD_BOUNDS: L.LatLngBoundsExpression = [
+  [-MAX_LATITUDE, -180],
+  [MAX_LATITUDE, 180],
+]
+const WORLD_TILE_SIZE = 256
+
+function clampLatitude(value: number): number {
+  return Math.min(MAX_LATITUDE, Math.max(-MAX_LATITUDE, value))
+}
+
+function normalizeLongitude(value: number): number {
+  return ((((value + 180) % 360) + 360) % 360) - 180
+}
 
 interface MapViewport {
   lat: number
@@ -109,8 +154,8 @@ function MapViewportSync({
   const updateViewport = useCallback((map: L.Map) => {
     const center = map.getCenter()
     onViewportChange({
-      lat: center.lat,
-      lng: center.lng,
+      lat: clampLatitude(center.lat),
+      lng: normalizeLongitude(center.lng),
       zoom: map.getZoom(),
     })
   }, [onViewportChange])
@@ -339,8 +384,8 @@ export function MapPage() {
   const [selected, setSelected] = useState<PhotoLocation | null>(initialSelected)
   const [activeFilter, setActiveFilter] = useState<FilterId>(initialFilter)
   const [viewport, setViewport] = useState<MapViewport>({
-    lat: parseCoordinate(searchParams.get('lat'), DEFAULT_CENTER[0]),
-    lng: parseCoordinate(searchParams.get('lng'), DEFAULT_CENTER[1]),
+    lat: clampLatitude(parseCoordinate(searchParams.get('lat'), DEFAULT_CENTER[0])),
+    lng: normalizeLongitude(parseCoordinate(searchParams.get('lng'), DEFAULT_CENTER[1])),
     zoom: parseZoom(searchParams.get('z'), DEFAULT_ZOOM),
   })
   const [imageLoaded, setImageLoaded] = useState(false)
@@ -521,6 +566,8 @@ export function MapPage() {
         zoom={viewport.zoom}
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
+        maxBounds={WORLD_BOUNDS}
+        maxBoundsViscosity={1}
         zoomControl={false}
         scrollWheelZoom={true}
         style={{ width: '100%', height: '100%' }}
@@ -528,6 +575,7 @@ export function MapPage() {
       >
         <ThemeAwareTiles />
         <ZoomControls />
+        <ResponsiveMinZoom />
         <MapViewportSync onViewportChange={setViewport} />
         <PhotoMarkerClusters
           photos={filteredPhotos}
