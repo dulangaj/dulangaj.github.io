@@ -1,0 +1,182 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Social Card Option C</title>
+    <style>
+      :root {
+        --paper: #f7f2ea;
+        --surface: rgba(255, 252, 247, 0.72);
+        --ink: #171411;
+        --line: rgba(124, 92, 56, 0.18);
+        --accent: #b42318;
+        --shadow: rgba(21, 16, 11, 0.18);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        background: #ddd;
+        font-family: "Inter", "Helvetica Neue", Arial, sans-serif;
+      }
+
+      .card {
+        position: relative;
+        width: 1200px;
+        height: 630px;
+        overflow: hidden;
+        background:
+          radial-gradient(circle at top right, rgba(180, 35, 24, 0.14), transparent 28%),
+          linear-gradient(135deg, #fbf7f0 0%, #f4eee4 52%, #efe6da 100%);
+        color: var(--ink);
+      }
+
+      .grain,
+      .grid {
+        position: absolute;
+        inset: 0;
+        pointer-events: none;
+      }
+
+      .grain {
+        opacity: 0.05;
+        background-image: radial-gradient(rgba(20, 16, 12, 0.14) 0.7px, transparent 0.7px);
+        background-size: 12px 12px;
+        mix-blend-mode: multiply;
+      }
+
+      .grid {
+        background-image:
+          linear-gradient(var(--line) 1px, transparent 1px),
+          linear-gradient(90deg, var(--line) 1px, transparent 1px);
+        background-size: 90px 90px;
+        mask-image: linear-gradient(180deg, rgba(0, 0, 0, 0.55), transparent 88%);
+      }
+
+      .frame {
+        position: absolute;
+        inset: 34px;
+        border: 1px solid rgba(128, 100, 68, 0.2);
+        border-radius: 28px;
+      }
+
+      .content {
+        position: relative;
+        z-index: 1;
+        display: grid;
+        grid-template-columns: minmax(0, 1.18fr) 392px;
+        gap: 28px;
+        align-items: center;
+        height: 100%;
+        padding: 58px 72px;
+      }
+
+      .eyebrow {
+        display: inline-flex;
+        align-items: center;
+        gap: 16px;
+        margin-bottom: 28px;
+        font-size: 17px;
+        font-weight: 700;
+        letter-spacing: 0.34em;
+        text-transform: uppercase;
+        color: #7b6e61;
+      }
+
+      .eyebrow::before {
+        content: "";
+        width: 52px;
+        height: 2px;
+        border-radius: 999px;
+        background: var(--accent);
+      }
+
+      h1 {
+        margin: 0;
+        max-width: 560px;
+        font-family: Georgia, "Times New Roman", serif;
+        font-size: 86px;
+        line-height: 0.9;
+        letter-spacing: -0.04em;
+      }
+
+      .pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 26px;
+      }
+
+      .pill {
+        padding: 10px 16px;
+        border-radius: 999px;
+        background: var(--surface);
+        border: 1px solid rgba(126, 96, 67, 0.16);
+        box-shadow: 0 10px 24px rgba(255, 255, 255, 0.24) inset;
+        font-size: 15px;
+        font-weight: 600;
+        color: #433b33;
+        backdrop-filter: blur(14px);
+      }
+
+      .portrait-wrap {
+        position: relative;
+        justify-self: end;
+      }
+
+      .portrait-wrap::before {
+        content: "";
+        position: absolute;
+        inset: -22px -20px auto auto;
+        width: 150px;
+        height: 150px;
+        border-radius: 50%;
+        background: radial-gradient(circle, rgba(180, 35, 24, 0.22), transparent 70%);
+      }
+
+      .portrait-panel {
+        position: relative;
+        width: 392px;
+        height: 470px;
+        overflow: hidden;
+        border-radius: 28px;
+        border: 1px solid rgba(255, 255, 255, 0.55);
+        box-shadow: 0 22px 40px var(--shadow), 0 1px 0 rgba(255, 255, 255, 0.4) inset;
+        background: #251f1a;
+      }
+
+      .portrait-panel img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center 14%;
+        filter: saturate(0.92) contrast(1.05);
+      }
+    </style>
+  </head>
+  <body>
+    <article class="card">
+      <div class="grain"></div>
+      <div class="grid"></div>
+      <div class="frame"></div>
+      <div class="content">
+        <section>
+          <div class="eyebrow">Dulanga Jayawardena</div>
+          <h1>Builds financial systems.</h1>
+          <div class="pills">
+            <span class="pill">Risk</span>
+            <span class="pill">Trading</span>
+            <span class="pill">Platform</span>
+          </div>
+        </section>
+        <div class="portrait-wrap">
+          <div class="portrait-panel">
+            <img src="../img/profile.jpeg" alt="Portrait of Dulanga Jayawardena" />
+          </div>
+        </div>
+      </div>
+    </article>
+  </body>
+</html>
