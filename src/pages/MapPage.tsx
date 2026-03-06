@@ -47,8 +47,7 @@ function ThemeAwareTiles() {
       url={tile.url}
       attribution={tile.attribution}
       maxZoom={8}
-      maxNativeZoom={6}
-      updateWhenZooming={false}
+      maxNativeZoom={7}
     />
   )
 }
