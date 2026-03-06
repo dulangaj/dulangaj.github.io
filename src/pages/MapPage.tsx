@@ -65,24 +65,12 @@ function ZoomControls() {
   return null
 }
 
-/* ─── Fit map to show all pins on first load ─────────────────────────────── */
-
-function FitBounds({ locations, enabled }: { locations: PhotoLocation[], enabled: boolean }) {
-  const map = useMap()
-  const fitted = useRef(false)
-  useEffect(() => {
-    if (!enabled || fitted.current || locations.length === 0) return
-    fitted.current = true
-    const bounds = L.latLngBounds(locations.map((p) => [p.lat, p.lng]))
-    map.fitBounds(bounds, { padding: [80, 80], maxZoom: 4 })
-  }, [enabled, map, locations])
-  return null
-}
-
 /* ─── Map state in URL ───────────────────────────────────────────────────── */
 
-const DEFAULT_CENTER: [number, number] = [15, 97]
-const DEFAULT_ZOOM = 5
+// Leaflet uses Web Mercator, so the visual midpoint is slightly north of the
+// arithmetic latitude average between Colombo and Hong Kong.
+const DEFAULT_CENTER: [number, number] = [14.7876, 97.0344]
+const DEFAULT_ZOOM = 4
 const MIN_ZOOM = 2
 const MAX_ZOOM = 5
 
@@ -345,10 +333,6 @@ export function MapPage() {
   const location = useLocation()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
-  const hasSavedViewport =
-    searchParams.has('lat') &&
-    searchParams.has('lng') &&
-    searchParams.has('z')
   const filterParam = searchParams.get('filter')
   const initialFilter: FilterId = isFilterId(filterParam) ? filterParam : 'all'
   const initialSelected = initialPhotoFromId(searchParams.get('selected'))
@@ -545,7 +529,6 @@ export function MapPage() {
         <ThemeAwareTiles />
         <ZoomControls />
         <MapViewportSync onViewportChange={setViewport} />
-        <FitBounds locations={filteredPhotos} enabled={!hasSavedViewport} />
         <PhotoMarkerClusters
           photos={filteredPhotos}
           selectedId={visibleSelected?.id}
