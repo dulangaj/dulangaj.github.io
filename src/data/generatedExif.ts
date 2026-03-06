@@ -13,29 +13,29 @@ export const rawExifData: Record<string, ExifEntry> = {
   "15.02_moir.jpeg": {
     "date": "2015-06-08"
   },
+  "16.11_graduation.jpeg": {
+    "date": "2016-11-17"
+  },
   "15.07_edexcel.jpeg": {
     "date": "2015-12-14",
     "make": "NIKON CORPORATION",
     "model": "NIKON D90"
   },
-  "16.11_graduation.jpeg": {
-    "date": "2016-11-17"
+  "18.10_roadTest.jpeg": {
+    "date": "2018-10-15"
   },
   "18.10_canoe.jpeg": {
     "date": "2018-10-06",
     "make": "LG Electronics",
     "model": "LG-F800L"
   },
+  "18.11_stitching.jpeg": {
+    "date": "2018-11-09"
+  },
   "18.09_window.jpeg": {
     "date": "2018-09-07",
     "make": "Apple",
     "model": "iPhone 7"
-  },
-  "18.10_roadTest.jpeg": {
-    "date": "2018-10-15"
-  },
-  "18.11_stitching.jpeg": {
-    "date": "2018-11-09"
   },
   "20.12_vbrands.jpeg": {
     "date": "1899-11-30",
@@ -49,18 +49,21 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
+  "leaves.jpeg": {
+    "date": "2023-03-31",
+    "make": "Apple",
+    "model": "iPhone 13 Pro"
+  },
   "25.04_hongkong.jpeg": {
     "date": "2022-05-03",
     "make": "Apple",
     "model": "iPhone 13 Pro"
   },
+  "litpak.jpeg": {
+    "date": "2018-11-12"
+  },
   "profile.jpeg": {
     "date": "2022-12-16",
-    "make": "Apple",
-    "model": "iPhone 13 Pro"
-  },
-  "leaves.jpeg": {
-    "date": "2023-03-31",
     "make": "Apple",
     "model": "iPhone 13 Pro"
   },
@@ -68,8 +71,5 @@ export const rawExifData: Record<string, ExifEntry> = {
     "date": "2025-04-30",
     "make": "Apple",
     "model": "iPhone 13 Pro Max"
-  },
-  "litpak.jpeg": {
-    "date": "2018-11-12"
   }
 }
