@@ -3,6 +3,7 @@ export type PhotoCategory = 'Education' | 'Work' | 'Travel'
 export interface PhotoMetadata {
   lat?: number
   lng?: number
+  date?: string
   title?: string
   subtitle?: string
   location?: string
@@ -85,19 +86,20 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     category: 'Education',
   },
   '19.05_hkie.jpeg': {
-    lat: 22.3193,
-    lng: 114.1694,
-    title: 'HKIE Annual Dinner',
-    subtitle: 'Hong Kong Institution of Engineers',
-    location: 'Kowloon, Hong Kong',
+    lat: 25.0174,
+    lng: 121.5396,
+    title: 'HKIE Delegation Visit',
+    subtitle: 'National Taiwan University',
+    location: 'Taipei, Taiwan',
     category: 'Work',
   },
   '20.12_vbrands.jpeg': {
     lat: 22.2800,
     lng: 114.1838,
+    date: '2020-12-01',
     title: 'VBrands — Technology Consultant',
     subtitle: 'VBrands',
-    location: 'Causeway Bay, Hong Kong',
+    location: 'Hong Kong',
     category: 'Work',
   },
   '23.10_icc.jpeg': {
@@ -115,12 +117,13 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'A dawn view across the moai at Ahu Tongariki on Easter Island.',
     category: 'Travel',
   },
-  '25.04_hongkong.jpeg': {
+  '22_icc.jpeg': {
     lat: 22.2796,
     lng: 114.1666,
-    title: 'Building Software for Equity Risk Management at Morgan Stanley',
-    subtitle: 'Morgan Stanley',
-    location: 'Central, Hong Kong',
+    title: 'ICC from the Flight Path',
+    subtitle: 'Hong Kong reopening after COVID',
+    location: 'Hong Kong',
+    description: 'A view of ICC while flying out of Hong Kong, with both my office and home visible in the frame.',
     category: 'Work',
   },
   '25.04_torres_del_paine.jpeg': {

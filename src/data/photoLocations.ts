@@ -113,7 +113,7 @@ export const photoLocations: PhotoLocation[] = filenames
       subtitle:       metadata?.subtitle,
       description:    metadata?.description,
       location:       metadata?.location ?? locationFromCoordinates(lat, lng),
-      date:           exif.date ?? dateFromFilename(filename),
+      date:           metadata?.date ?? exif.date ?? dateFromFilename(filename),
       relatedPosts:   relatedPosts.length > 0 ? relatedPosts : undefined,
       category:       metadata?.category,
       locationSource: hasGPS ? 'gps' : 'inferred',

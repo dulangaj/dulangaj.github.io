@@ -48,6 +48,11 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "OLYMPUS IMAGING CORP.",
     "model": "E-PL3"
   },
+  "22_icc.jpeg": {
+    "date": "2022-05-03",
+    "make": "Apple",
+    "model": "iPhone 13 Pro"
+  },
   "23.10_icc.jpeg": {
     "lat": 22.303725,
     "lng": 114.16009444444445,
@@ -61,11 +66,6 @@ export const rawExifData: Record<string, ExifEntry> = {
     "date": "2025-05-04",
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
-  },
-  "25.04_hongkong.jpeg": {
-    "date": "2022-05-03",
-    "make": "Apple",
-    "model": "iPhone 13 Pro"
   },
   "25.04_torres_del_paine.jpeg": {
     "lat": -50.942299999999996,

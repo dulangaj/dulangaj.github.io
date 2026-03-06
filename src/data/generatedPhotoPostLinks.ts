@@ -73,7 +73,7 @@ export const generatedPhotoPostLinks: Record<string, GeneratedPhotoPostLink[]> =
       "title": "VBrands — Technology Consultant & Digital Operations"
     }
   ],
-  "25.04_hongkong.jpeg": [
+  "22_icc.jpeg": [
     {
       "postId": "2025-05-01-morgan-stanley-equity-risk",
       "title": "Building Software for Equity Risk Management at Morgan Stanley"
