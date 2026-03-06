@@ -12,6 +12,7 @@
 import type { Plugin } from 'vite'
 import { promises as fs } from 'fs'
 import path from 'path'
+import { spawn } from 'child_process'
 import exifr from 'exifr'
 
 interface ExifEntry {
@@ -20,6 +21,106 @@ interface ExifEntry {
   date?: string
   make?: string
   model?: string
+}
+
+type ImageTool = 'magick' | 'sips' | 'copy'
+
+const THUMBNAIL_SIZE = 160
+
+function runCommand(command: string, args: string[]): Promise<void> {
+  return new Promise((resolve, reject) => {
+    const child = spawn(command, args, { stdio: 'ignore' })
+
+    child.on('error', reject)
+    child.on('exit', (code) => {
+      if (code === 0) {
+        resolve()
+        return
+      }
+
+      reject(new Error(`${command} exited with code ${code ?? 'unknown'}`))
+    })
+  })
+}
+
+async function commandExists(command: string, args: string[]): Promise<boolean> {
+  try {
+    await runCommand(command, args)
+    return true
+  } catch {
+    return false
+  }
+}
+
+async function detectImageTool(): Promise<ImageTool> {
+  if (await commandExists('magick', ['-version'])) return 'magick'
+  if (await commandExists('sips', ['--help'])) return 'sips'
+  return 'copy'
+}
+
+async function createThumbnail(inputFile: string, outputFile: string, tool: ImageTool) {
+  if (tool === 'magick') {
+    await runCommand('magick', [
+      inputFile,
+      '-auto-orient',
+      '-thumbnail',
+      `${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}^`,
+      '-gravity',
+      'center',
+      '-extent',
+      `${THUMBNAIL_SIZE}x${THUMBNAIL_SIZE}`,
+      outputFile,
+    ])
+    return
+  }
+
+  if (tool === 'sips') {
+    await runCommand('sips', [
+      '-s',
+      'formatOptions',
+      '85',
+      '--resampleHeightWidth',
+      String(THUMBNAIL_SIZE),
+      String(THUMBNAIL_SIZE),
+      inputFile,
+      '--out',
+      outputFile,
+    ])
+    return
+  }
+
+  await fs.copyFile(inputFile, outputFile)
+}
+
+async function ensureThumbnails(root: string, files: string[]) {
+  const imgDir = path.join(root, 'public', 'assets', 'img')
+  const thumbDir = path.join(imgDir, 'thumbs')
+  const tool = await detectImageTool()
+
+  await fs.mkdir(thumbDir, { recursive: true })
+
+  let generated = 0
+
+  await Promise.all(
+    files.map(async (file) => {
+      const source = path.join(imgDir, file)
+      const target = path.join(thumbDir, file)
+
+      try {
+        await fs.access(target)
+        return
+      } catch {
+        // Thumbnail does not exist yet.
+      }
+
+      await createThumbnail(source, target, tool)
+      generated += 1
+    }),
+  )
+
+  if (generated > 0) {
+    console.log(`[vite-plugin-exif] Generated ${generated} missing thumbnails → public/assets/img/thumbs`)
+  }
 }
 
 async function extractAndWrite(root: string) {
@@ -34,6 +135,8 @@ async function extractAndWrite(root: string) {
   } catch {
     return // public/assets/img doesn't exist yet during first install
   }
+
+  await ensureThumbnails(root, files)
 
   const entries: Record<string, ExifEntry> = {}
 

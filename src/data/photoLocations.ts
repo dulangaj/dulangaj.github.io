@@ -25,6 +25,7 @@ import { rawExifData } from './generatedExif'
 export interface PhotoLocation {
   id:             string
   image:          string   // /assets/img/<filename> served from public/assets/img/
+  thumbnail:      string   // /assets/img/thumbs/<filename> served from public/assets/img/thumbs/
   lat:            number
   lng:            number
   title:          string
@@ -253,6 +254,7 @@ export const photoLocations: PhotoLocation[] = filenames
     photos.push({
       id:             stripExtension(filename),
       image:          `/assets/img/${filename}`,
+      thumbnail:      `/assets/img/thumbs/${filename}`,
       lat,
       lng,
       title:          ov?.title ?? labelFromFilename(filename),

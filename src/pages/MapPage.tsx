@@ -46,7 +46,9 @@ function ThemeAwareTiles() {
       key={tile.url}
       url={tile.url}
       attribution={tile.attribution}
-      maxZoom={19}
+      maxZoom={8}
+      maxNativeZoom={6}
+      updateWhenZooming={false}
     />
   )
 }
@@ -72,7 +74,7 @@ function FitBounds({ locations }: { locations: PhotoLocation[] }) {
     if (fitted.current || locations.length === 0) return
     fitted.current = true
     const bounds = L.latLngBounds(locations.map((p) => [p.lat, p.lng]))
-    map.fitBounds(bounds, { padding: [80, 80], maxZoom: 10 })
+    map.fitBounds(bounds, { padding: [80, 80], maxZoom: 4 })
   }, [map, locations])
   return null
 }
@@ -83,7 +85,7 @@ function createPhotoIcon(photo: PhotoLocation, selected = false) {
   const size = selected ? 60 : 50
   const border = selected ? 3 : 2.5
   return L.divIcon({
-    html: `<div class="map-photo-pin${selected ? ' map-photo-pin--selected' : ''}" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.image}" alt="" loading="lazy" /></div>`,
+    html: `<div class="map-photo-pin${selected ? ' map-photo-pin--selected' : ''}" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
     className: '',
     iconSize:   [size, size],
     iconAnchor: [size / 2, size / 2],
@@ -126,7 +128,7 @@ function createClusterIcon(cluster: any) {
     html: `
       <div class="map-cluster-wrap" style="width:${outer}px;height:${outer}px">
         <div class="map-cluster-photo" style="width:${size}px;height:${size}px">
-          <img src="${top.image}" alt="" loading="lazy" />
+          <img src="${top.thumbnail}" alt="" loading="lazy" decoding="async" />
         </div>
         <div class="map-cluster-badge">${count}</div>
       </div>`,
@@ -238,6 +240,7 @@ export function MapPage() {
       <MapContainer
         center={[25, 60]}
         zoom={3}
+        maxZoom={8}
         zoomControl={false}
         scrollWheelZoom={true}
         style={{ width: '100%', height: '100%' }}
