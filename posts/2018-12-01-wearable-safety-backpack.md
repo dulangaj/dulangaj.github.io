@@ -10,11 +10,9 @@ image: litpak.jpeg
 read_time: 6
 ---
 
-## Overview
+Pedestrians are extremely vulnerable at night. Over 75% of pedestrian fatalities happen after dark, largely due to poor visibility. Existing safety gear — reflective vests, belts, neon clothing — often goes unused because it's inconvenient, unfashionable, or not designed for daily wear.
 
-The **LitPak** project was born from one simple but critical problem: pedestrians are extremely vulnerable at night. Over 75% of pedestrian fatalities happen after dark, largely due to poor visibility. Existing safety gear (reflective vests, belts, or neon clothing) often go unused because they're inconvenient, unfashionable, or not designed for daily wear.
-
-Our goal was to design a *product people actually want to wear* — one that blends safety, fashion, convenience, and everyday functionality. We chose the most universally worn item for students and commuters: the backpack.
+We set out to design a *product people actually want to wear*. Something that blends safety, fashion, convenience, and everyday functionality. We chose the most universally worn item for students and commuters: the backpack.
 
 ---
 

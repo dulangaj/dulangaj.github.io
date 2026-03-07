@@ -9,16 +9,7 @@ image: 15.02_moir.jpeg
 read_time: 3
 ---
 
-## 📝 Overview
-
-I completed my A-Level studies at **Elizabeth Moir School** in Colombo, Sri Lanka, specializing in the **Math Stream**, which included:
-
-- Physics
-- Chemistry
-- Mathematics
-- Further Mathematics
-
-As part of a highly competitive cohort, I consistently ranked among the top students nationally. I was placed within the **Top 30 in Sri Lanka** at the UK-based Edexcel A Levels, contributing to one of the highest-performing graduating classes in the world.
+I completed my A-Level studies at **Elizabeth Moir School** in Colombo, Sri Lanka, specializing in the **Math Stream** — Physics, Chemistry, Mathematics, and Further Mathematics. As part of a highly competitive cohort, I was placed within the **Top 30 in Sri Lanka** at the UK-based Edexcel A Levels, contributing to one of the highest-performing graduating classes in the world.
 
 ![Receiving my High Achiever's Award](/assets/img/15.07_edexcel.jpeg)
 
@@ -26,26 +17,12 @@ As part of a highly competitive cohort, I consistently ranked among the top stud
 
 ---
 
-## 🌏 Extracurricular Highlights
+## Beyond the Classroom
 
-### Rotaract Club of Colombo East
+Outside of academics, I was actively involved in the **Rotaract Club of Colombo East**, building community service and leadership experience, and the **Colombo Toastmasters Gavel Club**, where I developed public speaking and presentation skills that continue to serve me professionally.
 
-- Participated actively in community service initiatives and leadership development programs through the **Rotaract Club of Colombo East**, building teamwork and social impact experience beyond academics.
-
-### Colombo Toastmasters Gavel Club
-
-- Member of the **Colombo Toastmasters Gavel Club**, developing public speaking, presentation, and communication skills that continue to serve me professionally today.
-
-### Science Summer School — National University of Singapore (2014)
-
-- Attended the **Science Summer School at NUS**, gaining early exposure to university-level research topics in science and technology while interacting with an international cohort of students.
-
-### Tech in Asia — Singapore 2016
-
-- Volunteered at **Tech in Asia Singapore 2016**, gaining early exposure to the regional startup and technology scene and developing an interest in emerging tech ecosystems across Asia.
+I also attended the **Science Summer School at NUS** in 2014, gaining early exposure to university-level research alongside an international cohort, and volunteered at **Tech in Asia Singapore 2016**, which sparked my interest in the regional startup and technology scene.
 
 ---
 
-## 🧮 Foundation
-
-This early academic experience laid the groundwork for my later interest in software engineering, data modeling, and real-world problem solving — blending analytical rigor with practical applications in technology.
+This early foundation — analytical rigor blended with curiosity about technology — laid the groundwork for my later work in software engineering, data modeling, and real-world problem solving.
