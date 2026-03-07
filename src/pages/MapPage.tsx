@@ -274,6 +274,11 @@ interface MarkerClusterSpiderfyEvent {
   cluster: MarkerClusterLike
 }
 
+interface PhotoSelectionContext {
+  photo: PhotoLocation
+  clusterPhotos: PhotoLocation[]
+}
+
 function spiderfyShapePositions(count: number, center: L.Point): L.Point[] {
   const twoPi = Math.PI * 2
 
@@ -319,6 +324,10 @@ function mostRecentPhoto(markers: PhotoMarker[]): PhotoLocation | null {
   }
 
   return latest
+}
+
+function photosFromMarkers(markers: PhotoMarker[]): PhotoLocation[] {
+  return markers.flatMap((marker) => marker.__photo ? [marker.__photo] : [])
 }
 
 class ClusterIconFactory {
@@ -414,13 +423,15 @@ const FILTER_OPTIONS = [
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
 const SPIDER_LEG_FADE_MS = 120
+const PHOTO_SWIPE_THRESHOLD = 56
+const PHOTO_SWIPE_RESTRAINT = 32
 
 const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos,
   onMarkerClick,
 }: {
   photos: PhotoLocation[]
-  onMarkerClick: (photo: PhotoLocation) => void
+  onMarkerClick: (selection: PhotoSelectionContext) => void
 }) {
   const { isDark } = useTheme()
   const map = useMap()
@@ -519,11 +530,18 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
 
   const handleMarkerSelect = useCallback((photo: PhotoLocation, marker: PhotoMarker) => {
     const spiderfied = clusterGroupRef.current?._spiderfied
+    const selection = {
+      photo,
+      clusterPhotos: spiderfied && spiderfied.getAllChildMarkers().includes(marker)
+        ? photosFromMarkers(spiderfied.getAllChildMarkers())
+        : [photo],
+    }
+
     if (spiderfied && !spiderfied.getAllChildMarkers().includes(marker)) {
-      collapseSpiderfiedCluster(() => onMarkerClick(photo))
+      collapseSpiderfiedCluster(() => onMarkerClick(selection))
       return
     }
-    onMarkerClick(photo)
+    onMarkerClick(selection)
   }, [collapseSpiderfiedCluster, onMarkerClick])
 
   return (
@@ -565,6 +583,9 @@ export function MapPage() {
   const initialFilter: FilterId = isFilterId(filterParam) ? filterParam : 'all'
   const initialSelected = initialPhotoFromId(searchParams.get('selected'))
   const [selected, setSelected] = useState<PhotoLocation | null>(initialSelected)
+  const [selectedClusterPhotoIds, setSelectedClusterPhotoIds] = useState<string[]>(
+    initialSelected ? [initialSelected.id] : [],
+  )
   const [activeFilter, setActiveFilter] = useState<FilterId>(initialFilter)
   const [isMapLayoutReady, setIsMapLayoutReady] = useState(false)
   const [viewport, setViewport] = useState<MapViewport>({
@@ -587,13 +608,15 @@ export function MapPage() {
     return () => mql.removeEventListener('change', onChange)
   }, [])
 
-  const handleMarkerClick = useCallback((photo: PhotoLocation) => {
+  const handleMarkerClick = useCallback(({ photo, clusterPhotos }: PhotoSelectionContext) => {
     setImageLoaded(false)
+    setSelectedClusterPhotoIds(clusterPhotos.map((clusterPhoto) => clusterPhoto.id))
     setSelected(photo)
   }, [])
 
   const handleClose = useCallback(() => {
     setImageLoaded(false)
+    setSelectedClusterPhotoIds([])
     setSelected(null)
   }, [])
 
@@ -625,6 +648,24 @@ export function MapPage() {
   const visibleSelected = selected && filteredPhotos.some((photo) => photo.id === selected.id)
     ? selected
     : null
+  const visiblePhotoMap = useMemo(
+    () => new Map(filteredPhotos.map((photo) => [photo.id, photo])),
+    [filteredPhotos],
+  )
+  const activeClusterPhotos = useMemo(() => {
+    if (!visibleSelected) return []
+
+    const clusterPhotos = selectedClusterPhotoIds
+      .map((photoId) => visiblePhotoMap.get(photoId) ?? null)
+      .filter((photo): photo is PhotoLocation => photo !== null)
+
+    if (clusterPhotos.some((photo) => photo.id === visibleSelected.id)) {
+      return clusterPhotos
+    }
+
+    return [visibleSelected]
+  }, [selectedClusterPhotoIds, visiblePhotoMap, visibleSelected])
+  const canNavigateCluster = activeClusterPhotos.length > 1
 
   useEffect(() => {
     const nextParams = new URLSearchParams()
@@ -662,13 +703,13 @@ export function MapPage() {
 
       if (event.key === 'ArrowLeft') {
         event.preventDefault()
-        navigatePhoto('prev', filteredPhotos, selected)
+        navigatePhoto('prev', activeClusterPhotos, selected)
         return
       }
 
       if (event.key === 'ArrowRight') {
         event.preventDefault()
-        navigatePhoto('next', filteredPhotos, selected)
+        navigatePhoto('next', activeClusterPhotos, selected)
         return
       }
 
@@ -706,7 +747,7 @@ export function MapPage() {
       window.removeEventListener('keydown', handleKeyDown)
       previousFocusRef.current?.focus()
     }
-  }, [selected, handleClose, filteredPhotos, navigatePhoto])
+  }, [activeClusterPhotos, handleClose, navigatePhoto, selected])
 
   const mappedLocations = countUnique(filteredPhotos.map((p) => `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`))
 
@@ -890,10 +931,10 @@ export function MapPage() {
                 <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
 
                 {/* Photo navigation */}
-                {filteredPhotos.length > 1 && (
+                {canNavigateCluster && (
                   <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
                     <button
-                      onClick={() => navigatePhoto('prev', filteredPhotos, visibleSelected)}
+                      onClick={() => navigatePhoto('prev', activeClusterPhotos, visibleSelected)}
                       className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
                       style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                       aria-label="Previous photo"
@@ -902,7 +943,7 @@ export function MapPage() {
                       <FiChevronLeft size={15} />
                     </button>
                     <button
-                      onClick={() => navigatePhoto('next', filteredPhotos, visibleSelected)}
+                      onClick={() => navigatePhoto('next', activeClusterPhotos, visibleSelected)}
                       className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
                       style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                       aria-label="Next photo"
@@ -928,9 +969,25 @@ export function MapPage() {
               {/* Scrollable content */}
               <div className="overflow-y-auto overscroll-contain">
                 {/* Photo */}
-                <div
+                <motion.div
                   className="relative w-full overflow-hidden"
                   style={{ aspectRatio: '16/9', background: 'var(--color-rule)' }}
+                  drag={canNavigateCluster && !isDesktop ? 'x' : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.14}
+                  dragMomentum={false}
+                  onDragEnd={(_, info) => {
+                    if (!canNavigateCluster) return
+                    const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y) + PHOTO_SWIPE_RESTRAINT
+                    if (!isHorizontalSwipe) return
+                    if (info.offset.x <= -PHOTO_SWIPE_THRESHOLD || info.velocity.x <= -500) {
+                      navigatePhoto('next', activeClusterPhotos, visibleSelected)
+                      return
+                    }
+                    if (info.offset.x >= PHOTO_SWIPE_THRESHOLD || info.velocity.x >= 500) {
+                      navigatePhoto('prev', activeClusterPhotos, visibleSelected)
+                    }
+                  }}
                 >
                   <img
                     src={visibleSelected.thumbnail}
@@ -967,7 +1024,7 @@ export function MapPage() {
                       {visibleSelected.cameraModel}
                     </div>
                   )}
-                </div>
+                </motion.div>
 
                 {/* Info */}
                 <div className="px-5 pt-4 pb-6">
@@ -1080,7 +1137,7 @@ export function MapPage() {
               <div
                 className="hidden lg:flex items-center justify-center gap-4 px-4 py-2 flex-shrink-0 border-t border-[var(--color-rule)]"
               >
-                {filteredPhotos.length > 1 && (
+                {canNavigateCluster && (
                   <span
                     className="flex items-center gap-1.5 font-mono text-[10px]"
                     style={{ color: 'var(--color-subtle)' }}
