@@ -666,6 +666,9 @@ export function MapPage() {
     return [visibleSelected]
   }, [selectedClusterPhotoIds, visiblePhotoMap, visibleSelected])
   const canNavigateCluster = activeClusterPhotos.length > 1
+  const activeClusterIndex = visibleSelected
+    ? activeClusterPhotos.findIndex((photo) => photo.id === visibleSelected.id)
+    : -1
 
   useEffect(() => {
     const nextParams = new URLSearchParams()
@@ -931,8 +934,8 @@ export function MapPage() {
                 <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
 
                 {/* Photo navigation */}
-                {canNavigateCluster && (
-                  <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+                {isDesktop && canNavigateCluster && (
+                  <div className="absolute left-3 top-3 flex items-center gap-1 z-10">
                     <button
                       onClick={() => navigatePhoto('prev', activeClusterPhotos, visibleSelected)}
                       className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
@@ -954,10 +957,19 @@ export function MapPage() {
                   </div>
                 )}
 
+                {canNavigateCluster && activeClusterIndex !== -1 && (
+                  <div
+                    className="font-mono text-[10px] tracking-[0.14em] uppercase"
+                    style={{ color: 'var(--color-subtle)' }}
+                  >
+                    {activeClusterIndex + 1} / {activeClusterPhotos.length}
+                  </div>
+                )}
+
                 <button
                   ref={closeButtonRef}
                   onClick={handleClose}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10 lg:top-3 lg:right-3 lg:translate-y-0"
+                  className="absolute right-3 top-3 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
                   style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                   aria-label="Close"
                   aria-keyshortcuts="Escape"
