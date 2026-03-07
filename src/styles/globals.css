@@ -65,6 +65,8 @@ html[data-theme="dark"] { color-scheme: dark; }
 html {
   scroll-behavior: smooth;
   font-size: 16px;
+  width: 100%;
+  overflow-x: clip;
 }
 
 /* Keep fixed header from obscuring in-page anchor targets. */
@@ -78,10 +80,17 @@ body {
   color: var(--color-ink);
   font-family: var(--font-body);
   line-height: 1.7;
+  width: 100%;
+  overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   /* Smooth color transition on theme switch */
   transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+#root {
+  width: 100%;
+  overflow-x: clip;
 }
 
 /* ─── Paper texture ──────────────────────────────────────────────────────── */
