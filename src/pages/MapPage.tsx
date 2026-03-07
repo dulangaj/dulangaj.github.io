@@ -109,6 +109,31 @@ function ResponsiveMinZoom() {
   return null
 }
 
+function EnsureFreshMapLayout() {
+  const map = useMap()
+
+  useEffect(() => {
+    let frameId = 0
+    let timeoutId = 0
+
+    const refreshLayout = () => {
+      map.invalidateSize(false)
+      map.fire('resize')
+    }
+
+    refreshLayout()
+    frameId = window.requestAnimationFrame(refreshLayout)
+    timeoutId = window.setTimeout(refreshLayout, 120)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      window.clearTimeout(timeoutId)
+    }
+  }, [map])
+
+  return null
+}
+
 /* ─── Map state in URL ───────────────────────────────────────────────────── */
 
 // Leaflet uses Web Mercator, so the visual midpoint is slightly north of the
@@ -224,6 +249,7 @@ const photoIconFactory = new PhotoIconFactory()
 
 interface PhotoMarker extends L.Marker {
   __photo?: PhotoLocation
+  _spiderLeg?: L.Polyline
 }
 
 interface MarkerClusterLike {
@@ -385,6 +411,7 @@ const FILTER_OPTIONS = [
 ] as const
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
+const SPIDER_LEG_FADE_MS = 120
 
 const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos,
@@ -395,6 +422,7 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
 }) {
   const { isDark } = useTheme()
   const clusterGroupRef = useRef<MarkerClusterGroupWithSpider | null>(null)
+  const collapseTimeoutRef = useRef<number | null>(null)
   const spiderLegPolylineOptions = isDark ? SPIDER_LEG_STYLES.dark : SPIDER_LEG_STYLES.light
 
   useEffect(() => {
@@ -419,6 +447,9 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
     clusterGroup.on('unspiderfied', handleUnspiderfied)
 
     return () => {
+      if (collapseTimeoutRef.current !== null) {
+        window.clearTimeout(collapseTimeoutRef.current)
+      }
       clusterGroup.off('spiderfied', handleSpiderfied)
       clusterGroup.off('unspiderfied', handleUnspiderfied)
       const spiderfied = clusterGroup._spiderfied
@@ -426,19 +457,52 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
     }
   }, [])
 
+  const collapseSpiderfiedCluster = useCallback((afterCollapse: () => void) => {
+    const clusterGroup = clusterGroupRef.current
+    const spiderfied = clusterGroup?._spiderfied
+
+    if (!clusterGroup || !spiderfied) {
+      afterCollapse()
+      return
+    }
+
+    spiderfied._icon?.classList.remove('map-cluster-icon--spiderfied')
+    spiderfied.getAllChildMarkers().forEach((marker) => {
+      marker._spiderLeg?.setStyle({ opacity: 0 })
+    })
+
+    if (collapseTimeoutRef.current !== null) {
+      window.clearTimeout(collapseTimeoutRef.current)
+    }
+
+    collapseTimeoutRef.current = window.setTimeout(() => {
+      if (clusterGroup._spiderfied === spiderfied) {
+        clusterGroup.unspiderfy()
+      }
+      collapseTimeoutRef.current = null
+      afterCollapse()
+    }, SPIDER_LEG_FADE_MS)
+  }, [])
+
   const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
     const cluster = event.layer
     if (!cluster) return
+    const spiderfied = clusterGroupRef.current?._spiderfied
+    if (spiderfied && spiderfied !== cluster) {
+      collapseSpiderfiedCluster(() => cluster.spiderfy())
+      return
+    }
     cluster.spiderfy()
-  }, [])
+  }, [collapseSpiderfiedCluster])
 
   const handleMarkerSelect = useCallback((photo: PhotoLocation, marker: PhotoMarker) => {
     const spiderfied = clusterGroupRef.current?._spiderfied
     if (spiderfied && !spiderfied.getAllChildMarkers().includes(marker)) {
-      clusterGroupRef.current?.unspiderfy()
+      collapseSpiderfiedCluster(() => onMarkerClick(photo))
+      return
     }
     onMarkerClick(photo)
-  }, [onMarkerClick])
+  }, [collapseSpiderfiedCluster, onMarkerClick])
 
   return (
     <MarkerClusterGroup
@@ -671,6 +735,7 @@ export function MapPage() {
         className="map-container"
       >
         <ThemeAwareTiles />
+        <EnsureFreshMapLayout />
         <ZoomControls />
         <ResponsiveMinZoom />
         <MapViewportSync onViewportChange={setViewport} />
