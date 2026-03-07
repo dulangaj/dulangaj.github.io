@@ -68,7 +68,7 @@ export const SiteConfig = new SiteConfigClass({
   nav: [
     { label: 'Featured',    href: '#featured'    },
     { label: 'Experience',  href: '#experience'  },
-    { label: 'Blog',        href: '#blog'        },
+    { label: 'Writing',     href: '#writing'     },
     { label: 'Contact',     href: '#contact'     },
     { label: 'Map',         href: '/map'         },
   ],
