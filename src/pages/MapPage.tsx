@@ -812,6 +812,36 @@ export function MapPage() {
         )}
       </MapContainer>
 
+      {/* ── Loading overlay ──────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {!isMapLayoutReady && (
+          <motion.div
+            key="map-loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none"
+            style={{ background: 'var(--color-paper)' }}
+          >
+            <div className="flex flex-col items-center gap-3">
+              <div
+                className="w-8 h-8 rounded-full border-2 animate-spin"
+                style={{
+                  borderColor: 'var(--color-rule)',
+                  borderTopColor: 'var(--color-crimson)',
+                }}
+              />
+              <span
+                className="font-body text-[12px]"
+                style={{ color: 'var(--color-muted)' }}
+              >
+                Loading map…
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Bottom sheet ────────────────────────────────────────────────── */}
       <AnimatePresence>
         {visibleSelected && (
