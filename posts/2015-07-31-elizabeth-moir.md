@@ -9,7 +9,9 @@ image: 15.02_moir.jpeg
 read_time: 3
 ---
 
-I completed my A-Level studies at **Elizabeth Moir School** in Colombo, Sri Lanka, specializing in the **Math Stream** — Physics, Chemistry, Mathematics, and Further Mathematics. As part of a highly competitive cohort, I was placed within the **Top 30 in Sri Lanka** at the UK-based Edexcel A Levels, contributing to one of the highest-performing graduating classes in the world.
+I completed my A-Level studies at **Elizabeth Moir School** in Colombo, Sri Lanka, specializing in the **Math Stream** — Physics, Chemistry, Mathematics, and Further Mathematics. 
+
+As part of a highly competitive cohort, I placed within the **Top 30 in Sri Lanka** at the UK-based Edexcel A Levels, contributing to one of the highest-performing graduating classes in the world.
 
 ![Receiving my High Achiever's Award](/assets/img/15.07_edexcel.jpeg)
 

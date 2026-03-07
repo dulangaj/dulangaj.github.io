@@ -21,13 +21,13 @@ My coursework combined the technical and human aspects of engineering, with a st
 - **Engineering Design** — building prototypes and working on multidisciplinary projects that combined user-centered design with technical problem solving.
 - **Materials Engineering** — practical lab experience with varied manufacturing processes and testing equipment.
 
-![Canoeing along the Connecticut](/assets/img/18.10_canoe.jpeg)
-
 ---
 
 ## South House
 
 Beyond academics, I participated in Dartmouth’s **South House Residential Community Executive Committee**, contributing to campus life through student-led events.
+
+![Canoeing along the Connecticut](/assets/img/18.10_canoe.jpeg)
 
 ---
 

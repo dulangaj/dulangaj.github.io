@@ -12,7 +12,7 @@ read_time: 6
 
 At Morgan Stanley, I worked as part of the Equity Risk Technology team, developing scalable and highly reliable software systems used globally by traders and risk managers to monitor and manage risk exposure across multiple equity products.
 
-My work spanned backend development, automation, and infrastructure — contributing to systems used across major global regions in real-time trading environments.
+My work spanned backend development, automation, and infrastructure; contributing to systems used across major global regions in real-time trading environments.
 
 ---
 
