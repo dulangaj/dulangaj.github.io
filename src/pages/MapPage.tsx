@@ -18,7 +18,7 @@ import { motion, AnimatePresence, type PanInfo } from 'framer-motion'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight } from 'react-icons/fi'
+import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useTheme } from '@/hooks/useTheme'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { photoLocations, type PhotoLocation } from '@/data/photoLocations'
@@ -606,6 +606,17 @@ export function MapPage() {
     [handleClose],
   )
 
+  const navigatePhoto = useCallback((direction: 'prev' | 'next', photos: PhotoLocation[], current: PhotoLocation | null) => {
+    if (!current || photos.length === 0) return
+    const idx = photos.findIndex((p) => p.id === current.id)
+    if (idx === -1) return
+    const nextIdx = direction === 'next'
+      ? (idx + 1) % photos.length
+      : (idx - 1 + photos.length) % photos.length
+    setImageLoaded(false)
+    setSelected(photos[nextIdx])
+  }, [])
+
   const filteredPhotos = useMemo(() => photoLocations.filter((photo) => {
     if (activeFilter === 'all') return true
     if (activeFilter === 'linked') return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
@@ -649,6 +660,18 @@ export function MapPage() {
         return
       }
 
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        navigatePhoto('prev', filteredPhotos, selected)
+        return
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        navigatePhoto('next', filteredPhotos, selected)
+        return
+      }
+
       if (event.key !== 'Tab') return
 
       const panel = panelRef.current
@@ -683,7 +706,7 @@ export function MapPage() {
       window.removeEventListener('keydown', handleKeyDown)
       previousFocusRef.current?.focus()
     }
-  }, [selected, handleClose])
+  }, [selected, handleClose, filteredPhotos, navigatePhoto])
 
   const mappedLocations = countUnique(filteredPhotos.map((p) => `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`))
 
@@ -835,6 +858,29 @@ export function MapPage() {
                 style={{ touchAction: 'none' }}
               >
                 <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
+
+                {/* Photo navigation */}
+                {filteredPhotos.length > 1 && (
+                  <div className="absolute left-4 top-1/2 -translate-y-1/2 flex items-center gap-1 z-10">
+                    <button
+                      onClick={() => navigatePhoto('prev', filteredPhotos, visibleSelected)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
+                      style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
+                      aria-label="Previous photo"
+                    >
+                      <FiChevronLeft size={15} />
+                    </button>
+                    <button
+                      onClick={() => navigatePhoto('next', filteredPhotos, visibleSelected)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
+                      style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
+                      aria-label="Next photo"
+                    >
+                      <FiChevronRight size={15} />
+                    </button>
+                  </div>
+                )}
+
                 <button
                   ref={closeButtonRef}
                   onClick={handleClose}
