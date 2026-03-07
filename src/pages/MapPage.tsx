@@ -11,7 +11,7 @@
  *            photo, metadata, and related article links.
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { memo, useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -38,6 +38,19 @@ const TILES = {
   },
 }
 
+const SPIDER_LEG_STYLES = {
+  light: {
+    color: '#94a3b8',
+    opacity: 0.45,
+    weight: 1.25,
+  },
+  dark: {
+    color: '#64748b',
+    opacity: 0.55,
+    weight: 1.25,
+  },
+} as const
+
 function ThemeAwareTiles() {
   const { isDark } = useTheme()
   const tile = isDark ? TILES.dark : TILES.light
@@ -49,6 +62,7 @@ function ThemeAwareTiles() {
       minZoom={2}
       maxZoom={5}
       maxNativeZoom={5}
+      noWrap={true}
     />
   )
 }
@@ -65,6 +79,63 @@ function ZoomControls() {
   return null
 }
 
+function ResponsiveMinZoom() {
+  const map = useMap()
+
+  useEffect(() => {
+    const updateMinZoom = () => {
+      const width = map.getSize().x
+      const rawMinZoom = Math.log2(width / WORLD_TILE_SIZE)
+      const nextMinZoom = Math.min(
+        MAX_ZOOM,
+        Math.max(MIN_ZOOM, Math.ceil(rawMinZoom)),
+      )
+
+      map.setMinZoom(nextMinZoom)
+
+      if (map.getZoom() < nextMinZoom) {
+        map.setZoom(nextMinZoom)
+      }
+    }
+
+    updateMinZoom()
+    map.on('resize', updateMinZoom)
+
+    return () => {
+      map.off('resize', updateMinZoom)
+    }
+  }, [map])
+
+  return null
+}
+
+function EnsureFreshMapLayout({ onReady }: { onReady: () => void }) {
+  const map = useMap()
+
+  useEffect(() => {
+    let frameId = 0
+    let timeoutId = 0
+
+    const refreshLayout = () => {
+      map.invalidateSize(false)
+      map.fire('resize')
+    }
+
+    refreshLayout()
+    frameId = window.requestAnimationFrame(refreshLayout)
+    timeoutId = window.setTimeout(() => {
+      refreshLayout()
+      onReady()
+    }, 120)
+
+    return () => {
+      window.cancelAnimationFrame(frameId)
+      window.clearTimeout(timeoutId)
+    }
+  }, [map, onReady])
+
+  return null
+}
 /* ─── Map state in URL ───────────────────────────────────────────────────── */
 
 // Leaflet uses Web Mercator, so the visual midpoint is slightly north of the
@@ -73,6 +144,20 @@ const DEFAULT_CENTER: [number, number] = [14.7876, 97.0344]
 const DEFAULT_ZOOM = 4
 const MIN_ZOOM = 2
 const MAX_ZOOM = 5
+const MAX_LATITUDE = 85.05112878
+const WORLD_BOUNDS: L.LatLngBoundsExpression = [
+  [-MAX_LATITUDE, -180],
+  [MAX_LATITUDE, 180],
+]
+const WORLD_TILE_SIZE = 256
+
+function clampLatitude(value: number): number {
+  return Math.min(MAX_LATITUDE, Math.max(-MAX_LATITUDE, value))
+}
+
+function normalizeLongitude(value: number): number {
+  return ((((value + 180) % 360) + 360) % 360) - 180
+}
 
 interface MapViewport {
   lat: number
@@ -109,8 +194,8 @@ function MapViewportSync({
   const updateViewport = useCallback((map: L.Map) => {
     const center = map.getCenter()
     onViewportChange({
-      lat: center.lat,
-      lng: center.lng,
+      lat: clampLatitude(center.lat),
+      lng: normalizeLongitude(center.lng),
       zoom: map.getZoom(),
     })
   }, [onViewportChange])
@@ -136,17 +221,16 @@ function MapViewportSync({
 class PhotoIconFactory {
   private readonly cache = new Map<string, L.DivIcon>()
 
-  get(photo: PhotoLocation, selected = false): L.DivIcon {
-    const state = selected ? 'selected' : 'default'
-    const cacheKey = `${photo.id}:${state}:${photo.thumbnail}`
+  get(photo: PhotoLocation): L.DivIcon {
+    const cacheKey = `${photo.id}:${photo.thumbnail}`
     const cached = this.cache.get(cacheKey)
 
     if (cached) return cached
 
-    const size = selected ? 70 : 56
-    const border = selected ? 3 : 2.5
+    const size = 56
+    const border = 2.5
     const icon = L.divIcon({
-      html: `<div class="map-photo-pin${selected ? ' map-photo-pin--selected' : ''}" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
+      html: `<div class="map-photo-pin" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
       className: '',
       iconSize:   [size, size],
       iconAnchor: [size / 2, size / 2],
@@ -167,16 +251,60 @@ const photoIconFactory = new PhotoIconFactory()
 
 interface PhotoMarker extends L.Marker {
   __photo?: PhotoLocation
+  _spiderLeg?: L.Polyline
 }
 
 interface MarkerClusterLike {
   getChildCount: () => number
   getAllChildMarkers: () => PhotoMarker[]
   spiderfy: () => void
+  _icon?: HTMLElement | null
+}
+
+interface MarkerClusterGroupWithSpider extends L.FeatureGroup {
+  _spiderfied?: MarkerClusterLike | null
+  unspiderfy: () => void
 }
 
 interface MarkerClusterClickEvent {
   layer?: MarkerClusterLike
+}
+
+interface MarkerClusterSpiderfyEvent {
+  cluster: MarkerClusterLike
+}
+
+function spiderfyShapePositions(count: number, center: L.Point): L.Point[] {
+  const twoPi = Math.PI * 2
+
+  if (count < 9) {
+    const circumference = 50 * (2 + count)
+    const legLength = Math.max(circumference / twoPi, 44)
+    const angleStep = twoPi / count
+
+    return Array.from({ length: count }, (_, index) => {
+      const angle = index * angleStep
+      return new L.Point(
+        center.x + legLength * Math.cos(angle),
+        center.y + legLength * Math.sin(angle),
+      ).round()
+    })
+  }
+
+  const res: L.Point[] = new Array(count)
+  let legLength = 22
+  let angle = 0
+
+  for (let index = count - 1; index >= 0; index -= 1) {
+    angle += 56 / legLength + index * 0.0005
+    res[index] = new L.Point(
+      center.x + legLength * Math.cos(angle),
+      center.y + legLength * Math.sin(angle),
+    ).round()
+    legLength += twoPi * 5 / angle
+  }
+
+  return res
 }
 
 function mostRecentPhoto(markers: PhotoMarker[]): PhotoLocation | null {
@@ -285,24 +413,122 @@ const FILTER_OPTIONS = [
 ] as const
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
+const SPIDER_LEG_FADE_MS = 120
 
-function PhotoMarkerClusters({
+const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos,
-  selectedId,
   onMarkerClick,
 }: {
   photos: PhotoLocation[]
-  selectedId?: string
   onMarkerClick: (photo: PhotoLocation) => void
 }) {
+  const { isDark } = useTheme()
+  const map = useMap()
+  const clusterGroupRef = useRef<MarkerClusterGroupWithSpider | null>(null)
+  const collapseTimeoutRef = useRef<number | null>(null)
+  const spiderLegPolylineOptions = isDark ? SPIDER_LEG_STYLES.dark : SPIDER_LEG_STYLES.light
+
+  const beginSpiderCollapseVisual = useCallback((cluster: MarkerClusterLike | null | undefined) => {
+    if (!cluster) return
+
+    cluster._icon?.classList.remove('map-cluster-icon--spiderfied')
+    cluster.getAllChildMarkers().forEach((marker) => {
+      marker._spiderLeg?.setStyle({ opacity: 0 })
+    })
+  }, [])
+
+  useEffect(() => {
+    const clusterGroup = clusterGroupRef.current
+    if (!clusterGroup) return
+
+    const setSpiderfiedState = (cluster: MarkerClusterLike, spiderfied: boolean) => {
+      cluster._icon?.classList.toggle('map-cluster-icon--spiderfied', spiderfied)
+    }
+
+    const handleSpiderfied = (event: L.LeafletEvent) => {
+      const clusterEvent = event as L.LeafletEvent & MarkerClusterSpiderfyEvent
+      setSpiderfiedState(clusterEvent.cluster, true)
+    }
+
+    const handleUnspiderfied = (event: L.LeafletEvent) => {
+      const clusterEvent = event as L.LeafletEvent & MarkerClusterSpiderfyEvent
+      setSpiderfiedState(clusterEvent.cluster, false)
+    }
+
+    clusterGroup.on('spiderfied', handleSpiderfied)
+    clusterGroup.on('unspiderfied', handleUnspiderfied)
+
+    return () => {
+      if (collapseTimeoutRef.current !== null) {
+        window.clearTimeout(collapseTimeoutRef.current)
+      }
+      clusterGroup.off('spiderfied', handleSpiderfied)
+      clusterGroup.off('unspiderfied', handleUnspiderfied)
+      const spiderfied = clusterGroup._spiderfied
+      if (spiderfied) setSpiderfiedState(spiderfied, false)
+    }
+  }, [])
+
+  useEffect(() => {
+    const handleMapCollapseVisual = () => {
+      beginSpiderCollapseVisual(clusterGroupRef.current?._spiderfied)
+    }
+
+    map.on('click', handleMapCollapseVisual)
+    map.on('zoomstart', handleMapCollapseVisual)
+
+    return () => {
+      map.off('click', handleMapCollapseVisual)
+      map.off('zoomstart', handleMapCollapseVisual)
+    }
+  }, [beginSpiderCollapseVisual, map])
+
+  const collapseSpiderfiedCluster = useCallback((afterCollapse: () => void) => {
+    const clusterGroup = clusterGroupRef.current
+    const spiderfied = clusterGroup?._spiderfied
+
+    if (!clusterGroup || !spiderfied) {
+      afterCollapse()
+      return
+    }
+
+    beginSpiderCollapseVisual(spiderfied)
+
+    if (collapseTimeoutRef.current !== null) {
+      window.clearTimeout(collapseTimeoutRef.current)
+    }
+
+    collapseTimeoutRef.current = window.setTimeout(() => {
+      if (clusterGroup._spiderfied === spiderfied) {
+        clusterGroup.unspiderfy()
+      }
+      collapseTimeoutRef.current = null
+      afterCollapse()
+    }, SPIDER_LEG_FADE_MS)
+  }, [beginSpiderCollapseVisual])
+
   const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
     const cluster = event.layer
     if (!cluster) return
+    const spiderfied = clusterGroupRef.current?._spiderfied
+    if (spiderfied && spiderfied !== cluster) {
+      beginSpiderCollapseVisual(spiderfied)
+    }
     cluster.spiderfy()
-  }, [])
+  }, [beginSpiderCollapseVisual])
+
+  const handleMarkerSelect = useCallback((photo: PhotoLocation, marker: PhotoMarker) => {
+    const spiderfied = clusterGroupRef.current?._spiderfied
+    if (spiderfied && !spiderfied.getAllChildMarkers().includes(marker)) {
+      collapseSpiderfiedCluster(() => onMarkerClick(photo))
+      return
+    }
+    onMarkerClick(photo)
+  }, [collapseSpiderfiedCluster, onMarkerClick])
 
   return (
     <MarkerClusterGroup
+      ref={clusterGroupRef}
       chunkedLoading
       showCoverageOnHover={false}
       maxClusterRadius={80}
@@ -311,6 +537,8 @@ function PhotoMarkerClusters({
       zoomToBoundsOnClick={false}
       spiderfyOnMaxZoom={false}
       spiderfyDistanceMultiplier={2}
+      spiderfyShapePositions={spiderfyShapePositions}
+      spiderLegPolylineOptions={spiderLegPolylineOptions}
       removeOutsideVisibleBounds={true}
       onClick={handleClusterClick}
     >
@@ -318,14 +546,14 @@ function PhotoMarkerClusters({
         <Marker
           key={photo.id}
           position={[photo.lat, photo.lng]}
-          icon={photoIconFactory.get(photo, selectedId === photo.id)}
-          eventHandlers={{ click: () => onMarkerClick(photo) }}
+          icon={photoIconFactory.get(photo)}
+          eventHandlers={{ click: (event) => handleMarkerSelect(photo, event.target as PhotoMarker) }}
           ref={(marker) => { if (marker) (marker as PhotoMarker).__photo = photo }}
         />
       ))}
     </MarkerClusterGroup>
   )
-}
+})
 
 /* ─── MapPage ────────────────────────────────────────────────────────────── */
 
@@ -338,9 +566,10 @@ export function MapPage() {
   const initialSelected = initialPhotoFromId(searchParams.get('selected'))
   const [selected, setSelected] = useState<PhotoLocation | null>(initialSelected)
   const [activeFilter, setActiveFilter] = useState<FilterId>(initialFilter)
+  const [isMapLayoutReady, setIsMapLayoutReady] = useState(false)
   const [viewport, setViewport] = useState<MapViewport>({
-    lat: parseCoordinate(searchParams.get('lat'), DEFAULT_CENTER[0]),
-    lng: parseCoordinate(searchParams.get('lng'), DEFAULT_CENTER[1]),
+    lat: clampLatitude(parseCoordinate(searchParams.get('lat'), DEFAULT_CENTER[0])),
+    lng: normalizeLongitude(parseCoordinate(searchParams.get('lng'), DEFAULT_CENTER[1])),
     zoom: parseZoom(searchParams.get('z'), DEFAULT_ZOOM),
   })
   const [imageLoaded, setImageLoaded] = useState(false)
@@ -358,11 +587,11 @@ export function MapPage() {
     setSelected(null)
   }, [])
 
-  const filteredPhotos = photoLocations.filter((photo) => {
+  const filteredPhotos = useMemo(() => photoLocations.filter((photo) => {
     if (activeFilter === 'all') return true
     if (activeFilter === 'linked') return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
     return true
-  })
+  }), [activeFilter])
   const visibleSelected = selected && filteredPhotos.some((photo) => photo.id === selected.id)
     ? selected
     : null
@@ -521,19 +750,24 @@ export function MapPage() {
         zoom={viewport.zoom}
         minZoom={MIN_ZOOM}
         maxZoom={MAX_ZOOM}
+        maxBounds={WORLD_BOUNDS}
+        maxBoundsViscosity={1}
         zoomControl={false}
         scrollWheelZoom={true}
         style={{ width: '100%', height: '100%' }}
         className="map-container"
       >
         <ThemeAwareTiles />
+        <EnsureFreshMapLayout onReady={() => setIsMapLayoutReady(true)} />
         <ZoomControls />
+        <ResponsiveMinZoom />
         <MapViewportSync onViewportChange={setViewport} />
-        <PhotoMarkerClusters
-          photos={filteredPhotos}
-          selectedId={visibleSelected?.id}
-          onMarkerClick={handleMarkerClick}
-        />
+        {isMapLayoutReady && (
+          <PhotoMarkerClusters
+            photos={filteredPhotos}
+            onMarkerClick={handleMarkerClick}
+          />
+        )}
       </MapContainer>
 
       {/* ── Bottom sheet ────────────────────────────────────────────────── */}

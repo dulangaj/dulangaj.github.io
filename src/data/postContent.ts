@@ -1,6 +1,6 @@
 /* ─── Post Content Loader ────────────────────────────────────────────────── */
 /* Loads all posts/*.md files at build time via Vite glob import.             */
-/* Parses frontmatter for metadata and exports auto-loaded Post objects.      */
+/* Parses frontmatter for metadata and exports auto-loaded Post objects.       */
 
 import { Post } from '@/models/Post'
 
