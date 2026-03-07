@@ -252,7 +252,6 @@ const photoIconFactory = new PhotoIconFactory()
 
 interface PhotoMarker extends L.Marker {
   __photo?: PhotoLocation
-  _spiderLeg?: L.Polyline
 }
 
 interface MarkerClusterLike {
@@ -414,7 +413,6 @@ const FILTER_OPTIONS = [
 ] as const
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
-const SPIDER_LEG_FADE_MS = 120
 
 const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos,
@@ -424,19 +422,8 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   onMarkerClick: (photo: PhotoLocation) => void
 }) {
   const { isDark } = useTheme()
-  const map = useMap()
   const clusterGroupRef = useRef<MarkerClusterGroupWithSpider | null>(null)
-  const collapseTimeoutRef = useRef<number | null>(null)
   const spiderLegPolylineOptions = isDark ? SPIDER_LEG_STYLES.dark : SPIDER_LEG_STYLES.light
-
-  const beginSpiderCollapseVisual = useCallback((cluster: MarkerClusterLike | null | undefined) => {
-    if (!cluster) return
-
-    cluster._icon?.classList.remove('map-cluster-icon--spiderfied')
-    cluster.getAllChildMarkers().forEach((marker) => {
-      marker._spiderLeg?.setStyle({ opacity: 0 })
-    })
-  }, [])
 
   useEffect(() => {
     const clusterGroup = clusterGroupRef.current
@@ -460,9 +447,6 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
     clusterGroup.on('unspiderfied', handleUnspiderfied)
 
     return () => {
-      if (collapseTimeoutRef.current !== null) {
-        window.clearTimeout(collapseTimeoutRef.current)
-      }
       clusterGroup.off('spiderfied', handleSpiderfied)
       clusterGroup.off('unspiderfied', handleUnspiderfied)
       const spiderfied = clusterGroup._spiderfied
@@ -470,62 +454,19 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
     }
   }, [])
 
-  useEffect(() => {
-    const handleMapCollapseVisual = () => {
-      beginSpiderCollapseVisual(clusterGroupRef.current?._spiderfied)
-    }
-
-    map.on('click', handleMapCollapseVisual)
-    map.on('zoomstart', handleMapCollapseVisual)
-
-    return () => {
-      map.off('click', handleMapCollapseVisual)
-      map.off('zoomstart', handleMapCollapseVisual)
-    }
-  }, [beginSpiderCollapseVisual, map])
-
-  const collapseSpiderfiedCluster = useCallback((afterCollapse: () => void) => {
-    const clusterGroup = clusterGroupRef.current
-    const spiderfied = clusterGroup?._spiderfied
-
-    if (!clusterGroup || !spiderfied) {
-      afterCollapse()
-      return
-    }
-
-    beginSpiderCollapseVisual(spiderfied)
-
-    if (collapseTimeoutRef.current !== null) {
-      window.clearTimeout(collapseTimeoutRef.current)
-    }
-
-    collapseTimeoutRef.current = window.setTimeout(() => {
-      if (clusterGroup._spiderfied === spiderfied) {
-        clusterGroup.unspiderfy()
-      }
-      collapseTimeoutRef.current = null
-      afterCollapse()
-    }, SPIDER_LEG_FADE_MS)
-  }, [beginSpiderCollapseVisual])
-
   const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
     const cluster = event.layer
     if (!cluster) return
-    const spiderfied = clusterGroupRef.current?._spiderfied
-    if (spiderfied && spiderfied !== cluster) {
-      beginSpiderCollapseVisual(spiderfied)
-    }
     cluster.spiderfy()
-  }, [beginSpiderCollapseVisual])
+  }, [])
 
   const handleMarkerSelect = useCallback((photo: PhotoLocation, marker: PhotoMarker) => {
     const spiderfied = clusterGroupRef.current?._spiderfied
     if (spiderfied && !spiderfied.getAllChildMarkers().includes(marker)) {
-      collapseSpiderfiedCluster(() => onMarkerClick(photo))
-      return
+      clusterGroupRef.current?.unspiderfy()
     }
     onMarkerClick(photo)
-  }, [collapseSpiderfiedCluster, onMarkerClick])
+  }, [onMarkerClick])
 
   return (
     <MarkerClusterGroup
