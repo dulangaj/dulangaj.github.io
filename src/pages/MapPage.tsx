@@ -230,6 +230,7 @@ interface MarkerClusterLike {
   getChildCount: () => number
   getAllChildMarkers: () => PhotoMarker[]
   spiderfy: () => void
+  _icon?: HTMLElement | null
 }
 
 interface MarkerClusterGroupWithSpider extends L.FeatureGroup {
@@ -239,6 +240,43 @@ interface MarkerClusterGroupWithSpider extends L.FeatureGroup {
 
 interface MarkerClusterClickEvent {
   layer?: MarkerClusterLike
+}
+
+interface MarkerClusterSpiderfyEvent {
+  cluster: MarkerClusterLike
+}
+
+function spiderfyShapePositions(count: number, center: L.Point): L.Point[] {
+  const twoPi = Math.PI * 2
+
+  if (count < 9) {
+    const circumference = 50 * (2 + count)
+    const legLength = Math.max(circumference / twoPi, 44)
+    const angleStep = twoPi / count
+
+    return Array.from({ length: count }, (_, index) => {
+      const angle = index * angleStep
+      return new L.Point(
+        center.x + legLength * Math.cos(angle),
+        center.y + legLength * Math.sin(angle),
+      ).round()
+    })
+  }
+
+  const res: L.Point[] = new Array(count)
+  let legLength = 22
+  let angle = 0
+
+  for (let index = count - 1; index >= 0; index -= 1) {
+    angle += 56 / legLength + index * 0.0005
+    res[index] = new L.Point(
+      center.x + legLength * Math.cos(angle),
+      center.y + legLength * Math.sin(angle),
+    ).round()
+    legLength += twoPi * 5 / angle
+  }
+
+  return res
 }
 
 function mostRecentPhoto(markers: PhotoMarker[]): PhotoLocation | null {
@@ -359,6 +397,35 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   const clusterGroupRef = useRef<MarkerClusterGroupWithSpider | null>(null)
   const spiderLegPolylineOptions = isDark ? SPIDER_LEG_STYLES.dark : SPIDER_LEG_STYLES.light
 
+  useEffect(() => {
+    const clusterGroup = clusterGroupRef.current
+    if (!clusterGroup) return
+
+    const setSpiderfiedState = (cluster: MarkerClusterLike, spiderfied: boolean) => {
+      cluster._icon?.classList.toggle('map-cluster-icon--spiderfied', spiderfied)
+    }
+
+    const handleSpiderfied = (event: L.LeafletEvent) => {
+      const clusterEvent = event as L.LeafletEvent & MarkerClusterSpiderfyEvent
+      setSpiderfiedState(clusterEvent.cluster, true)
+    }
+
+    const handleUnspiderfied = (event: L.LeafletEvent) => {
+      const clusterEvent = event as L.LeafletEvent & MarkerClusterSpiderfyEvent
+      setSpiderfiedState(clusterEvent.cluster, false)
+    }
+
+    clusterGroup.on('spiderfied', handleSpiderfied)
+    clusterGroup.on('unspiderfied', handleUnspiderfied)
+
+    return () => {
+      clusterGroup.off('spiderfied', handleSpiderfied)
+      clusterGroup.off('unspiderfied', handleUnspiderfied)
+      const spiderfied = clusterGroup._spiderfied
+      if (spiderfied) setSpiderfiedState(spiderfied, false)
+    }
+  }, [])
+
   const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
     const cluster = event.layer
     if (!cluster) return
@@ -384,6 +451,7 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
       zoomToBoundsOnClick={false}
       spiderfyOnMaxZoom={false}
       spiderfyDistanceMultiplier={2}
+      spiderfyShapePositions={spiderfyShapePositions}
       spiderLegPolylineOptions={spiderLegPolylineOptions}
       removeOutsideVisibleBounds={true}
       onClick={handleClusterClick}

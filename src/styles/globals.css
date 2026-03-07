@@ -275,7 +275,8 @@ button:focus-visible,
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1);
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1),
+              opacity 0.16s ease;
   will-change: transform;
 }
 .map-cluster-wrap:hover { transform: scale(1.1); }
@@ -327,6 +328,7 @@ button:focus-visible,
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: opacity 0.16s ease, transform 0.16s ease;
   box-shadow: 0 2px 10px rgba(220,38,38,0.5);
 }
 .map-cluster-pin--fallback span {
@@ -335,6 +337,13 @@ button:focus-visible,
   font-weight: 600;
   color: #fff;
   line-height: 1;
+}
+
+.map-cluster-icon--spiderfied .map-cluster-wrap,
+.map-cluster-icon--spiderfied .map-cluster-pin--fallback {
+  opacity: 0.14;
+  transform: scale(0.72);
+  pointer-events: none;
 }
 
 /* ── Leaflet popup cleanup (unused but reset anyway) ────────────────────── */
