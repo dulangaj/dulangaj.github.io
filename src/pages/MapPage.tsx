@@ -136,7 +136,6 @@ function EnsureFreshMapLayout({ onReady }: { onReady: () => void }) {
 
   return null
 }
-
 /* ─── Map state in URL ───────────────────────────────────────────────────── */
 
 // Leaflet uses Web Mercator, so the visual midpoint is slightly north of the
