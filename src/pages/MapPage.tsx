@@ -109,7 +109,7 @@ function ResponsiveMinZoom() {
   return null
 }
 
-function EnsureFreshMapLayout() {
+function EnsureFreshMapLayout({ onReady }: { onReady: () => void }) {
   const map = useMap()
 
   useEffect(() => {
@@ -123,13 +123,16 @@ function EnsureFreshMapLayout() {
 
     refreshLayout()
     frameId = window.requestAnimationFrame(refreshLayout)
-    timeoutId = window.setTimeout(refreshLayout, 120)
+    timeoutId = window.setTimeout(() => {
+      refreshLayout()
+      onReady()
+    }, 120)
 
     return () => {
       window.cancelAnimationFrame(frameId)
       window.clearTimeout(timeoutId)
     }
-  }, [map])
+  }, [map, onReady])
 
   return null
 }
@@ -544,6 +547,7 @@ export function MapPage() {
   const initialSelected = initialPhotoFromId(searchParams.get('selected'))
   const [selected, setSelected] = useState<PhotoLocation | null>(initialSelected)
   const [activeFilter, setActiveFilter] = useState<FilterId>(initialFilter)
+  const [isMapLayoutReady, setIsMapLayoutReady] = useState(false)
   const [viewport, setViewport] = useState<MapViewport>({
     lat: clampLatitude(parseCoordinate(searchParams.get('lat'), DEFAULT_CENTER[0])),
     lng: normalizeLongitude(parseCoordinate(searchParams.get('lng'), DEFAULT_CENTER[1])),
@@ -735,14 +739,16 @@ export function MapPage() {
         className="map-container"
       >
         <ThemeAwareTiles />
-        <EnsureFreshMapLayout />
+        <EnsureFreshMapLayout onReady={() => setIsMapLayoutReady(true)} />
         <ZoomControls />
         <ResponsiveMinZoom />
         <MapViewportSync onViewportChange={setViewport} />
-        <PhotoMarkerClusters
-          photos={filteredPhotos}
-          onMarkerClick={handleMarkerClick}
-        />
+        {isMapLayoutReady && (
+          <PhotoMarkerClusters
+            photos={filteredPhotos}
+            onMarkerClick={handleMarkerClick}
+          />
+        )}
       </MapContainer>
 
       {/* ── Bottom sheet ────────────────────────────────────────────────── */}
