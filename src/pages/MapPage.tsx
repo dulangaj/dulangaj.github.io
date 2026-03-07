@@ -490,13 +490,8 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
     const cluster = event.layer
     if (!cluster) return
-    const spiderfied = clusterGroupRef.current?._spiderfied
-    if (spiderfied && spiderfied !== cluster) {
-      collapseSpiderfiedCluster(() => cluster.spiderfy())
-      return
-    }
     cluster.spiderfy()
-  }, [collapseSpiderfiedCluster])
+  }, [])
 
   const handleMarkerSelect = useCallback((photo: PhotoLocation, marker: PhotoMarker) => {
     const spiderfied = clusterGroupRef.current?._spiderfied
