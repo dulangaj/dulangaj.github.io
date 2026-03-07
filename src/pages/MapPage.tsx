@@ -14,11 +14,11 @@
 import { memo, useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight } from 'react-icons/fi'
+import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useTheme } from '@/hooks/useTheme'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { photoLocations, type PhotoLocation } from '@/data/photoLocations'
@@ -274,6 +274,11 @@ interface MarkerClusterSpiderfyEvent {
   cluster: MarkerClusterLike
 }
 
+interface PhotoSelectionContext {
+  photo: PhotoLocation
+  clusterPhotos: PhotoLocation[]
+}
+
 function spiderfyShapePositions(count: number, center: L.Point): L.Point[] {
   const twoPi = Math.PI * 2
 
@@ -319,6 +324,10 @@ function mostRecentPhoto(markers: PhotoMarker[]): PhotoLocation | null {
   }
 
   return latest
+}
+
+function photosFromMarkers(markers: PhotoMarker[]): PhotoLocation[] {
+  return markers.flatMap((marker) => marker.__photo ? [marker.__photo] : [])
 }
 
 class ClusterIconFactory {
@@ -414,13 +423,15 @@ const FILTER_OPTIONS = [
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
 const SPIDER_LEG_FADE_MS = 120
+const PHOTO_SWIPE_THRESHOLD = 56
+const PHOTO_SWIPE_RESTRAINT = 32
 
 const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos,
   onMarkerClick,
 }: {
   photos: PhotoLocation[]
-  onMarkerClick: (photo: PhotoLocation) => void
+  onMarkerClick: (selection: PhotoSelectionContext) => void
 }) {
   const { isDark } = useTheme()
   const map = useMap()
@@ -519,11 +530,18 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
 
   const handleMarkerSelect = useCallback((photo: PhotoLocation, marker: PhotoMarker) => {
     const spiderfied = clusterGroupRef.current?._spiderfied
+    const selection = {
+      photo,
+      clusterPhotos: spiderfied && spiderfied.getAllChildMarkers().includes(marker)
+        ? photosFromMarkers(spiderfied.getAllChildMarkers())
+        : [photo],
+    }
+
     if (spiderfied && !spiderfied.getAllChildMarkers().includes(marker)) {
-      collapseSpiderfiedCluster(() => onMarkerClick(photo))
+      collapseSpiderfiedCluster(() => onMarkerClick(selection))
       return
     }
-    onMarkerClick(photo)
+    onMarkerClick(selection)
   }, [collapseSpiderfiedCluster, onMarkerClick])
 
   return (
@@ -565,6 +583,9 @@ export function MapPage() {
   const initialFilter: FilterId = isFilterId(filterParam) ? filterParam : 'all'
   const initialSelected = initialPhotoFromId(searchParams.get('selected'))
   const [selected, setSelected] = useState<PhotoLocation | null>(initialSelected)
+  const [selectedClusterPhotoIds, setSelectedClusterPhotoIds] = useState<string[]>(
+    initialSelected ? [initialSelected.id] : [],
+  )
   const [activeFilter, setActiveFilter] = useState<FilterId>(initialFilter)
   const [isMapLayoutReady, setIsMapLayoutReady] = useState(false)
   const [viewport, setViewport] = useState<MapViewport>({
@@ -576,15 +597,47 @@ export function MapPage() {
   const panelRef = useRef<HTMLDivElement | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+  )
 
-  const handleMarkerClick = useCallback((photo: PhotoLocation) => {
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 1024px)')
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches)
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
+  }, [])
+
+  const handleMarkerClick = useCallback(({ photo, clusterPhotos }: PhotoSelectionContext) => {
     setImageLoaded(false)
+    setSelectedClusterPhotoIds(clusterPhotos.map((clusterPhoto) => clusterPhoto.id))
     setSelected(photo)
   }, [])
 
   const handleClose = useCallback(() => {
     setImageLoaded(false)
+    setSelectedClusterPhotoIds([])
     setSelected(null)
+  }, [])
+
+  const handleDragEnd = useCallback(
+    (_: unknown, info: PanInfo) => {
+      if (info.offset.y > 100 || info.velocity.y > 500) {
+        handleClose()
+      }
+    },
+    [handleClose],
+  )
+
+  const navigatePhoto = useCallback((direction: 'prev' | 'next', photos: PhotoLocation[], current: PhotoLocation | null) => {
+    if (!current || photos.length === 0) return
+    const idx = photos.findIndex((p) => p.id === current.id)
+    if (idx === -1) return
+    const nextIdx = direction === 'next'
+      ? (idx + 1) % photos.length
+      : (idx - 1 + photos.length) % photos.length
+    setImageLoaded(false)
+    setSelected(photos[nextIdx])
   }, [])
 
   const filteredPhotos = useMemo(() => photoLocations.filter((photo) => {
@@ -595,6 +648,27 @@ export function MapPage() {
   const visibleSelected = selected && filteredPhotos.some((photo) => photo.id === selected.id)
     ? selected
     : null
+  const visiblePhotoMap = useMemo(
+    () => new Map(filteredPhotos.map((photo) => [photo.id, photo])),
+    [filteredPhotos],
+  )
+  const activeClusterPhotos = useMemo(() => {
+    if (!visibleSelected) return []
+
+    const clusterPhotos = selectedClusterPhotoIds
+      .map((photoId) => visiblePhotoMap.get(photoId) ?? null)
+      .filter((photo): photo is PhotoLocation => photo !== null)
+
+    if (clusterPhotos.some((photo) => photo.id === visibleSelected.id)) {
+      return clusterPhotos
+    }
+
+    return [visibleSelected]
+  }, [selectedClusterPhotoIds, visiblePhotoMap, visibleSelected])
+  const canNavigateCluster = activeClusterPhotos.length > 1
+  const activeClusterIndex = visibleSelected
+    ? activeClusterPhotos.findIndex((photo) => photo.id === visibleSelected.id)
+    : -1
 
   useEffect(() => {
     const nextParams = new URLSearchParams()
@@ -627,6 +701,18 @@ export function MapPage() {
       if (event.key === 'Escape') {
         event.preventDefault()
         handleClose()
+        return
+      }
+
+      if (event.key === 'ArrowLeft') {
+        event.preventDefault()
+        navigatePhoto('prev', activeClusterPhotos, selected)
+        return
+      }
+
+      if (event.key === 'ArrowRight') {
+        event.preventDefault()
+        navigatePhoto('next', activeClusterPhotos, selected)
         return
       }
 
@@ -664,7 +750,7 @@ export function MapPage() {
       window.removeEventListener('keydown', handleKeyDown)
       previousFocusRef.current?.focus()
     }
-  }, [selected, handleClose])
+  }, [activeClusterPhotos, handleClose, navigatePhoto, selected])
 
   const mappedLocations = countUnique(filteredPhotos.map((p) => `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`))
 
@@ -770,6 +856,36 @@ export function MapPage() {
         )}
       </MapContainer>
 
+      {/* ── Loading overlay ──────────────────────────────────────────────── */}
+      <AnimatePresence>
+        {!isMapLayoutReady && (
+          <motion.div
+            key="map-loader"
+            initial={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none"
+            style={{ background: 'var(--color-paper)' }}
+          >
+            <div className="flex flex-col items-center gap-3">
+              <div
+                className="w-8 h-8 rounded-full border-2 animate-spin"
+                style={{
+                  borderColor: 'var(--color-rule)',
+                  borderTopColor: 'var(--color-crimson)',
+                }}
+              />
+              <span
+                className="font-body text-[12px]"
+                style={{ color: 'var(--color-muted)' }}
+              >
+                Loading map…
+              </span>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       {/* ── Bottom sheet ────────────────────────────────────────────────── */}
       <AnimatePresence>
         {visibleSelected && (
@@ -793,6 +909,10 @@ export function MapPage() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 28, stiffness: 260, mass: 0.8 }}
+              drag={isDesktop ? false : 'y'}
+              dragConstraints={{ top: 0 }}
+              dragElastic={0.2}
+              onDragEnd={handleDragEnd}
               className="absolute bottom-0 left-0 right-0 z-[1002] max-h-[85vh] flex flex-col rounded-t-2xl overflow-hidden shadow-2xl lg:top-24 lg:right-6 lg:left-auto lg:w-[min(440px,38vw)] lg:max-h-[calc(100vh-7rem)] lg:rounded-2xl"
               style={{
                 background: 'var(--color-surface)',
@@ -807,14 +927,52 @@ export function MapPage() {
               aria-labelledby={`map-photo-title-${visibleSelected.id}`}
               ref={panelRef}
             >
-              <div className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)]">
+              <div
+                className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)]"
+                style={{ touchAction: 'none' }}
+              >
                 <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
+
+                {/* Photo navigation */}
+                {isDesktop && canNavigateCluster && (
+                  <div className="absolute left-3 top-3 flex items-center gap-1 z-10">
+                    <button
+                      onClick={() => navigatePhoto('prev', activeClusterPhotos, visibleSelected)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
+                      style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
+                      aria-label="Previous photo"
+                      aria-keyshortcuts="ArrowLeft"
+                    >
+                      <FiChevronLeft size={15} />
+                    </button>
+                    <button
+                      onClick={() => navigatePhoto('next', activeClusterPhotos, visibleSelected)}
+                      className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
+                      style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
+                      aria-label="Next photo"
+                      aria-keyshortcuts="ArrowRight"
+                    >
+                      <FiChevronRight size={15} />
+                    </button>
+                  </div>
+                )}
+
+                {canNavigateCluster && activeClusterIndex !== -1 && (
+                  <div
+                    className="font-mono text-[10px] tracking-[0.14em] uppercase"
+                    style={{ color: 'var(--color-subtle)' }}
+                  >
+                    {activeClusterIndex + 1} / {activeClusterPhotos.length}
+                  </div>
+                )}
+
                 <button
                   ref={closeButtonRef}
                   onClick={handleClose}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10 lg:top-3 lg:right-3 lg:translate-y-0"
+                  className="absolute right-3 top-3 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
                   style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                   aria-label="Close"
+                  aria-keyshortcuts="Escape"
                 >
                   <FiX size={15} />
                 </button>
@@ -823,9 +981,25 @@ export function MapPage() {
               {/* Scrollable content */}
               <div className="overflow-y-auto overscroll-contain">
                 {/* Photo */}
-                <div
+                <motion.div
                   className="relative w-full overflow-hidden"
                   style={{ aspectRatio: '16/9', background: 'var(--color-rule)' }}
+                  drag={canNavigateCluster && !isDesktop ? 'x' : false}
+                  dragConstraints={{ left: 0, right: 0 }}
+                  dragElastic={0.14}
+                  dragMomentum={false}
+                  onDragEnd={(_, info) => {
+                    if (!canNavigateCluster) return
+                    const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y) + PHOTO_SWIPE_RESTRAINT
+                    if (!isHorizontalSwipe) return
+                    if (info.offset.x <= -PHOTO_SWIPE_THRESHOLD || info.velocity.x <= -500) {
+                      navigatePhoto('next', activeClusterPhotos, visibleSelected)
+                      return
+                    }
+                    if (info.offset.x >= PHOTO_SWIPE_THRESHOLD || info.velocity.x >= 500) {
+                      navigatePhoto('prev', activeClusterPhotos, visibleSelected)
+                    }
+                  }}
                 >
                   <img
                     src={visibleSelected.thumbnail}
@@ -862,7 +1036,7 @@ export function MapPage() {
                       {visibleSelected.cameraModel}
                     </div>
                   )}
-                </div>
+                </motion.div>
 
                 {/* Info */}
                 <div className="px-5 pt-4 pb-6">
@@ -969,6 +1143,44 @@ export function MapPage() {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* Keyboard shortcut hints — desktop only */}
+              <div
+                className="hidden lg:flex items-center justify-center gap-4 px-4 py-2 flex-shrink-0 border-t border-[var(--color-rule)]"
+              >
+                {canNavigateCluster && (
+                  <span
+                    className="flex items-center gap-1.5 font-mono text-[10px]"
+                    style={{ color: 'var(--color-subtle)' }}
+                  >
+                    <kbd
+                      className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px]"
+                      style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
+                    >
+                      ←
+                    </kbd>
+                    <kbd
+                      className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px]"
+                      style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
+                    >
+                      →
+                    </kbd>
+                    navigate
+                  </span>
+                )}
+                <span
+                  className="flex items-center gap-1.5 font-mono text-[10px]"
+                  style={{ color: 'var(--color-subtle)' }}
+                >
+                  <kbd
+                    className="inline-flex items-center justify-center px-1.5 h-5 rounded text-[10px]"
+                    style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
+                  >
+                    esc
+                  </kbd>
+                  close
+                </span>
               </div>
             </motion.div>
           </>
