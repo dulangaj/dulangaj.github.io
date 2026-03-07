@@ -232,6 +232,11 @@ interface MarkerClusterLike {
   spiderfy: () => void
 }
 
+interface MarkerClusterGroupWithSpider extends L.FeatureGroup {
+  _spiderfied?: MarkerClusterLike | null
+  unspiderfy: () => void
+}
+
 interface MarkerClusterClickEvent {
   layer?: MarkerClusterLike
 }
@@ -351,6 +356,7 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   onMarkerClick: (photo: PhotoLocation) => void
 }) {
   const { isDark } = useTheme()
+  const clusterGroupRef = useRef<MarkerClusterGroupWithSpider | null>(null)
   const spiderLegPolylineOptions = isDark ? SPIDER_LEG_STYLES.dark : SPIDER_LEG_STYLES.light
 
   const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
@@ -359,8 +365,17 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
     cluster.spiderfy()
   }, [])
 
+  const handleMarkerSelect = useCallback((photo: PhotoLocation, marker: PhotoMarker) => {
+    const spiderfied = clusterGroupRef.current?._spiderfied
+    if (spiderfied && !spiderfied.getAllChildMarkers().includes(marker)) {
+      clusterGroupRef.current?.unspiderfy()
+    }
+    onMarkerClick(photo)
+  }, [onMarkerClick])
+
   return (
     <MarkerClusterGroup
+      ref={clusterGroupRef}
       chunkedLoading
       showCoverageOnHover={false}
       maxClusterRadius={80}
@@ -378,7 +393,7 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
           key={photo.id}
           position={[photo.lat, photo.lng]}
           icon={photoIconFactory.get(photo)}
-          eventHandlers={{ click: () => onMarkerClick(photo) }}
+          eventHandlers={{ click: (event) => handleMarkerSelect(photo, event.target as PhotoMarker) }}
           ref={(marker) => { if (marker) (marker as PhotoMarker).__photo = photo }}
         />
       ))}
