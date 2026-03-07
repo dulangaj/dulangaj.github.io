@@ -897,6 +897,7 @@ export function MapPage() {
                       className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
                       style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                       aria-label="Previous photo"
+                      aria-keyshortcuts="ArrowLeft"
                     >
                       <FiChevronLeft size={15} />
                     </button>
@@ -905,6 +906,7 @@ export function MapPage() {
                       className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
                       style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                       aria-label="Next photo"
+                      aria-keyshortcuts="ArrowRight"
                     >
                       <FiChevronRight size={15} />
                     </button>
@@ -917,6 +919,7 @@ export function MapPage() {
                   className="absolute right-4 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10 lg:top-3 lg:right-3 lg:translate-y-0"
                   style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                   aria-label="Close"
+                  aria-keyshortcuts="Escape"
                 >
                   <FiX size={15} />
                 </button>
@@ -1071,6 +1074,44 @@ export function MapPage() {
                     </div>
                   )}
                 </div>
+              </div>
+
+              {/* Keyboard shortcut hints — desktop only */}
+              <div
+                className="hidden lg:flex items-center justify-center gap-4 px-4 py-2 flex-shrink-0 border-t border-[var(--color-rule)]"
+              >
+                {filteredPhotos.length > 1 && (
+                  <span
+                    className="flex items-center gap-1.5 font-mono text-[10px]"
+                    style={{ color: 'var(--color-subtle)' }}
+                  >
+                    <kbd
+                      className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px]"
+                      style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
+                    >
+                      ←
+                    </kbd>
+                    <kbd
+                      className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px]"
+                      style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
+                    >
+                      →
+                    </kbd>
+                    navigate
+                  </span>
+                )}
+                <span
+                  className="flex items-center gap-1.5 font-mono text-[10px]"
+                  style={{ color: 'var(--color-subtle)' }}
+                >
+                  <kbd
+                    className="inline-flex items-center justify-center px-1.5 h-5 rounded text-[10px]"
+                    style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
+                  >
+                    esc
+                  </kbd>
+                  close
+                </span>
               </div>
             </motion.div>
           </>
