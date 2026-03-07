@@ -38,6 +38,19 @@ const TILES = {
   },
 }
 
+const SPIDER_LEG_STYLES = {
+  light: {
+    color: '#94a3b8',
+    opacity: 0.45,
+    weight: 1.25,
+  },
+  dark: {
+    color: '#64748b',
+    opacity: 0.55,
+    weight: 1.25,
+  },
+} as const
+
 function ThemeAwareTiles() {
   const { isDark } = useTheme()
   const tile = isDark ? TILES.dark : TILES.light
@@ -337,6 +350,9 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos: PhotoLocation[]
   onMarkerClick: (photo: PhotoLocation) => void
 }) {
+  const { isDark } = useTheme()
+  const spiderLegPolylineOptions = isDark ? SPIDER_LEG_STYLES.dark : SPIDER_LEG_STYLES.light
+
   const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
     const cluster = event.layer
     if (!cluster) return
@@ -353,6 +369,7 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
       zoomToBoundsOnClick={false}
       spiderfyOnMaxZoom={false}
       spiderfyDistanceMultiplier={2}
+      spiderLegPolylineOptions={spiderLegPolylineOptions}
       removeOutsideVisibleBounds={true}
       onClick={handleClusterClick}
     >
