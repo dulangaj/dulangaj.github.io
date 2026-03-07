@@ -11,7 +11,7 @@
  *            photo, metadata, and related article links.
  */
 
-import { useState, useCallback, useEffect, useRef } from 'react'
+import { memo, useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { motion, AnimatePresence } from 'framer-motion'
@@ -181,17 +181,16 @@ function MapViewportSync({
 class PhotoIconFactory {
   private readonly cache = new Map<string, L.DivIcon>()
 
-  get(photo: PhotoLocation, selected = false): L.DivIcon {
-    const state = selected ? 'selected' : 'default'
-    const cacheKey = `${photo.id}:${state}:${photo.thumbnail}`
+  get(photo: PhotoLocation): L.DivIcon {
+    const cacheKey = `${photo.id}:${photo.thumbnail}`
     const cached = this.cache.get(cacheKey)
 
     if (cached) return cached
 
-    const size = selected ? 70 : 56
-    const border = selected ? 3 : 2.5
+    const size = 56
+    const border = 2.5
     const icon = L.divIcon({
-      html: `<div class="map-photo-pin${selected ? ' map-photo-pin--selected' : ''}" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
+      html: `<div class="map-photo-pin" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
       className: '',
       iconSize:   [size, size],
       iconAnchor: [size / 2, size / 2],
@@ -331,13 +330,11 @@ const FILTER_OPTIONS = [
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
 
-function PhotoMarkerClusters({
+const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos,
-  selectedId,
   onMarkerClick,
 }: {
   photos: PhotoLocation[]
-  selectedId?: string
   onMarkerClick: (photo: PhotoLocation) => void
 }) {
   const handleClusterClick = useCallback((event: MarkerClusterClickEvent) => {
@@ -363,14 +360,14 @@ function PhotoMarkerClusters({
         <Marker
           key={photo.id}
           position={[photo.lat, photo.lng]}
-          icon={photoIconFactory.get(photo, selectedId === photo.id)}
+          icon={photoIconFactory.get(photo)}
           eventHandlers={{ click: () => onMarkerClick(photo) }}
           ref={(marker) => { if (marker) (marker as PhotoMarker).__photo = photo }}
         />
       ))}
     </MarkerClusterGroup>
   )
-}
+})
 
 /* ─── MapPage ────────────────────────────────────────────────────────────── */
 
@@ -403,11 +400,11 @@ export function MapPage() {
     setSelected(null)
   }, [])
 
-  const filteredPhotos = photoLocations.filter((photo) => {
+  const filteredPhotos = useMemo(() => photoLocations.filter((photo) => {
     if (activeFilter === 'all') return true
     if (activeFilter === 'linked') return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
     return true
-  })
+  }), [activeFilter])
   const visibleSelected = selected && filteredPhotos.some((photo) => photo.id === selected.id)
     ? selected
     : null
@@ -579,7 +576,6 @@ export function MapPage() {
         <MapViewportSync onViewportChange={setViewport} />
         <PhotoMarkerClusters
           photos={filteredPhotos}
-          selectedId={visibleSelected?.id}
           onMarkerClick={handleMarkerClick}
         />
       </MapContainer>
