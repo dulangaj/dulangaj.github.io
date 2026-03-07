@@ -14,7 +14,7 @@
 import { memo, useState, useCallback, useEffect, useMemo, useRef } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, type PanInfo } from 'framer-motion'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -576,6 +576,16 @@ export function MapPage() {
   const panelRef = useRef<HTMLDivElement | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  const [isDesktop, setIsDesktop] = useState(() =>
+    typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
+  )
+
+  useEffect(() => {
+    const mql = window.matchMedia('(min-width: 1024px)')
+    const onChange = (e: MediaQueryListEvent) => setIsDesktop(e.matches)
+    mql.addEventListener('change', onChange)
+    return () => mql.removeEventListener('change', onChange)
+  }, [])
 
   const handleMarkerClick = useCallback((photo: PhotoLocation) => {
     setImageLoaded(false)
@@ -586,6 +596,15 @@ export function MapPage() {
     setImageLoaded(false)
     setSelected(null)
   }, [])
+
+  const handleDragEnd = useCallback(
+    (_: unknown, info: PanInfo) => {
+      if (info.offset.y > 100 || info.velocity.y > 500) {
+        handleClose()
+      }
+    },
+    [handleClose],
+  )
 
   const filteredPhotos = useMemo(() => photoLocations.filter((photo) => {
     if (activeFilter === 'all') return true
@@ -793,6 +812,10 @@ export function MapPage() {
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 28, stiffness: 260, mass: 0.8 }}
+              drag={isDesktop ? false : 'y'}
+              dragConstraints={{ top: 0 }}
+              dragElastic={0.2}
+              onDragEnd={handleDragEnd}
               className="absolute bottom-0 left-0 right-0 z-[1002] max-h-[85vh] flex flex-col rounded-t-2xl overflow-hidden shadow-2xl lg:top-24 lg:right-6 lg:left-auto lg:w-[min(440px,38vw)] lg:max-h-[calc(100vh-7rem)] lg:rounded-2xl"
               style={{
                 background: 'var(--color-surface)',
@@ -807,7 +830,10 @@ export function MapPage() {
               aria-labelledby={`map-photo-title-${visibleSelected.id}`}
               ref={panelRef}
             >
-              <div className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)]">
+              <div
+                className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)]"
+                style={{ touchAction: 'none' }}
+              >
                 <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
                 <button
                   ref={closeButtonRef}
