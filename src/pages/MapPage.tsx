@@ -11,7 +11,7 @@
  *            photo, metadata, and related article links.
  */
 
-import { memo, useState, useCallback, useEffect, useMemo, useRef } from 'react'
+import { memo, useState, useCallback, useEffect, useMemo, useRef, type PointerEvent as ReactPointerEvent } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { motion, AnimatePresence, type PanInfo } from 'framer-motion'
@@ -423,8 +423,8 @@ const FILTER_OPTIONS = [
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
 const SPIDER_LEG_FADE_MS = 120
-const PHOTO_SWIPE_THRESHOLD = 56
-const PHOTO_SWIPE_RESTRAINT = 32
+const PHOTO_SWIPE_THRESHOLD = 40
+const PHOTO_SWIPE_VELOCITY = 300
 
 const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos,
@@ -594,6 +594,10 @@ export function MapPage() {
     zoom: parseZoom(searchParams.get('z'), DEFAULT_ZOOM),
   })
   const [imageLoaded, setImageLoaded] = useState(false)
+  const [slideDirection, setSlideDirection] = useState<1 | -1>(1)
+  const [dragX, setDragX] = useState(0)
+  const isDraggingRef = useRef(false)
+  const pointerStartRef = useRef<{ x: number; y: number; t: number } | null>(null)
   const panelRef = useRef<HTMLDivElement | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
@@ -636,6 +640,8 @@ export function MapPage() {
     const nextIdx = direction === 'next'
       ? (idx + 1) % photos.length
       : (idx - 1 + photos.length) % photos.length
+    setSlideDirection(direction === 'next' ? 1 : -1)
+    setDragX(0)
     setImageLoaded(false)
     setSelected(photos[nextIdx])
   }, [])
@@ -980,63 +986,154 @@ export function MapPage() {
 
               {/* Scrollable content */}
               <div className="overflow-y-auto overscroll-contain">
-                {/* Photo */}
-                <motion.div
+                {/* Photo with swipe */}
+                <div
                   className="relative w-full overflow-hidden"
-                  style={{ aspectRatio: '16/9', background: 'var(--color-rule)' }}
-                  drag={canNavigateCluster && !isDesktop ? 'x' : false}
-                  dragConstraints={{ left: 0, right: 0 }}
-                  dragElastic={0.14}
-                  dragMomentum={false}
-                  onDragEnd={(_, info) => {
-                    if (!canNavigateCluster) return
-                    const isHorizontalSwipe = Math.abs(info.offset.x) > Math.abs(info.offset.y) + PHOTO_SWIPE_RESTRAINT
-                    if (!isHorizontalSwipe) return
-                    if (info.offset.x <= -PHOTO_SWIPE_THRESHOLD || info.velocity.x <= -500) {
-                      navigatePhoto('next', activeClusterPhotos, visibleSelected)
+                  style={{ aspectRatio: '16/9', background: 'var(--color-rule)', touchAction: canNavigateCluster && !isDesktop ? 'pan-y pinch-zoom' : 'auto' }}
+                  onPointerDown={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
+                    pointerStartRef.current = { x: e.clientX, y: e.clientY, t: Date.now() }
+                    isDraggingRef.current = false
+                    setDragX(0)
+                  } : undefined}
+                  onPointerMove={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
+                    const start = pointerStartRef.current
+                    if (!start) return
+                    const dx = e.clientX - start.x
+                    const dy = e.clientY - start.y
+                    if (!isDraggingRef.current) {
+                      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+                        isDraggingRef.current = true
+                        ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
+                      } else {
+                        return
+                      }
+                    }
+                    e.preventDefault()
+                    setDragX(dx)
+                  } : undefined}
+                  onPointerUp={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
+                    const start = pointerStartRef.current
+                    pointerStartRef.current = null
+                    if (!isDraggingRef.current || !start) {
+                      setDragX(0)
                       return
                     }
-                    if (info.offset.x >= PHOTO_SWIPE_THRESHOLD || info.velocity.x >= 500) {
+                    isDraggingRef.current = false
+                    ;(e.target as HTMLElement).releasePointerCapture?.(e.pointerId)
+                    const dx = e.clientX - start.x
+                    const dt = Math.max(Date.now() - start.t, 1)
+                    const velocity = (dx / dt) * 1000
+                    if (dx <= -PHOTO_SWIPE_THRESHOLD || velocity <= -PHOTO_SWIPE_VELOCITY) {
+                      navigatePhoto('next', activeClusterPhotos, visibleSelected)
+                    } else if (dx >= PHOTO_SWIPE_THRESHOLD || velocity >= PHOTO_SWIPE_VELOCITY) {
                       navigatePhoto('prev', activeClusterPhotos, visibleSelected)
+                    } else {
+                      setDragX(0)
                     }
-                  }}
+                  } : undefined}
+                  onPointerCancel={canNavigateCluster && !isDesktop ? () => {
+                    pointerStartRef.current = null
+                    isDraggingRef.current = false
+                    setDragX(0)
+                  } : undefined}
                 >
-                  <img
-                    src={visibleSelected.thumbnail}
-                    alt=""
-                    aria-hidden="true"
-                    className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-60"
-                  />
-                  <div className="absolute inset-0 bg-black/8" />
-                  {!imageLoaded && (
-                    <div
-                      className="absolute inset-0 animate-pulse"
-                      style={{ background: 'color-mix(in srgb, var(--color-rule) 78%, transparent)' }}
-                    />
-                  )}
-                  <img
-                    src={visibleSelected.image}
-                    alt={visibleSelected.title}
-                    className="relative z-[1] w-full h-full object-cover transition-opacity duration-300"
-                    style={{ opacity: imageLoaded ? 1 : 0 }}
-                    onLoad={() => setImageLoaded(true)}
-                  />
-
-                  {/* Camera badge */}
-                  {visibleSelected.cameraModel && (
-                    <div
-                      className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full font-body text-[10px] font-medium"
-                      style={{
-                        background: 'rgba(0,0,0,0.5)',
-                        backdropFilter: 'blur(8px)',
-                        color: 'rgba(255,255,255,0.9)',
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      transform: dragX !== 0 ? `translateX(${dragX}px)` : undefined,
+                      willChange: dragX !== 0 ? 'transform' : undefined,
+                    }}
+                  >
+                  <AnimatePresence initial={false} mode="popLayout" custom={slideDirection}>
+                    <motion.div
+                      key={visibleSelected.id}
+                      custom={slideDirection}
+                      variants={{
+                        enter: (dir: number) => ({ x: `${dir * 100}%`, opacity: 0.5 }),
+                        center: { x: 0, opacity: 1 },
+                        exit: (dir: number) => ({ x: `${dir * -100}%`, opacity: 0.5 }),
                       }}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.8 }}
+                      className="absolute inset-0"
                     >
-                      <FiCamera size={9} />
-                      {visibleSelected.cameraModel}
+                      <img
+                        src={visibleSelected.thumbnail}
+                        alt=""
+                        aria-hidden="true"
+                        className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-60"
+                        draggable={false}
+                      />
+                      <div className="absolute inset-0 bg-black/8" />
+                      {!imageLoaded && (
+                        <div
+                          className="absolute inset-0 animate-pulse"
+                          style={{ background: 'color-mix(in srgb, var(--color-rule) 78%, transparent)' }}
+                        />
+                      )}
+                      <img
+                        src={visibleSelected.image}
+                        alt={visibleSelected.title}
+                        className="relative z-[1] w-full h-full object-cover transition-opacity duration-300"
+                        style={{ opacity: imageLoaded ? 1 : 0 }}
+                        onLoad={() => setImageLoaded(true)}
+                        draggable={false}
+                      />
+
+                      {/* Camera badge */}
+                      {visibleSelected.cameraModel && (
+                        <div
+                          className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full font-body text-[10px] font-medium"
+                          style={{
+                            background: 'rgba(0,0,0,0.5)',
+                            backdropFilter: 'blur(8px)',
+                            color: 'rgba(255,255,255,0.9)',
+                          }}
+                        >
+                          <FiCamera size={9} />
+                          {visibleSelected.cameraModel}
+                        </div>
+                      )}
+                    </motion.div>
+                  </AnimatePresence>
+                  </div>
+
+                  {/* Pagination dots — mobile only */}
+                  {!isDesktop && canNavigateCluster && (
+                    <div className="absolute bottom-2 left-0 right-0 z-[2] flex items-center justify-center gap-1.5">
+                      {activeClusterPhotos.length <= 8
+                        ? activeClusterPhotos.map((photo, i) => (
+                          <div
+                            key={photo.id}
+                            className="rounded-full transition-all duration-200"
+                            style={{
+                              width: i === activeClusterIndex ? 7 : 5,
+                              height: i === activeClusterIndex ? 7 : 5,
+                              background: i === activeClusterIndex
+                                ? 'rgba(255,255,255,0.95)'
+                                : 'rgba(255,255,255,0.45)',
+                              boxShadow: '0 0 3px rgba(0,0,0,0.3)',
+                            }}
+                          />
+                        ))
+                        : (
+                          <span
+                            className="font-mono text-[10px] px-2 py-0.5 rounded-full"
+                            style={{
+                              background: 'rgba(0,0,0,0.45)',
+                              color: 'rgba(255,255,255,0.9)',
+                              backdropFilter: 'blur(4px)',
+                            }}
+                          >
+                            {activeClusterIndex + 1} / {activeClusterPhotos.length}
+                          </span>
+                        )
+                      }
                     </div>
                   )}
-                </motion.div>
+                </div>
 
                 {/* Info */}
                 <div className="px-5 pt-4 pb-6">
