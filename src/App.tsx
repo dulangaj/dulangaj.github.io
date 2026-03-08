@@ -7,6 +7,7 @@ import { NowStrip }   from '@/components/ui/NowStrip'
 import { Projects }   from '@/components/sections/Projects'
 import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
+import { homeSections } from '@/data/homeSections'
 
 const PostDetail = lazy(async () => {
   const module = await import('@/pages/PostDetail')
@@ -26,11 +27,11 @@ function HomePage() {
       <a href="#main-content" className="skip-link">Skip to content</a>
       <Header />
       <main id="main-content">
-        <Hero />
-        <NowStrip />
-        <Projects />
-        <Experience />
-        <Writing />
+        {homeSections.hero && <Hero />}
+        {homeSections.now && <NowStrip />}
+        {homeSections.featured && <Projects />}
+        {homeSections.experience && <Experience />}
+        {homeSections.writing && <Writing />}
       </main>
       <Footer />
     </>

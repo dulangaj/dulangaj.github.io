@@ -4,7 +4,6 @@ export interface NowItem {
 }
 
 export interface NowConfig {
-  enabled: boolean
   items: NowItem[]
 }
 
@@ -12,7 +11,6 @@ export interface NowConfig {
 /* This stays data-only so a daily job can update it without touching UI.    */
 
 export const nowConfig: NowConfig = {
-  enabled: true,
   items: [
     { label: 'Based', value: 'Hong Kong' },
     { label: 'Building', value: 'A calmer publishing workflow for this site' },

@@ -5,7 +5,7 @@ import { nowConfig } from '@/data/now'
 /* Keep content in src/data/now.ts so it can be updated by automation.       */
 
 export function NowStrip() {
-  if (!nowConfig.enabled) return null
+  if (nowConfig.items.length === 0) return null
 
   return (
     <aside
