@@ -5,7 +5,7 @@ import { featuredPosts } from '@/data/posts'
 import { Post } from '@/models/Post'
 import { FadeIn } from '@/components/ui/FadeIn'
 
-/* ─── Projects / Front Page ───────────────────────────────────────────────── */
+/* ─── Featured / Front Page ───────────────────────────────────────────────── */
 /* Newspaper front page: one dominant lead story, secondary column headlines.  */
 /* Teases only — the Writing section below is "inside the paper."              */
 
@@ -99,7 +99,7 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
   )
 }
 
-export function Projects() {
+export function Featured() {
   const [lead, ...secondaries] = featuredPosts
   const secondaryGridClass =
     secondaries.length === 1 ? 'sm:grid-cols-1 md:grid-cols-1'

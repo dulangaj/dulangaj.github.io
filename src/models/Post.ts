@@ -1,6 +1,6 @@
 /* ─── Post Model ─────────────────────────────────────────────────────────── */
 /* Single source of truth for all portfolio items — writing, projects,        */
-/* education. The Projects section is just a filtered view (featured: true).  */
+/* education. The Featured section is just a filtered view (featured: true).  */
 
 export interface PostProps {
   id:       string
