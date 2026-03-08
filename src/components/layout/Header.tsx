@@ -97,7 +97,7 @@ export function Header() {
 
   return (
     <motion.header
-      className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
+      className="site-header fixed top-0 inset-x-0 z-50 transition-all duration-300"
       style={{ backgroundColor: 'var(--color-paper)' }}
       animate={{ borderBottomColor: scrolled ? 'var(--color-rule)' : 'transparent' }}
       transition={{ duration: 0.3 }}
