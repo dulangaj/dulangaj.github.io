@@ -967,7 +967,7 @@ export function MapPage() {
                   </div>
                 )}
 
-                {canNavigateCluster && activeClusterIndex !== -1 && (
+                {isDesktop && canNavigateCluster && activeClusterIndex !== -1 && (
                   <div
                     className="font-mono text-[10px] tracking-[0.14em] uppercase"
                     style={{ color: 'var(--color-subtle)' }}
