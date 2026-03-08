@@ -71,10 +71,10 @@ function LeadStory({ post }: { post: Post }) {
 
 function SecondaryStory({ post, index }: { post: Post; index: number }) {
   return (
-    <FadeIn delay={0.05 * index}>
+    <FadeIn delay={0.05 * index} className="h-full">
       <Link
         to={`/post/${post.id}`}
-        className="group flex flex-col pt-5 cursor-pointer border-t border-[var(--color-rule)]"
+        className="group flex h-full flex-col pt-5 cursor-pointer border-t border-[var(--color-rule)]"
       >
         <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)] mb-3">
           {post.category}
