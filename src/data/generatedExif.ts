@@ -7,6 +7,8 @@ export interface ExifEntry {
   date?:  string   // YYYY-MM-DD
   make?:  string
   model?: string
+  title?: string
+  description?: string
 }
 
 export const rawExifData: Record<string, ExifEntry> = {
@@ -23,6 +25,14 @@ export const rawExifData: Record<string, ExifEntry> = {
   "16.11_graduation.jpeg": {
     "date": "2016-11-17"
   },
+  "18.07_london_bridge.jpeg": {
+    "lat": 51.5079,
+    "lng": -0.08765833333333332,
+    "date": "2018-07-14",
+    "make": "Apple",
+    "model": "iPhone 7",
+    "title": "Following my roommate through London Bridge"
+  },
   "18.09_window.jpeg": {
     "date": "2018-09-07",
     "make": "Apple",
@@ -38,6 +48,23 @@ export const rawExifData: Record<string, ExifEntry> = {
   },
   "18.11_stitching.jpeg": {
     "date": "2018-11-09"
+  },
+  "18.12_grand_canyon.jpeg": {
+    "lat": 36.063288888888884,
+    "lng": -112.12353611111111,
+    "date": "2018-12-14",
+    "make": "Apple",
+    "model": "iPhone 7",
+    "title": "Strolling through the Grand Canyon with one of my best friends"
+  },
+  "18.12_yosemite.jpeg": {
+    "lat": 37.741280555555555,
+    "lng": -119.59198888888888,
+    "date": "2018-12-06",
+    "make": "Apple",
+    "model": "iPhone 7",
+    "title": "Chapel",
+    "description": "Almost died going off-trail in Yosemite"
   },
   "19.05_hkie.jpeg": {
     "lat": 25.0174,
@@ -60,6 +87,64 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
+  "23.12_po_toi.jpeg": {
+    "lat": 22.15738888888889,
+    "lng": 114.2570361111111,
+    "date": "2023-12-10",
+    "make": "DJI",
+    "model": "FC3582",
+    "title": "Po Toi Island",
+    "description": "My favorite place to look at the night sky, and second favorite camping spot in Hong Kong"
+  },
+  "24.01_okinawa.jpeg": {
+    "date": "2024-01-13",
+    "make": "GoPro",
+    "model": "HERO8 Black",
+    "title": "Okinawa",
+    "description": "DCIM\\101GOPRO\\GOPR6794.JPG"
+  },
+  "24.06_milky_way.jpeg": {
+    "lat": -44.00389444444444,
+    "lng": 170.484375,
+    "date": "2024-06-30",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Plonked my phone on the sunroof and waited inside",
+    "description": "While my iPhone did its 30-second exposure"
+  },
+  "24.06_tekapo.jpeg": {
+    "lat": -44.00486388888889,
+    "lng": 170.48062222222222,
+    "date": "2024-06-30",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Lake Tekapo"
+  },
+  "24.09_lucerne.jpeg": {
+    "lat": 46.97157777777778,
+    "lng": 8.587786111111111,
+    "date": "2024-09-19",
+    "make": "DJI",
+    "model": "FC3582",
+    "title": "Lucerne"
+  },
+  "25.01_greenland.jpeg": {
+    "lat": 78.08078333333333,
+    "lng": -52.25155,
+    "date": "2025-02-02",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Greenland"
+  },
+  "25.04_atacama.jpeg": {
+    "lat": -22.53493888888889,
+    "lng": -68.039475,
+    "date": "2025-04-28",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Three layers of Atacama",
+    "description": "Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view"
+  },
   "25.04_easter_island.jpeg": {
     "lat": -27.125611111111112,
     "lng": -109.27727777777778,
@@ -67,12 +152,36 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
+  "25.04_patagonia.jpeg": {
+    "lat": -51.207030555555555,
+    "lng": -72.97460277777778,
+    "date": "2025-04-29",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Driving into Patagonia way past curfew"
+  },
+  "25.04_perth.jpeg": {
+    "lat": -31.948219444444444,
+    "lng": 115.85842222222222,
+    "date": "2025-04-19",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Self-portrait"
+  },
   "25.04_torres_del_paine.jpeg": {
     "lat": -50.942299999999996,
     "lng": -72.93674722222222,
     "date": "2025-05-01",
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
+  },
+  "25.10_malacca.jpeg": {
+    "lat": 2.1825055555555553,
+    "lng": 102.263,
+    "date": "2025-10-20",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Deepavali Celebrations in Malaysia"
   },
   "leaves.jpeg": {
     "date": "2023-03-31",
