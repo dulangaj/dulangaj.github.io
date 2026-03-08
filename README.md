@@ -200,6 +200,7 @@ To add a new photo:
    - to override the embedded title or description, or add a subtitle
    - a human-readable location label
    - category and description overrides
+   - to keep a specific image off the map with `excludeFromMap: true`
    - suppression of generated post backlinks
 
 Notes:

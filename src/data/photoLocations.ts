@@ -99,6 +99,7 @@ export const photoLocations: PhotoLocation[] = filenames
     const exif = rawExifData[filename] ?? {}
     const hasGPS = typeof exif.lat === 'number' && typeof exif.lng === 'number'
 
+    if (metadata?.excludeFromMap) return photos
     if (!metadata && !hasGPS) return photos
     if (!hasGPS && (typeof metadata?.lat !== 'number' || typeof metadata?.lng !== 'number')) return photos
 
