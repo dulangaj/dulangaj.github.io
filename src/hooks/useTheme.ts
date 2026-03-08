@@ -44,6 +44,18 @@ function readSnapshot(): ThemeSnapshot {
   return nextSnapshot
 }
 
+const THEME_COLORS: Record<ThemePreference, string> = {
+  light: '#fafaf8',
+  dark:  '#1a1918',
+}
+
+function updateThemeColorMeta(isDark: boolean) {
+  const color = isDark ? THEME_COLORS.dark : THEME_COLORS.light
+  document
+    .querySelectorAll<HTMLMetaElement>('meta[name="theme-color"]')
+    .forEach((meta) => { meta.content = color })
+}
+
 function applyPreference(preference: ThemePreference | null) {
   const root = document.documentElement
 
@@ -52,6 +64,11 @@ function applyPreference(preference: ThemePreference | null) {
   } else {
     root.setAttribute('data-theme', preference)
   }
+
+  // Sync the <meta name="theme-color"> so iOS Safari paints the status bar
+  // area with the correct color even when the user overrides the system theme.
+  const isDark = preference !== null ? preference === 'dark' : getSystemDark()
+  updateThemeColorMeta(isDark)
 
   try {
     if (preference === null) {

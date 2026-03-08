@@ -14,12 +14,12 @@ function LeadStory({ post }: { post: Post }) {
     <FadeIn>
       <Link
         to={`/post/${post.id}`}
-        className="group grid grid-cols-1 md:grid-cols-5 border-b border-[var(--color-rule)] cursor-pointer"
+        className="group grid grid-cols-1 md:grid-cols-5 border-b border-[var(--color-rule)] cursor-pointer min-w-0"
       >
         {/* Text column — left 3/5 */}
-        <div className="md:col-span-3 flex flex-col justify-center py-10 md:py-16 md:pr-12">
+        <div className="md:col-span-3 min-w-0 flex flex-col justify-center py-10 md:py-16 md:pr-12">
           {/* Category + byline */}
-          <div className="flex items-center gap-3 mb-6">
+          <div className="flex flex-wrap items-center gap-3 mb-6">
             <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)]">
               {post.category}
             </span>
@@ -39,7 +39,7 @@ function LeadStory({ post }: { post: Post }) {
           </h2>
 
           {/* Standfirst — one sentence only */}
-          <p className="font-body text-[15px] leading-relaxed text-[var(--color-muted)] mb-8 max-w-prose line-clamp-2">
+          <p className="min-w-0 font-body text-[15px] leading-relaxed text-[var(--color-muted)] mb-8 max-w-prose line-clamp-2">
             {post.excerpt}
           </p>
 
