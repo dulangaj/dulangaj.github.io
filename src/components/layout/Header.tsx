@@ -15,6 +15,9 @@ export function Header() {
   const navigate = useNavigate()
   const location = useLocation()
   const scrollProgress = useScrollProgress()
+  const safeAreaTop = 'env(safe-area-inset-top, 0px)'
+  const safeAreaBottom = 'env(safe-area-inset-bottom, 0px)'
+  const mobileHeaderHeight = `calc(${safeAreaTop} + 64px)`
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -98,7 +101,10 @@ export function Header() {
   return (
     <motion.header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
-      style={{ backgroundColor: 'var(--color-paper)' }}
+      style={{
+        backgroundColor: 'var(--color-paper)',
+        paddingTop: safeAreaTop,
+      }}
       animate={{ borderBottomColor: scrolled ? 'var(--color-rule)' : 'transparent' }}
       transition={{ duration: 0.3 }}
     >
@@ -149,57 +155,73 @@ export function Header() {
         <div className="flex items-center gap-1">
           <ThemeToggle />
 
-        {/* Mobile Hamburger */}
-        <button
-          className="md:hidden flex flex-col gap-[5px] cursor-pointer bg-transparent border-none p-1"
-          onClick={() => setMobileOpen((v) => !v)}
-          aria-label="Toggle menu"
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-nav"
-        >
-          <motion.span
-            className="block w-5 h-px bg-[var(--color-ink)]"
-            animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 6 : 0 }}
-          />
-          <motion.span
-            className="block w-5 h-px bg-[var(--color-ink)]"
-            animate={{ opacity: mobileOpen ? 0 : 1 }}
-          />
-          <motion.span
-            className="block w-5 h-px bg-[var(--color-ink)]"
-            animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -6 : 0 }}
-          />
-        </button>
+          {/* Mobile Hamburger */}
+          <button
+            className="md:hidden flex flex-col gap-[5px] cursor-pointer bg-transparent border-none p-1"
+            onClick={() => setMobileOpen((v) => !v)}
+            aria-label="Toggle menu"
+            aria-expanded={mobileOpen}
+            aria-controls="mobile-nav"
+          >
+            <motion.span
+              className="block w-5 h-px bg-[var(--color-ink)]"
+              animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 6 : 0 }}
+            />
+            <motion.span
+              className="block w-5 h-px bg-[var(--color-ink)]"
+              animate={{ opacity: mobileOpen ? 0 : 1 }}
+            />
+            <motion.span
+              className="block w-5 h-px bg-[var(--color-ink)]"
+              animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -6 : 0 }}
+            />
+          </button>
         </div>
       </div>
 
-      {/* Mobile Drawer */}
+      {/* Mobile overlay */}
       <AnimatePresence>
         {mobileOpen && (
-          <motion.nav
+          <motion.div
             id="mobile-nav"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-            className="md:hidden overflow-hidden bg-[var(--color-paper)] border-b border-[var(--color-rule)]"
+            className="fixed inset-0 z-40 md:hidden bg-[var(--color-paper)]"
+            style={{
+              paddingTop: mobileHeaderHeight,
+              paddingBottom: safeAreaBottom,
+            }}
           >
-            <div className="px-6 pb-6 pt-2 flex flex-col gap-4">
-              {SiteConfig.nav.map((item) => (
-                <a
-                  key={item.href}
-                  href={item.href}
-                  onClick={(event) => {
-                    event.preventDefault()
-                    closeMobileAndNavigate(item.href)
-                  }}
-                  className="text-left font-body text-[15px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer"
-                >
-                  {item.label}
-                </a>
-              ))}
-            </div>
-          </motion.nav>
+            <motion.nav
+              initial={{ y: -16, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: -16, opacity: 0 }}
+              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+              className="h-full overflow-y-auto border-t border-[var(--color-rule)] px-6 pb-8 pt-6"
+              style={{
+                WebkitOverflowScrolling: 'touch',
+                overscrollBehavior: 'contain',
+              }}
+            >
+              <div className="flex flex-col gap-4">
+                {SiteConfig.nav.map((item) => (
+                  <a
+                    key={item.href}
+                    href={item.href}
+                    onClick={(event) => {
+                      event.preventDefault()
+                      closeMobileAndNavigate(item.href)
+                    }}
+                    className="text-left font-body text-[15px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer"
+                  >
+                    {item.label}
+                  </a>
+                ))}
+              </div>
+            </motion.nav>
+          </motion.div>
         )}
       </AnimatePresence>
 
