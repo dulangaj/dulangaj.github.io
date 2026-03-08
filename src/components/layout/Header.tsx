@@ -59,6 +59,26 @@ export function Header() {
     performScroll()
   }
 
+  const navigateToHref = (href: string) => {
+    if (href.startsWith('/')) {
+      navigate(href)
+      return
+    }
+
+    scrollToSection(href.replace(/^#/, ''))
+  }
+
+  const closeMobileAndNavigate = (href: string) => {
+    setMobileOpen(false)
+
+    // Wait for the drawer/body scroll lock to clear before starting smooth scroll.
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        navigateToHref(href)
+      })
+    })
+  }
+
   return (
     <motion.header
       className="fixed top-0 inset-x-0 z-50 transition-all duration-300"
@@ -80,8 +100,12 @@ export function Header() {
           className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors duration-200"
           onClick={(event) => {
             event.preventDefault()
-            setMobileOpen(false)
-            scrollToSection('top')
+            if (mobileOpen) {
+              closeMobileAndNavigate('#top')
+              return
+            }
+
+            navigateToHref('#top')
           }}
         >
           {SiteConfig.initials}
@@ -96,11 +120,7 @@ export function Header() {
               href={item.href}
               onClick={(event) => {
                 event.preventDefault()
-                if (item.href.startsWith('/')) {
-                  navigate(item.href)
-                } else {
-                  scrollToSection(item.href.replace(/^#/, ''))
-                }
+                navigateToHref(item.href)
               }}
               className="font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors duration-200 tracking-wide cursor-pointer bg-transparent border-none"
             >
@@ -155,12 +175,7 @@ export function Header() {
                   href={item.href}
                   onClick={(event) => {
                     event.preventDefault()
-                    setMobileOpen(false)
-                    if (item.href.startsWith('/')) {
-                      navigate(item.href)
-                    } else {
-                      scrollToSection(item.href.replace(/^#/, ''))
-                    }
+                    closeMobileAndNavigate(item.href)
                   }}
                   className="text-left font-body text-[15px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer"
                 >
