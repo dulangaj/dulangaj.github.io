@@ -137,8 +137,18 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'My favorite place to look at the night sky, and second favorite camping spot in Hong Kong',
     category: 'Travel',
   },
+  '24.01_okinawa.jpeg': {
+    lat: 26.4585704366135,
+    lng: 127.77522749264577,
+    title: 'Snorkeling in Okinawa',
+    subtitle: 'Okinawa',
+    location: 'Okinawa, Japan',
+    description: 'A GoPro frame from one of those swims where the water was clearer than it looked real.',
+    category: 'Travel',
+  },
   '24.06_milky_way.jpeg': {
     title: 'Plonked my phone on the sunroof and waited inside',
+    subtitle: 'Mackenzie Basin',
     location: 'Lake Tekapo, New Zealand',
     description: 'While my iPhone did its 30-second exposure',
     category: 'Travel',
@@ -149,10 +159,17 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Lake Tekapo, New Zealand',
     category: 'Travel',
   },
+  '24.09_lucerne.jpeg': {
+    title: 'Lucerne After Dark',
+    subtitle: 'Above Lake Lucerne',
+    location: 'Lucerne, Switzerland',
+    category: 'Travel',
+  },
   '25.01_greenland.jpeg': {
     title: 'Greenland',
     subtitle: 'Somewhere over the ice sheet',
     location: 'Greenland',
+    description: 'A window-seat view over Greenland that made the whole island look endless.',
     category: 'Travel',
   },
   '25.04_atacama.jpeg': {
@@ -182,6 +199,25 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Patagonia',
     location: 'Torres del Paine National Park, Chile',
     description: 'A Patagonia landscape from Torres del Paine National Park.',
+    category: 'Travel',
+  },
+  '25.04_patagonia.jpeg': {
+    title: 'Driving into Patagonia way past curfew',
+    subtitle: 'Torres del Paine',
+    location: 'Torres del Paine National Park, Chile',
+    description: 'The road, the headlights, and the skyline all felt a little too cinematic to be real.',
+    category: 'Travel',
+  },
+  '25.04_perth.jpeg': {
+    title: 'Self-portrait',
+    subtitle: 'Golden hour in Perth',
+    location: 'Perth, Western Australia',
+    category: 'Travel',
+  },
+  '25.10_malacca.jpeg': {
+    title: 'Deepavali Celebrations in Malacca',
+    location: 'Malacca, Malaysia',
+    description: 'Fireworks going off below the hotel window during Deepavali celebrations in Malacca.',
     category: 'Travel',
   },
   'leaves.jpeg': {
