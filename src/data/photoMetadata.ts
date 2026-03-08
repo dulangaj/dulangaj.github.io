@@ -45,6 +45,9 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Shatin, Hong Kong',
     category: 'Education',
   },
+  '18.07_london_bridge.jpeg': {
+    title: 'Following my roommate through London Bridge',
+  },
   '18.09_window.jpeg': {
     lat: 43.7022,
     lng: -72.2896,
@@ -85,6 +88,13 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hanover, NH, USA',
     category: 'Education',
   },
+  '18.12_grand_canyon.jpeg': {
+    title: 'Strolling through the Grand Canyon with one of my best friends',
+  },
+  '18.12_yosemite.jpeg': {
+    title: 'Lone Chapel',
+    description: 'Almost died going off-trail in Yosemite',
+  },
   '19.05_hkie.jpeg': {
     lat: 25.0174,
     lng: 121.5396,
@@ -109,6 +119,24 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'West Kowloon, Hong Kong',
     location: 'West Kowloon, Hong Kong',
     category: 'Travel',
+  },
+  '23.12_po_toi.jpeg': {
+    title: 'Po Toi Island',
+    description: 'My favorite place to look at the night sky, and second favorite camping spot in Hong Kong',
+  },
+  '24.06_milky_way.jpeg': {
+    title: 'Plonked my phone on the sunroof and waited inside',
+    description: 'While my iPhone did its 30-second exposure',
+  },
+  '24.06_tekapo.jpeg': {
+    title: 'Lake Tekapo',
+  },
+  '25.01_greenland.jpeg': {
+    title: 'Greenland',
+  },
+  '25.04_atacama.jpeg': {
+    title: 'Three layers of Atacama',
+    description: 'Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view',
   },
   '25.04_easter_island.jpeg': {
     title: 'Ahu Tongariki',
