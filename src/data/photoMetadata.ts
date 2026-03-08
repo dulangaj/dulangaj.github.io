@@ -9,6 +9,7 @@ export interface PhotoMetadata {
   location?: string
   description?: string
   category?: PhotoCategory
+  excludeFromMap?: boolean
   disableGeneratedPosts?: boolean
 }
 
@@ -44,6 +45,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Academic Project · CUHK',
     location: 'Shatin, Hong Kong',
     category: 'Education',
+    excludeFromMap: true,
   },
   '18.07_london_bridge.jpeg': {
     title: 'Following my roommate through London Bridge',
@@ -126,6 +128,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'ICC — International Commerce Centre',
     subtitle: 'West Kowloon, Hong Kong',
     location: 'West Kowloon, Hong Kong',
+    excludeFromMap: true,
   },
   '23.12_po_toi.jpeg': {
     title: 'Po Toi Island',
@@ -188,6 +191,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Research · CUHK',
     location: 'Shatin, Hong Kong',
     category: 'Education',
+    excludeFromMap: true,
   },
   'litpak.jpeg': {
     lat: 43.7055,
@@ -201,7 +205,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Patagonia',
     subtitle: 'Southern Chile',
     location: 'Patagonia, Chile',
-    description: 'A Patagonia travel photograph that currently reuses an older filename.',
+    description: 'A Patagonia travel photograph that I use as a banner for something else.',
     category: 'Travel',
     disableGeneratedPosts: true,
   },
