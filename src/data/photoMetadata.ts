@@ -47,6 +47,9 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
   },
   '18.07_london_bridge.jpeg': {
     title: 'Following my roommate through London Bridge',
+    location: 'London, England',
+    description: 'My heart was in my mouth, as I dropped my phone snapping this.',
+    category: 'Travel',
   },
   '18.09_window.jpeg': {
     lat: 43.7022,
@@ -90,10 +93,15 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
   },
   '18.12_grand_canyon.jpeg': {
     title: 'Strolling through the Grand Canyon with one of my best friends',
+    location: 'Grand Canyon National Park, AZ, USA',
+    description: 'A winter walk along the South Rim, with the canyon opening up wider at every turn.',
+    category: 'Travel',
   },
   '18.12_yosemite.jpeg': {
     title: 'Lone Chapel',
+    location: 'Yosemite National Park, CA, USA',
     description: 'Almost died going off-trail in Yosemite',
+    category: 'Travel',
   },
   '19.05_hkie.jpeg': {
     lat: 25.0174,
@@ -122,21 +130,34 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
   },
   '23.12_po_toi.jpeg': {
     title: 'Po Toi Island',
+    subtitle: 'Hong Kong’s southern edge',
+    location: 'Po Toi, Hong Kong',
     description: 'My favorite place to look at the night sky, and second favorite camping spot in Hong Kong',
+    category: 'Travel',
   },
   '24.06_milky_way.jpeg': {
     title: 'Plonked my phone on the sunroof and waited inside',
+    location: 'Lake Tekapo, New Zealand',
     description: 'While my iPhone did its 30-second exposure',
+    category: 'Travel',
   },
   '24.06_tekapo.jpeg': {
     title: 'Lake Tekapo',
+    subtitle: 'Church of the Good Shepherd',
+    location: 'Lake Tekapo, New Zealand',
+    category: 'Travel',
   },
   '25.01_greenland.jpeg': {
     title: 'Greenland',
+    subtitle: 'Somewhere over the ice sheet',
+    location: 'Greenland',
+    category: 'Travel',
   },
   '25.04_atacama.jpeg': {
     title: 'Three layers of Atacama',
+    location: 'Atacama Desert, Chile',
     description: 'Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view',
+    category: 'Travel',
   },
   '25.04_easter_island.jpeg': {
     title: 'Ahu Tongariki',
