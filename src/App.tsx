@@ -3,6 +3,7 @@ import { HashRouter, Routes, Route } from 'react-router-dom'
 import { Header }     from '@/components/layout/Header'
 import { Footer }     from '@/components/layout/Footer'
 import { Hero }       from '@/components/sections/Hero'
+import { NowStrip }   from '@/components/ui/NowStrip'
 import { Projects }   from '@/components/sections/Projects'
 import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
@@ -26,6 +27,7 @@ function HomePage() {
       <Header />
       <main id="main-content">
         <Hero />
+        <NowStrip />
         <Projects />
         <Experience />
         <Writing />
