@@ -146,8 +146,8 @@ const MIN_ZOOM = 2
 const MAX_ZOOM = 5
 const MAX_LATITUDE = 85.05112878
 const WORLD_BOUNDS: L.LatLngBoundsExpression = [
-  [-MAX_LATITUDE, -180],
-  [MAX_LATITUDE, 180],
+  [-MAX_LATITUDE, -200],
+  [MAX_LATITUDE, 200],
 ]
 const WORLD_TILE_SIZE = 256
 
