@@ -116,9 +116,11 @@ function TimelineItem({ experience, index, isOpen, onToggle, registerHeaderRef }
 
 export function Experience() {
   const [openId, setOpenId] = useState<string>(experiences[0]?.id ?? '')
+  const sectionRef = useRef<HTMLElement | null>(null)
   const headerRefs = useRef<Record<string, HTMLButtonElement | null>>({})
   const lastScrollY = useRef(0)
   const lastDirection = useRef<'up' | 'down' | 'none'>('none')
+  const suppressAutoOpenUntil = useRef(0)
 
   const toggle = (id: string) => setOpenId((prev) => (prev === id ? '' : id))
   const registerHeaderRef = (id: string, node: HTMLButtonElement | null) => {
@@ -129,6 +131,17 @@ export function Experience() {
     let ticking = false
 
     const updateActiveFromScroll = () => {
+      if (Date.now() < suppressAutoOpenUntil.current) {
+        return
+      }
+
+      const sectionRect = sectionRef.current?.getBoundingClientRect()
+      if (!sectionRect) return
+
+      const viewportHeight = window.innerHeight
+      const sectionIsVisible = sectionRect.top < viewportHeight && sectionRect.bottom > 0
+      if (!sectionIsVisible) return
+
       const currentY = window.scrollY
       const prevY = lastScrollY.current
       const direction =
@@ -141,7 +154,6 @@ export function Experience() {
 
       // Directional trigger line: switch a bit earlier when scrolling down,
       // and a bit later when scrolling up to reduce flicker.
-      const viewportHeight = window.innerHeight
       const triggerY =
         direction === 'down' ? viewportHeight * 0.55
           : direction === 'up' ? viewportHeight * 0.45
@@ -167,6 +179,7 @@ export function Experience() {
     }
 
     const onScroll = () => {
+      lastScrollY.current = window.scrollY
       if (ticking) return
       ticking = true
       requestAnimationFrame(() => {
@@ -175,14 +188,34 @@ export function Experience() {
       })
     }
 
+    const suspendAutoOpen = () => {
+      suppressAutoOpenUntil.current = Date.now() + 1000
+    }
+
+    const resumeAutoOpen = () => {
+      suppressAutoOpenUntil.current = 0
+      lastScrollY.current = window.scrollY
+    }
+
     lastScrollY.current = window.scrollY
     window.addEventListener('scroll', onScroll, { passive: true })
+    window.addEventListener('site:navigation-scroll-start', suspendAutoOpen)
+    window.addEventListener('site:navigation-scroll-end', resumeAutoOpen)
     updateActiveFromScroll()
-    return () => window.removeEventListener('scroll', onScroll)
+
+    return () => {
+      window.removeEventListener('scroll', onScroll)
+      window.removeEventListener('site:navigation-scroll-start', suspendAutoOpen)
+      window.removeEventListener('site:navigation-scroll-end', resumeAutoOpen)
+    }
   }, [])
 
   return (
-    <section id="experience" className="px-6 md:px-12 py-24 bg-[var(--color-surface)]">
+    <section
+      id="experience"
+      ref={sectionRef}
+      className="px-6 md:px-12 py-24 bg-[var(--color-surface)]"
+    >
       <div className="max-w-7xl mx-auto">
         <FadeIn>
           <SectionLabel text="Experience" index="02" />
