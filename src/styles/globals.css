@@ -67,6 +67,26 @@ html {
   font-size: 16px;
   width: 100%;
   overflow-x: clip;
+  background-color: var(--color-paper);
+}
+
+/* Safe area: extend fixed header background into the status bar / Dynamic
+   Island zone so scrolled content never peeks through on iOS Safari.
+   The ::before block sits directly above the header and inherits its
+   background, acting as a safety net if env() returns 0.                 */
+.site-header {
+  padding-top: constant(safe-area-inset-top); /* iOS 11.0–11.2 */
+  padding-top: env(safe-area-inset-top, 0px); /* iOS 11.2+     */
+}
+
+.site-header::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  height: 100px;
+  background: inherit;
 }
 
 /* Keep fixed header from obscuring in-page anchor targets. */
