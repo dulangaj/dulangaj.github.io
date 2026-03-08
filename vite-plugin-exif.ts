@@ -21,6 +21,8 @@ interface ExifEntry {
   date?: string
   make?: string
   model?: string
+  title?: string
+  description?: string
 }
 
 interface GeneratedPhotoPostLink {
@@ -31,6 +33,8 @@ interface GeneratedPhotoPostLink {
 type ImageTool = 'magick' | 'sips' | 'copy'
 
 const THUMBNAIL_SIZE = 160
+const TITLE_TAG_CANDIDATES = ['title', 'XPTitle', 'ObjectName', 'Headline'] as const
+const DESCRIPTION_TAG_CANDIDATES = ['description', 'Caption'] as const
 
 function runCommand(command: string, args: string[]): Promise<void> {
   return new Promise((resolve, reject) => {
@@ -139,6 +143,89 @@ function parseFrontmatterValue(raw: string, key: string): string | null {
   return match[1].trim().replace(/^["']|["']$/g, '')
 }
 
+function normalizeMetadataText(value: unknown): string | undefined {
+  if (typeof value === 'string') {
+    const normalized = value.replace(/\s+/g, ' ').trim()
+    return normalized || undefined
+  }
+
+  if (Array.isArray(value)) {
+    for (const item of value) {
+      const normalized = normalizeMetadataText(item)
+      if (normalized) return normalized
+    }
+    return undefined
+  }
+
+  if (value && typeof value === 'object') {
+    const record = value as Record<string, unknown>
+    const directValue = normalizeMetadataText(record.value)
+    if (directValue) return directValue
+
+    for (const key of ['x-default', 'en-US', 'en-us', 'en', 'default']) {
+      const localizedValue = normalizeMetadataText(record[key])
+      if (localizedValue) return localizedValue
+    }
+
+    for (const [key, candidate] of Object.entries(record)) {
+      if (key === 'lang' || key === 'value') continue
+      const normalized = normalizeMetadataText(candidate)
+      if (normalized) return normalized
+    }
+  }
+
+  return undefined
+}
+
+function firstMetadataText(data: Record<string, unknown>, keys: readonly string[]): string | undefined {
+  for (const key of keys) {
+    const value = normalizeMetadataText(data[key])
+    if (value) return value
+  }
+
+  return undefined
+}
+
+function firstMeaningfulDescription(data: Record<string, unknown>): string | undefined {
+  for (const key of DESCRIPTION_TAG_CANDIDATES) {
+    const value = normalizeMetadataText(data[key])
+    if (!value) continue
+    if (/^[A-Z0-9 .,_-]+$/.test(value) && /\b(?:CAMERA|DIGITAL)\b/.test(value)) continue
+    return value
+  }
+
+  return undefined
+}
+
+function extractDate(data: Record<string, unknown>): string | undefined {
+  for (const candidate of [data.DateCreated, data.DateTimeOriginal, data.CreateDate]) {
+    if (!candidate) continue
+
+    if (candidate instanceof Date) {
+      return candidate.toISOString().slice(0, 10)
+    }
+
+    const normalized = String(candidate).trim()
+    const isoMatch = normalized.match(/^(\d{4})[-:](\d{2})[-:](\d{2})/)
+    if (isoMatch) {
+      const [, year, month, day] = isoMatch
+      if (year !== '0000' && month !== '00' && day !== '00') {
+        return `${year}-${month}-${day}`
+      }
+    }
+
+    const compactMatch = normalized.match(/^(\d{4})(\d{2})(\d{2})$/)
+    if (compactMatch) {
+      const [, year, month, day] = compactMatch
+      if (year !== '0000' && month !== '00' && day !== '00') {
+        return `${year}-${month}-${day}`
+      }
+    }
+  }
+
+  return undefined
+}
+
 function collectMarkdownImageFilenames(raw: string): string[] {
   const matches = raw.matchAll(/!\[[^\]]*]\((?:\/assets\/img\/)?([^)\s]+)(?:\s+"[^"]*")?\)/g)
   return Array.from(matches, ([, filename]) => filename)
@@ -239,22 +326,25 @@ async function extractAndWrite(root: string) {
       try {
         const data = await exifr.parse(path.join(imgDir, file), {
           gps: true,
-          pick: ['GPSLatitude', 'GPSLongitude', 'GPSLatitudeRef', 'GPSLongitudeRef', 'latitude', 'longitude',
-                 'DateTimeOriginal', 'CreateDate', 'Make', 'Model'],
+          ifd0: { pick: ['ImageDescription', 'XPTitle', 'Make', 'Model'] },
+          exif: { pick: ['DateTimeOriginal', 'CreateDate'] },
+          iptc: { pick: ['ObjectName', 'Headline', 'Caption'] },
+          xmp: true,
         })
         if (!data) return
 
         const entry: ExifEntry = {}
         if (typeof data.latitude === 'number') entry.lat = data.latitude
         if (typeof data.longitude === 'number') entry.lng = data.longitude
-        if (data.DateTimeOriginal || data.CreateDate) {
-          const d = data.DateTimeOriginal ?? data.CreateDate
-          entry.date = d instanceof Date
-            ? d.toISOString().slice(0, 10)
-            : String(d).slice(0, 10)
-        }
+        const date = extractDate(data)
+        if (date) entry.date = date
         if (data.Make)  entry.make  = String(data.Make).trim()
         if (data.Model) entry.model = String(data.Model).trim()
+        const title = firstMetadataText(data, TITLE_TAG_CANDIDATES)
+        const description = firstMeaningfulDescription(data)
+        if (title) entry.title = title
+        if (description) entry.description = description
+        if (Object.keys(entry).length === 0) return
         entries[file] = entry
       } catch {
         // Silently skip unreadable files
@@ -277,6 +367,8 @@ async function extractAndWrite(root: string) {
     `  date?:  string   // YYYY-MM-DD\n` +
     `  make?:  string\n` +
     `  model?: string\n` +
+    `  title?: string\n` +
+    `  description?: string\n` +
     `}\n\n` +
     `export const rawExifData: Record<string, ExifEntry> = ${body}\n`
 
