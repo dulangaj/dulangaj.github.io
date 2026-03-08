@@ -52,7 +52,7 @@ function stripInlineMarkdown(text: string): string {
     .replace(/(\*|_)(.*?)\1/g, '$2')
     .replace(/~~(.*?)~~/g, '$1')
     .replace(/<[^>]+>/g, ' ')
-    .replace(/\\([\\`*{}\[\]()#+\-.!_>~|])/g, '$1')
+    .replace(/\\([\\`*{}[\]()+#\-.!_>~|])/g, '$1')
     .replace(/\s+/g, ' ')
     .trim()
 }
