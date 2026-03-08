@@ -4,7 +4,8 @@
  * Merges two data sources into a single PhotoLocation[] for the world map:
  *
  *   1. generatedExif.ts  — auto-generated at build time from image EXIF metadata.
- *      Provides real GPS coordinates (where available), capture dates, and camera info.
+ *      Provides real GPS coordinates (where available), capture dates, camera info,
+ *      and embedded photo title/description metadata.
  *
  *   2. locationOverrides below — manually maintained.
  *      Supplies coordinates for photos whose GPS was stripped (common when resizing
@@ -15,7 +16,9 @@
  * also supply fallback coordinates when a photo has no embedded GPS.
  *
  * To add a new photo: drop it in public/assets/img/, rebuild (EXIF is re-extracted
- * automatically), then add a matching entry to locationOverrides below.
+ * automatically). Add a matching entry to photoMetadata only if you want to
+ * override the embedded title/description, add nicer labels, or supply fallback
+ * coordinates for photos without GPS.
  */
 
 import { rawExifData } from './generatedExif'
@@ -96,6 +99,7 @@ export const photoLocations: PhotoLocation[] = filenames
     const exif = rawExifData[filename] ?? {}
     const hasGPS = typeof exif.lat === 'number' && typeof exif.lng === 'number'
 
+    if (metadata?.excludeFromMap) return photos
     if (!metadata && !hasGPS) return photos
     if (!hasGPS && (typeof metadata?.lat !== 'number' || typeof metadata?.lng !== 'number')) return photos
 
@@ -109,9 +113,9 @@ export const photoLocations: PhotoLocation[] = filenames
       thumbnail:      `/assets/img/thumbs/${filename}`,
       lat,
       lng,
-      title:          metadata?.title ?? labelFromFilename(filename),
+      title:          metadata?.title ?? exif.title ?? labelFromFilename(filename),
       subtitle:       metadata?.subtitle,
-      description:    metadata?.description,
+      description:    metadata?.description ?? exif.description,
       location:       metadata?.location ?? locationFromCoordinates(lat, lng),
       date:           metadata?.date ?? exif.date ?? dateFromFilename(filename),
       relatedPosts:   relatedPosts.length > 0 ? relatedPosts : undefined,
