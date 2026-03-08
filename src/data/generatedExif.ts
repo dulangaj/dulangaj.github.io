@@ -96,6 +96,13 @@ export const rawExifData: Record<string, ExifEntry> = {
     "title": "Po Toi Island",
     "description": "My favorite place to look at the night sky, and second favorite camping spot in Hong Kong"
   },
+  "24.01_okinawa.jpeg": {
+    "date": "2024-01-13",
+    "make": "GoPro",
+    "model": "HERO8 Black",
+    "title": "Okinawa",
+    "description": "DCIM\\101GOPRO\\GOPR6794.JPG"
+  },
   "24.06_milky_way.jpeg": {
     "lat": -44.00389444444444,
     "lng": 170.484375,
@@ -112,6 +119,14 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max",
     "title": "Lake Tekapo"
+  },
+  "24.09_lucerne.jpeg": {
+    "lat": 46.97157777777778,
+    "lng": 8.587786111111111,
+    "date": "2024-09-19",
+    "make": "DJI",
+    "model": "FC3582",
+    "title": "Lucerne"
   },
   "25.01_greenland.jpeg": {
     "lat": 78.08078333333333,
@@ -137,12 +152,36 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
+  "25.04_patagonia.jpeg": {
+    "lat": -51.207030555555555,
+    "lng": -72.97460277777778,
+    "date": "2025-04-29",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Driving into Patagonia way past curfew"
+  },
+  "25.04_perth.jpeg": {
+    "lat": -31.948219444444444,
+    "lng": 115.85842222222222,
+    "date": "2025-04-19",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Self-portrait"
+  },
   "25.04_torres_del_paine.jpeg": {
     "lat": -50.942299999999996,
     "lng": -72.93674722222222,
     "date": "2025-05-01",
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
+  },
+  "25.10_malacca.jpeg": {
+    "lat": 2.1825055555555553,
+    "lng": 102.263,
+    "date": "2025-10-20",
+    "make": "Apple",
+    "model": "iPhone 15 Pro Max",
+    "title": "Deepavali Celebrations in Malaysia"
   },
   "leaves.jpeg": {
     "date": "2023-03-31",

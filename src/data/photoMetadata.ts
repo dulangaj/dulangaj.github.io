@@ -126,7 +126,6 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'ICC — International Commerce Centre',
     subtitle: 'West Kowloon, Hong Kong',
     location: 'West Kowloon, Hong Kong',
-    category: 'Travel',
   },
   '23.12_po_toi.jpeg': {
     title: 'Po Toi Island',
