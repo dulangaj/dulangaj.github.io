@@ -43,14 +43,47 @@ function stripFrontmatter(content: string): string {
 
 /* ── Auto-extract first prose paragraph as excerpt ──────────────────────── */
 
+function stripInlineMarkdown(text: string): string {
+  return text
+    .replace(/!\[([^\]]*)\]\([^)]+\)/g, '$1')
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1')
+    .replace(/`([^`]+)`/g, '$1')
+    .replace(/(\*\*|__)(.*?)\1/g, '$2')
+    .replace(/(\*|_)(.*?)\1/g, '$2')
+    .replace(/~~(.*?)~~/g, '$1')
+    .replace(/<[^>]+>/g, ' ')
+    .replace(/\\([\\`*{}\[\]()#+\-.!_>~|])/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+function isExcerptCandidate(paragraph: string): boolean {
+  const trimmed = paragraph.trim()
+
+  if (!trimmed || trimmed.length <= 20) return false
+  if (/^#{1,6}\s/.test(trimmed)) return false
+  if (/^([-*_])(?:\s*\1){2,}\s*$/.test(trimmed)) return false
+  if (/^[>*|]/.test(trimmed)) return false
+  if (/^!\[/.test(trimmed)) return false
+  if (/^(?:[-+*]\s|\d+\.\s)/.test(trimmed)) return false
+
+  return true
+}
+
 function extractExcerpt(body: string, maxLen = 200): string {
-  for (const line of body.split('\n')) {
-    const t = line.trim()
-    if (t && !t.startsWith('#') && !t.startsWith('-') && !t.startsWith('*') &&
-        !t.startsWith('|') && !t.startsWith('!') && !t.startsWith('>') && t.length > 20) {
-      return t.length > maxLen ? t.slice(0, maxLen).trimEnd() + '…' : t
-    }
+  const paragraphs = body
+    .split(/\n\s*\n/)
+    .map((paragraph) => paragraph.replace(/\s*\n\s*/g, ' ').trim())
+
+  for (const paragraph of paragraphs) {
+    if (!isExcerptCandidate(paragraph)) continue
+
+    const plainText = stripInlineMarkdown(paragraph)
+    if (!plainText) continue
+
+    return plainText.length > maxLen ? plainText.slice(0, maxLen).trimEnd() + '…' : plainText
   }
+
   return ''
 }
 
