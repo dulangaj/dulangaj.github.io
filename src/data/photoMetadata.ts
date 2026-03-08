@@ -9,6 +9,7 @@ export interface PhotoMetadata {
   location?: string
   description?: string
   category?: PhotoCategory
+  excludeFromMap?: boolean
   disableGeneratedPosts?: boolean
 }
 
@@ -44,6 +45,13 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Academic Project · CUHK',
     location: 'Shatin, Hong Kong',
     category: 'Education',
+    excludeFromMap: true,
+  },
+  '18.07_london_bridge.jpeg': {
+    title: 'Following my roommate through London Bridge',
+    location: 'London, England',
+    description: 'My heart was in my mouth, as I dropped my phone snapping this.',
+    category: 'Travel',
   },
   '18.09_window.jpeg': {
     lat: 43.7022,
@@ -85,6 +93,18 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hanover, NH, USA',
     category: 'Education',
   },
+  '18.12_grand_canyon.jpeg': {
+    title: 'Strolling through the Grand Canyon with one of my best friends',
+    location: 'Grand Canyon National Park, AZ, USA',
+    description: 'A winter walk along the South Rim, with the canyon opening up wider at every turn.',
+    category: 'Travel',
+  },
+  '18.12_yosemite.jpeg': {
+    title: 'Lone Chapel',
+    location: 'Yosemite National Park, CA, USA',
+    description: 'Almost died going off-trail in Yosemite',
+    category: 'Travel',
+  },
   '19.05_hkie.jpeg': {
     lat: 25.0174,
     lng: 121.5396,
@@ -108,6 +128,54 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'ICC — International Commerce Centre',
     subtitle: 'West Kowloon, Hong Kong',
     location: 'West Kowloon, Hong Kong',
+    excludeFromMap: true,
+  },
+  '23.12_po_toi.jpeg': {
+    title: 'Po Toi Island',
+    subtitle: 'Hong Kong’s southern edge',
+    location: 'Po Toi, Hong Kong',
+    description: 'My favorite place to look at the night sky, and second favorite camping spot in Hong Kong',
+    category: 'Travel',
+  },
+  '24.01_okinawa.jpeg': {
+    lat: 26.4585704366135,
+    lng: 127.77522749264577,
+    title: 'Snorkeling in Okinawa',
+    subtitle: 'Okinawa',
+    location: 'Okinawa, Japan',
+    description: 'A GoPro frame from one of those swims where the water was clearer than it looked real.',
+    category: 'Travel',
+  },
+  '24.06_milky_way.jpeg': {
+    title: 'Plonked my phone on the sunroof and waited inside',
+    subtitle: 'Mackenzie Basin',
+    location: 'Lake Tekapo, New Zealand',
+    description: 'While my iPhone did its 30-second exposure',
+    category: 'Travel',
+  },
+  '24.06_tekapo.jpeg': {
+    title: 'Lake Tekapo',
+    subtitle: 'Church of the Good Shepherd',
+    location: 'Lake Tekapo, New Zealand',
+    category: 'Travel',
+  },
+  '24.09_lucerne.jpeg': {
+    title: 'Lucerne After Dark',
+    subtitle: 'Above Lake Lucerne',
+    location: 'Lucerne, Switzerland',
+    category: 'Travel',
+  },
+  '25.01_greenland.jpeg': {
+    title: 'Greenland',
+    subtitle: 'Somewhere over the ice sheet',
+    location: 'Greenland',
+    description: 'A window-seat view over Greenland that made the whole island look endless.',
+    category: 'Travel',
+  },
+  '25.04_atacama.jpeg': {
+    title: 'Three layers of Atacama',
+    location: 'Atacama Desert, Chile',
+    description: 'Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view',
     category: 'Travel',
   },
   '25.04_easter_island.jpeg': {
@@ -133,6 +201,25 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'A Patagonia landscape from Torres del Paine National Park.',
     category: 'Travel',
   },
+  '25.04_patagonia.jpeg': {
+    title: 'Driving into Patagonia way past curfew',
+    subtitle: 'Torres del Paine',
+    location: 'Torres del Paine National Park, Chile',
+    description: 'The road, the headlights, and the skyline all felt a little too cinematic to be real.',
+    category: 'Travel',
+  },
+  '25.04_perth.jpeg': {
+    title: 'Self-portrait',
+    subtitle: 'Golden hour in Perth',
+    location: 'Perth, Western Australia',
+    category: 'Travel',
+  },
+  '25.10_malacca.jpeg': {
+    title: 'Deepavali Celebrations in Malacca',
+    location: 'Malacca, Malaysia',
+    description: 'Fireworks going off below the hotel window during Deepavali celebrations in Malacca.',
+    category: 'Travel',
+  },
   'leaves.jpeg': {
     lat: 22.4190,
     lng: 114.2075,
@@ -140,6 +227,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Research · CUHK',
     location: 'Shatin, Hong Kong',
     category: 'Education',
+    excludeFromMap: true,
   },
   'litpak.jpeg': {
     lat: 43.7055,
@@ -153,7 +241,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Patagonia',
     subtitle: 'Southern Chile',
     location: 'Patagonia, Chile',
-    description: 'A Patagonia travel photograph that currently reuses an older filename.',
+    description: 'A Patagonia travel photograph that I use as a banner for something else.',
     category: 'Travel',
     disableGeneratedPosts: true,
   },
