@@ -42,12 +42,28 @@ export function Header() {
 
   const scrollToSection = (id: string) => {
     const performScroll = () => {
+      const finishNavigationScroll = () => {
+        window.setTimeout(() => {
+          window.dispatchEvent(new CustomEvent('site:navigation-scroll-end'))
+        }, 900)
+      }
+
+      window.dispatchEvent(new CustomEvent('site:navigation-scroll-start'))
+
       if (id === 'top') {
         window.scrollTo({ top: 0, behavior: 'smooth' })
+        finishNavigationScroll()
         return
       }
 
-      document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' })
+      const target = document.getElementById(id)
+      if (!target) {
+        finishNavigationScroll()
+        return
+      }
+
+      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
+      finishNavigationScroll()
     }
 
     if (location.pathname !== '/') {
