@@ -4,7 +4,7 @@ import { Header }     from '@/components/layout/Header'
 import { Footer }     from '@/components/layout/Footer'
 import { Hero }       from '@/components/sections/Hero'
 import { NowStrip }   from '@/components/ui/NowStrip'
-import { Projects }   from '@/components/sections/Projects'
+import { Featured }   from '@/components/sections/Featured'
 import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
 import { homeSections } from '@/data/homeSections'
@@ -29,7 +29,7 @@ function HomePage() {
       <main id="main-content">
         {homeSections.hero && <Hero />}
         {homeSections.now && <NowStrip />}
-        {homeSections.featured && <Projects />}
+        {homeSections.featured && <Featured />}
         {homeSections.experience && <Experience />}
         {homeSections.writing && <Writing />}
       </main>

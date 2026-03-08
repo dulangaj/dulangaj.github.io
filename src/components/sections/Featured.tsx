@@ -5,7 +5,7 @@ import { featuredPosts } from '@/data/posts'
 import { Post } from '@/models/Post'
 import { FadeIn } from '@/components/ui/FadeIn'
 
-/* ─── Projects / Front Page ───────────────────────────────────────────────── */
+/* ─── Featured / Front Page ───────────────────────────────────────────────── */
 /* Newspaper front page: one dominant lead story, secondary column headlines.  */
 /* Teases only — the Writing section below is "inside the paper."              */
 
@@ -51,7 +51,7 @@ function LeadStory({ post }: { post: Post }) {
 
         {/* Image — right 2/5, full bleed */}
         {post.image && (
-          <div className="md:col-span-2 relative overflow-hidden aspect-[4/3] md:aspect-auto bg-[var(--color-rule)]" style={{ minHeight: '320px' }}>
+          <div className="md:col-span-2 relative overflow-hidden aspect-[4/3] md:aspect-auto md:min-h-[320px] bg-[var(--color-rule)]">
             <motion.img
               src={post.image}
               alt={post.title}
@@ -99,7 +99,7 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
   )
 }
 
-export function Projects() {
+export function Featured() {
   const [lead, ...secondaries] = featuredPosts
   const secondaryGridClass =
     secondaries.length === 1 ? 'sm:grid-cols-1 md:grid-cols-1'
@@ -108,7 +108,7 @@ export function Projects() {
           : 'sm:grid-cols-2 md:grid-cols-4'
 
   return (
-    <section id="featured" className="px-6 md:px-12 py-24">
+    <section id="featured" className="px-6 md:px-12 py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto">
 
         {/* Masthead */}

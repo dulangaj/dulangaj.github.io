@@ -160,10 +160,10 @@ export function Hero() {
               Scroll to explore
             </span>
             <button
-              onClick={() => document.querySelector('#projects')?.scrollIntoView({ behavior: 'smooth' })}
+              onClick={() => document.querySelector('#featured')?.scrollIntoView({ behavior: 'smooth' })}
               className="group flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
             >
-              Projects
+              Featured
               <FiArrowDownRight
                 size={14}
                 className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:translate-y-0.5"
