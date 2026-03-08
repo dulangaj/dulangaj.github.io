@@ -191,12 +191,13 @@ To add a new photo:
 2. Run `npm run dev` or `npm run build`.
 3. The Vite EXIF plugin will:
    - read EXIF data from images
+   - extract embedded title/caption metadata (for example Lightroom XMP `title` and `description`)
    - generate `src/data/generatedExif.ts`
    - create missing thumbnails in `public/assets/img/thumbs/`
    - generate `src/data/generatedPhotoPostLinks.ts` by scanning markdown posts for image usage
 4. Add or update a matching entry in `src/data/photoMetadata.ts` if you want:
    - fallback coordinates when GPS is missing
-   - a cleaner title or subtitle
+   - to override the embedded title or description, or add a subtitle
    - a human-readable location label
    - category and description overrides
    - suppression of generated post backlinks
