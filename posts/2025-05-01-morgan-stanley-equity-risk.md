@@ -10,26 +10,19 @@ image: 22_icc.jpeg
 read_time: 6
 ---
 
-## 📝 Project Overview
-
 At Morgan Stanley, I worked as part of the Equity Risk Technology team, developing scalable and highly reliable software systems used globally by traders and risk managers to monitor and manage risk exposure across multiple equity products.
 
-My work spanned backend development, automation, and infrastructure organization, contributing to systems used across major global regions in real-time trading environments.
+My work spanned backend development, automation, and infrastructure; contributing to systems used across major global regions in real-time trading environments.
 
 ---
 
-## 🧰 Stack & Tools
+## Stack
 
-- Java, Python, C#, Bash
-- Springboot
-- Numpy, Flask, Tkinter
-- Kafka, MQ
-- REST API, SQL, KDB+
-- Jenkins for CI/CD pipelines
+Java, Python, C#, Bash, Spring Boot, NumPy, Flask, Kafka, MQ, REST API, SQL, KDB+, Jenkins
 
 ---
 
-## 🎯 Responsibilities
+## Responsibilities
 
 - Full SDLC ownership: requirements gathering, design, development, testing, deployment, and support.
 - Global L3 production support across multiple time zones.
