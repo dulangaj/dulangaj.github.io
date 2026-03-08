@@ -14,7 +14,7 @@
 import { memo, useState, useCallback, useEffect, useMemo, useRef, type PointerEvent as ReactPointerEvent } from 'react'
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
-import { motion, AnimatePresence, type PanInfo } from 'framer-motion'
+import { motion, AnimatePresence, useDragControls, type PanInfo } from 'framer-motion'
 import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
@@ -601,6 +601,7 @@ export function MapPage() {
   const panelRef = useRef<HTMLDivElement | null>(null)
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
+  const sheetDragControls = useDragControls()
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
   )
@@ -916,6 +917,8 @@ export function MapPage() {
               exit={{ y: '100%', opacity: 0 }}
               transition={{ type: 'spring', damping: 28, stiffness: 260, mass: 0.8 }}
               drag={isDesktop ? false : 'y'}
+              dragControls={sheetDragControls}
+              dragListener={false}
               dragConstraints={{ top: 0 }}
               dragElastic={0.2}
               onDragEnd={handleDragEnd}
@@ -934,8 +937,9 @@ export function MapPage() {
               ref={panelRef}
             >
               <div
-                className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)]"
+                className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)] cursor-grab active:cursor-grabbing"
                 style={{ touchAction: 'none' }}
+                onPointerDown={(e) => { if (!isDesktop) sheetDragControls.start(e) }}
               >
                 <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
 
