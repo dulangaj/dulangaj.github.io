@@ -423,8 +423,8 @@ const FILTER_OPTIONS = [
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
 const SPIDER_LEG_FADE_MS = 120
-const PHOTO_SWIPE_THRESHOLD = 40
-const PHOTO_SWIPE_VELOCITY = 300
+const PHOTO_SWIPE_THRESHOLD = 20
+const PHOTO_SWIPE_VELOCITY = 200
 
 const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
   photos,
@@ -1005,7 +1005,7 @@ export function MapPage() {
                     const dx = e.clientX - start.x
                     const dy = e.clientY - start.y
                     if (!isDraggingRef.current) {
-                      if (Math.abs(dx) > 8 && Math.abs(dx) > Math.abs(dy) * 1.2) {
+                      if (Math.abs(dx) > 5 && Math.abs(dx) > Math.abs(dy) * 0.8) {
                         isDraggingRef.current = true
                         ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
                       } else {
