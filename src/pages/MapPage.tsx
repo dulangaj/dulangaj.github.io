@@ -870,23 +870,75 @@ export function MapPage() {
             key="map-loader"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none"
             style={{ background: 'var(--color-paper)' }}
           >
-            <div className="flex flex-col items-center gap-3">
-              <div
-                className="w-8 h-8 rounded-full border-2 animate-spin"
-                style={{
-                  borderColor: 'var(--color-rule)',
-                  borderTopColor: 'var(--color-crimson)',
-                }}
-              />
+            <div className="flex flex-col items-center gap-4">
+              {/* Map pin with pulse ring */}
+              <div className="relative flex items-center justify-center">
+                {/* Pulse ring */}
+                <motion.div
+                  className="absolute w-10 h-10 rounded-full"
+                  style={{ border: '1.5px solid var(--color-crimson)' }}
+                  initial={{ opacity: 0.6, scale: 0.8 }}
+                  animate={{ opacity: 0, scale: 1.8 }}
+                  transition={{
+                    duration: 1.8,
+                    repeat: Infinity,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                />
+                {/* Pin icon */}
+                <svg
+                  width="28"
+                  height="28"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                    fill="var(--color-crimson)"
+                    opacity="0.15"
+                  />
+                  <path
+                    d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"
+                    stroke="var(--color-crimson)"
+                    strokeWidth="1.5"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
+                  <circle
+                    cx="12"
+                    cy="9"
+                    r="2.5"
+                    stroke="var(--color-crimson)"
+                    strokeWidth="1.5"
+                  />
+                </svg>
+              </div>
+              {/* Editorial loading text */}
               <span
-                className="font-body text-[12px]"
+                className="font-display italic text-sm tracking-wide"
                 style={{ color: 'var(--color-muted)' }}
               >
-                Loading map…
+                Loading map
+                {[0, 1, 2].map((i) => (
+                  <motion.span
+                    key={i}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: [0, 1, 0] }}
+                    transition={{
+                      duration: 1.4,
+                      repeat: Infinity,
+                      delay: i * 0.2,
+                      ease: 'easeInOut',
+                    }}
+                  >
+                    .
+                  </motion.span>
+                ))}
               </span>
             </div>
           </motion.div>
