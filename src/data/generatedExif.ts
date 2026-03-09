@@ -92,7 +92,7 @@ export const rawExifData: Record<string, ExifEntry> = {
     "lng": 114.2570361111111,
     "date": "2023-12-10",
     "make": "DJI",
-    "model": "FC3582",
+    "model": "DJI Mini 3 Pro",
     "title": "Po Toi Island",
     "description": "My favorite place to look at the night sky, and second favorite camping spot in Hong Kong"
   },
@@ -125,7 +125,7 @@ export const rawExifData: Record<string, ExifEntry> = {
     "lng": 8.587786111111111,
     "date": "2024-09-19",
     "make": "DJI",
-    "model": "FC3582",
+    "model": "DJI Mini 3 Pro",
     "title": "Lucerne"
   },
   "25.01_greenland.jpeg": {
