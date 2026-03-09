@@ -768,36 +768,40 @@ export function MapPage() {
     >
       {/* ── Header overlay ──────────────────────────────────────────────── */}
       <div
-        className="absolute top-0 left-0 right-0 z-[1000] flex flex-col gap-3 px-4 py-3 sm:px-6"
+        className="absolute top-0 left-0 right-0 z-[1000] flex flex-col px-4 py-3 sm:px-6"
         style={{
           background:      'color-mix(in srgb, var(--color-paper) 88%, transparent)',
           backdropFilter:  'blur(14px)',
           WebkitBackdropFilter: 'blur(14px)',
-          borderBottom:    '1px solid var(--color-rule)',
         }}
       >
+        {/* Top row: back + title + theme toggle */}
         <div className="flex items-center gap-4 w-full">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors cursor-pointer bg-transparent border-none"
+            className="flex items-center gap-1.5 font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer bg-transparent border-none"
             aria-label="Back to home"
           >
-            <FiArrowLeft size={15} />
+            <FiArrowLeft size={13} />
             <span className="hidden sm:inline">Back</span>
           </button>
 
-          <div className="flex-1 min-w-0">
-            <h1
-              className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] leading-none"
-            >
-              My World
-            </h1>
-            <p className="font-body text-[11px] text-[var(--color-muted)] mt-0.5 leading-none">
-              {filteredPhotos.length} visible moments · {mappedLocations} mapped locations
-            </p>
-          </div>
+          <div className="flex-1 min-w-0" />
 
           <ThemeToggle />
+        </div>
+
+        {/* Masthead — editorial section header */}
+        <div className="flex items-baseline justify-between border-b border-[var(--color-ink)] pb-2 mt-2">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">04</span>
+            <h1 className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)]">
+              My World
+            </h1>
+          </div>
+          <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)] hidden sm:block">
+            {filteredPhotos.length} moments · {mappedLocations} locations
+          </span>
         </div>
 
         <div className="w-full overflow-x-auto no-scrollbar">
