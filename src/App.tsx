@@ -41,7 +41,16 @@ function HomePage() {
 export default function App() {
   return (
     <HashRouter>
-      <Suspense fallback={<main className="min-h-screen bg-[var(--color-paper)]" />}>
+      <Suspense fallback={
+        <main className="min-h-screen bg-[var(--color-paper)] flex items-center justify-center">
+          <div className="flex flex-col items-center gap-3">
+            <div className="h-px w-10 bg-[var(--color-crimson)] animate-pulse" />
+            <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">
+              Loading
+            </span>
+          </div>
+        </main>
+      }>
         <Routes>
           <Route path="/"         element={<HomePage />} />
           <Route path="/post/:id" element={<PostDetail />} />
