@@ -661,6 +661,8 @@ export function MapPage() {
   const activeClusterIndex = visibleSelected
     ? activeClusterPhotos.findIndex((photo) => photo.id === visibleSelected.id)
     : -1
+  const photoViewerHeight = isDesktop ? 'min(58vh, 560px)' : 'min(56vh, 520px)'
+  const photoViewerMinHeight = isDesktop ? '320px' : '300px'
 
   useEffect(() => {
     const nextParams = new URLSearchParams()
@@ -972,7 +974,12 @@ export function MapPage() {
                 {/* Photo with swipe */}
                 <div
                   className="relative w-full overflow-hidden"
-                  style={{ aspectRatio: '16/9', background: 'var(--color-rule)', touchAction: canNavigateCluster && !isDesktop ? 'pan-y pinch-zoom' : 'auto' }}
+                  style={{
+                    height: photoViewerHeight,
+                    minHeight: photoViewerMinHeight,
+                    background: 'var(--color-rule)',
+                    touchAction: canNavigateCluster && !isDesktop ? 'pan-y pinch-zoom' : 'auto',
+                  }}
                   onPointerDown={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
                     pointerStartRef.current = { x: e.clientX, y: e.clientY, t: Date.now() }
                     isDraggingRef.current = false
@@ -1040,45 +1047,34 @@ export function MapPage() {
                       animate="center"
                       exit="exit"
                       transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.8 }}
-                      className="absolute inset-0"
+                      className="absolute inset-0 flex items-center justify-center p-3 sm:p-4"
                     >
                       <img
                         src={visibleSelected.thumbnail}
                         alt=""
                         aria-hidden="true"
-                        className="absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-60"
+                        className="pointer-events-none absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-60"
                         draggable={false}
                       />
-                      <div className="absolute inset-0 bg-black/8" />
+                      <div className="pointer-events-none absolute inset-0 bg-black/10" />
                       {!imageLoaded && (
                         <div
-                          className="absolute inset-0 animate-pulse"
+                          className="pointer-events-none absolute inset-0 animate-pulse"
                           style={{ background: 'color-mix(in srgb, var(--color-rule) 78%, transparent)' }}
                         />
                       )}
-                      <img
-                        src={visibleSelected.image}
-                        alt={visibleSelected.title}
-                        className="relative z-[1] w-full h-full object-cover transition-opacity duration-300"
+                      <div
+                        className="relative z-[1] flex max-w-full max-h-full items-center justify-center transition-opacity duration-300"
                         style={{ opacity: imageLoaded ? 1 : 0 }}
-                        onLoad={() => setImageLoaded(true)}
-                        draggable={false}
-                      />
-
-                      {/* Camera badge */}
-                      {visibleSelected.cameraModel && (
-                        <div
-                          className="absolute top-3 right-3 flex items-center gap-1 px-2 py-1 rounded-full font-body text-[10px] font-medium"
-                          style={{
-                            background: 'rgba(0,0,0,0.5)',
-                            backdropFilter: 'blur(8px)',
-                            color: 'rgba(255,255,255,0.9)',
-                          }}
-                        >
-                          <FiCamera size={9} />
-                          {visibleSelected.cameraModel}
-                        </div>
-                      )}
+                      >
+                        <img
+                          src={visibleSelected.image}
+                          alt={visibleSelected.title}
+                          className="block max-w-full max-h-full w-auto h-auto rounded-2xl shadow-[0_10px_28px_rgba(0,0,0,0.16)]"
+                          onLoad={() => setImageLoaded(true)}
+                          draggable={false}
+                        />
+                      </div>
                     </motion.div>
                   </AnimatePresence>
                   </div>
@@ -1180,6 +1176,29 @@ export function MapPage() {
                     </p>
                   )}
 
+                  {(visibleSelected.date || visibleSelected.cameraModel) && (
+                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+                      {visibleSelected.date && (
+                        <div
+                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase"
+                          style={{ color: 'var(--color-subtle)' }}
+                        >
+                          <FiCalendar size={10} />
+                          {formatDate(visibleSelected.date)}
+                        </div>
+                      )}
+                      {visibleSelected.cameraModel && (
+                        <div
+                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase"
+                          style={{ color: 'var(--color-subtle)' }}
+                        >
+                          <FiCamera size={10} />
+                          {visibleSelected.cameraModel}
+                        </div>
+                      )}
+                    </div>
+                  )}
+
                   {visibleSelected.description && (
                     <p
                       className="font-body text-[13px] leading-relaxed mb-4"
@@ -1187,17 +1206,6 @@ export function MapPage() {
                     >
                       {visibleSelected.description}
                     </p>
-                  )}
-
-                  {/* Date */}
-                  {visibleSelected.date && (
-                    <div
-                      className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase mb-4"
-                      style={{ color: 'var(--color-subtle)' }}
-                    >
-                      <FiCalendar size={10} />
-                      {formatDate(visibleSelected.date)}
-                    </div>
                   )}
 
                   {/* Related posts */}
