@@ -1204,19 +1204,19 @@ export function MapPage() {
                   {/* Date */}
                   {visibleSelected.date && (
                     <div
-                      className="flex items-center gap-1.5 font-body text-[12px] mb-4"
+                      className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase mb-4"
                       style={{ color: 'var(--color-subtle)' }}
                     >
-                      <FiCalendar size={11} />
+                      <FiCalendar size={10} />
                       {formatDate(visibleSelected.date)}
                     </div>
                   )}
 
                   {/* Related posts */}
                   {visibleSelected.relatedPosts && visibleSelected.relatedPosts.length > 0 && (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 border-t border-[var(--color-rule)] pt-4">
                       <p
-                        className="font-mono text-[10px] tracking-[0.18em] uppercase"
+                        className="font-mono text-[10px] tracking-widest uppercase mb-1"
                         style={{ color: 'var(--color-subtle)' }}
                       >
                         {visibleSelected.relatedPosts.length === 1 ? 'Related Article' : 'Related Articles'}
@@ -1230,29 +1230,12 @@ export function MapPage() {
                               backLabel: 'Back to map',
                             },
                           })}
-                          className="w-full flex items-center gap-3 px-3 py-3 rounded-xl font-body text-[13px] font-medium transition-all duration-200 cursor-pointer"
-                          style={{
-                            background: 'var(--color-paper)',
-                            color:      'var(--color-ink)',
-                            border:     '1px solid var(--color-rule)',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--color-surface)'
-                            e.currentTarget.style.borderColor = 'var(--color-crimson)'
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'var(--color-paper)'
-                            e.currentTarget.style.borderColor = 'var(--color-rule)'
-                          }}
+                          className="group w-full flex items-center gap-3 py-2 font-display text-[14px] font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none text-left"
+                          style={{ color: 'var(--color-ink)' }}
                         >
-                          <span
-                            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                            style={{ background: 'color-mix(in srgb, var(--color-crimson) 12%, transparent)', color: 'var(--color-crimson)' }}
-                          >
-                            <FiBookOpen size={14} />
-                          </span>
-                          <span className="flex-1 text-left">{post.title}</span>
-                          <FiArrowUpRight size={14} style={{ color: 'var(--color-subtle)' }} />
+                          <FiBookOpen size={13} className="flex-shrink-0 text-[var(--color-crimson)]" />
+                          <span className="flex-1 group-hover:text-[var(--color-crimson)] transition-colors duration-200">{post.title}</span>
+                          <FiArrowUpRight size={12} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
                         </button>
                       ))}
                     </div>
