@@ -1104,6 +1104,28 @@ export function MapPage() {
                   </AnimatePresence>
                   </div>
 
+                  {/* Prev/Next buttons — mobile only */}
+                  {!isDesktop && canNavigateCluster && (
+                    <>
+                      <button
+                        onClick={() => navigatePhoto('prev', activeClusterPhotos, visibleSelected)}
+                        className="absolute left-2 top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center rounded-full border-none cursor-pointer"
+                        style={{ background: 'rgba(0,0,0,0.45)', color: '#fff', backdropFilter: 'blur(6px)' }}
+                        aria-label="Previous photo"
+                      >
+                        <FiChevronLeft size={18} />
+                      </button>
+                      <button
+                        onClick={() => navigatePhoto('next', activeClusterPhotos, visibleSelected)}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center rounded-full border-none cursor-pointer"
+                        style={{ background: 'rgba(0,0,0,0.45)', color: '#fff', backdropFilter: 'blur(6px)' }}
+                        aria-label="Next photo"
+                      >
+                        <FiChevronRight size={18} />
+                      </button>
+                    </>
+                  )}
+
                   {/* Pagination dots — mobile only */}
                   {!isDesktop && canNavigateCluster && (
                     <div className="absolute bottom-2 left-0 right-0 z-[2] flex items-center justify-center gap-1.5">
