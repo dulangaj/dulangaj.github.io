@@ -56,10 +56,11 @@ export default defineConfig({
               },
             },
           },
-          // Local portfolio images — cache-first
+          // Local portfolio images live under public/ with stable URLs,
+          // so prefer freshness over a long-lived cache hit on replaced files.
           {
             urlPattern: /\/assets\/img\/.*/i,
-            handler: 'CacheFirst',
+            handler: 'StaleWhileRevalidate',
             options: {
               cacheName: 'portfolio-images',
               expiration: {
