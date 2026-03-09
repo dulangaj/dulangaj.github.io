@@ -41,7 +41,7 @@ function HomePage() {
 export default function App() {
   return (
     <HashRouter>
-      <Suspense fallback={<main className="min-h-screen pt-24 px-6 md:px-12" />}>
+      <Suspense fallback={<main className="min-h-screen bg-[var(--color-paper)]" />}>
         <Routes>
           <Route path="/"         element={<HomePage />} />
           <Route path="/post/:id" element={<PostDetail />} />
