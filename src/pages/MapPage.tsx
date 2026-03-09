@@ -400,11 +400,6 @@ function formatDate(iso: string): string {
 
 /* ─── Category label ─────────────────────────────────────────────────────── */
 
-/* ─── Summary stats ──────────────────────────────────────────────────────── */
-
-function countUnique<T>(arr: T[]): number {
-  return new Set(arr).size
-}
 
 const FILTER_OPTIONS = [
   { id: 'all', label: 'All' },
@@ -749,7 +744,6 @@ export function MapPage() {
     }
   }, [activeClusterPhotos, handleClose, navigatePhoto, selected])
 
-  const mappedLocations = countUnique(filteredPhotos.map((p) => `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`))
 
   return (
     <div
@@ -790,7 +784,7 @@ export function MapPage() {
             </h1>
           </div>
           <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)] hidden sm:block">
-            {filteredPhotos.length} moments · {mappedLocations} locations
+            {filteredPhotos.length} moments
           </span>
         </div>
 
@@ -861,13 +855,16 @@ export function MapPage() {
             key="map-loader"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none"
             style={{ background: 'var(--color-paper)' }}
           >
-            <div className="flex flex-col items-center gap-4">
+            <div className="flex flex-col items-center gap-3">
               <div className="h-px w-10 bg-[var(--color-crimson)] animate-pulse" />
-              <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">
+              <span
+                className="font-mono text-[10px] tracking-widest uppercase"
+                style={{ color: 'var(--color-subtle)' }}
+              >
                 Loading map
               </span>
             </div>
