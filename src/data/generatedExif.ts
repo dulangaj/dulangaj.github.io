@@ -142,7 +142,7 @@ export const rawExifData: Record<string, ExifEntry> = {
     "date": "2025-04-28",
     "make": "Apple",
     "model": "iPhone 15 Pro Max",
-    "title": "Layers of Atacama",
+    "title": "Three layers of Atacama",
     "description": "Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view"
   },
   "25.04_easter_island.jpeg": {
