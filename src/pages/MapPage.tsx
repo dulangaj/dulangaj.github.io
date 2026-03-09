@@ -398,17 +398,7 @@ function formatDate(iso: string): string {
   }
 }
 
-/* ─── Category colour pill ───────────────────────────────────────────────── */
-
-const CATEGORY_COLOURS: Record<string, string> = {
-  Work:      'bg-blue-500/15 text-blue-600 dark:text-blue-400',
-  Education: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
-  Travel:    'bg-amber-500/15 text-amber-600 dark:text-amber-400',
-}
-
-function categoryColour(cat: string | undefined) {
-  return cat ? (CATEGORY_COLOURS[cat] ?? 'bg-gray-500/15 text-gray-600') : ''
-}
+/* ─── Category label ─────────────────────────────────────────────────────── */
 
 /* ─── Summary stats ──────────────────────────────────────────────────────── */
 
@@ -1165,19 +1155,20 @@ export function MapPage() {
                 {/* Info */}
                 <div className="px-5 pt-4 pb-6">
                   {/* Category + location */}
-                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <div className="flex items-center gap-3 mb-3 flex-wrap">
                     {visibleSelected.category && (
-                      <span
-                        className={`font-body text-[11px] font-medium px-2 py-0.5 rounded-full ${categoryColour(visibleSelected.category)}`}
-                      >
-                        {visibleSelected.category}
-                      </span>
+                      <>
+                        <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)]">
+                          {visibleSelected.category}
+                        </span>
+                        <div className="h-px w-4 bg-[var(--color-rule)]" />
+                      </>
                     )}
                     <span
-                      className="flex items-center gap-1 font-body text-[12px]"
-                      style={{ color: 'var(--color-muted)' }}
+                      className="flex items-center gap-1 font-mono text-[10px] tracking-widest uppercase"
+                      style={{ color: 'var(--color-subtle)' }}
                     >
-                      <FiMapPin size={11} />
+                      <FiMapPin size={10} />
                       {visibleSelected.location}
                     </span>
                   </div>
