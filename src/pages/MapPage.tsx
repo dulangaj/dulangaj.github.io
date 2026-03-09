@@ -62,7 +62,7 @@ function ThemeAwareTiles() {
       minZoom={2}
       maxZoom={5}
       maxNativeZoom={5}
-      noWrap={true}
+      noWrap={false}
     />
   )
 }
