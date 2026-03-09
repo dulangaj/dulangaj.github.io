@@ -861,23 +861,14 @@ export function MapPage() {
             key="map-loader"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+            transition={{ duration: 0.4 }}
             className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none"
             style={{ background: 'var(--color-paper)' }}
           >
-            <div className="flex flex-col items-center gap-3">
-              <div
-                className="w-8 h-8 rounded-full border-2 animate-spin"
-                style={{
-                  borderColor: 'var(--color-rule)',
-                  borderTopColor: 'var(--color-crimson)',
-                }}
-              />
-              <span
-                className="font-body text-[12px]"
-                style={{ color: 'var(--color-muted)' }}
-              >
-                Loading map…
+            <div className="flex flex-col items-center gap-4">
+              <div className="h-px w-10 bg-[var(--color-crimson)] animate-pulse" />
+              <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">
+                Loading map
               </span>
             </div>
           </motion.div>
