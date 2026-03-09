@@ -398,17 +398,7 @@ function formatDate(iso: string): string {
   }
 }
 
-/* ─── Category colour pill ───────────────────────────────────────────────── */
-
-const CATEGORY_COLOURS: Record<string, string> = {
-  Work:      'bg-blue-500/15 text-blue-600 dark:text-blue-400',
-  Education: 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400',
-  Travel:    'bg-amber-500/15 text-amber-600 dark:text-amber-400',
-}
-
-function categoryColour(cat: string | undefined) {
-  return cat ? (CATEGORY_COLOURS[cat] ?? 'bg-gray-500/15 text-gray-600') : ''
-}
+/* ─── Category label ─────────────────────────────────────────────────────── */
 
 
 const FILTER_OPTIONS = [
@@ -762,72 +752,73 @@ export function MapPage() {
     >
       {/* ── Header overlay ──────────────────────────────────────────────── */}
       <div
-        className="absolute top-0 left-0 right-0 z-[1000] flex flex-col gap-3 px-4 py-3 sm:px-6"
+        className="absolute top-0 left-0 right-0 z-[1000] flex flex-col px-4 py-3 sm:px-6"
         style={{
           background:      'color-mix(in srgb, var(--color-paper) 88%, transparent)',
           backdropFilter:  'blur(14px)',
           WebkitBackdropFilter: 'blur(14px)',
-          borderBottom:    '1px solid var(--color-rule)',
         }}
       >
+        {/* Top row: back + title + theme toggle */}
         <div className="flex items-center gap-4 w-full">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors cursor-pointer bg-transparent border-none"
+            className="flex items-center gap-1.5 font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer bg-transparent border-none"
             aria-label="Back to home"
           >
-            <FiArrowLeft size={15} />
+            <FiArrowLeft size={13} />
             <span className="hidden sm:inline">Back</span>
           </button>
 
-          <div className="flex-1 min-w-0">
-            <h1
-              className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] leading-none"
-            >
-              My World
-            </h1>
-            <p className="font-body text-[11px] text-[var(--color-muted)] mt-0.5 leading-none">
-              {filteredPhotos.length} moments
-            </p>
-          </div>
+          <div className="flex-1 min-w-0" />
 
           <ThemeToggle />
         </div>
 
-        <div className="w-full overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-2 min-w-max">
-            {FILTER_OPTIONS.map((filter) => {
-              const active = activeFilter === filter.id
-              return (
-                <button
-                  key={filter.id}
-                  onClick={() => {
-                    const nextFilter = filter.id
-                    setActiveFilter(nextFilter)
-                    if (selected) {
-                      const willRemainVisible = photoLocations.some((photo) => {
-                        if (photo.id !== selected.id) return false
-                        if (nextFilter === 'all') return true
-                        return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
-                      })
-
-                      if (!willRemainVisible) {
-                        handleClose()
-                      }
-                    }
-                  }}
-                  className="px-3 py-1.5 rounded-full font-body text-[12px] transition-colors duration-200 cursor-pointer"
-                  style={{
-                    background: active ? 'var(--color-crimson)' : 'var(--color-surface)',
-                    color: active ? '#fff' : 'var(--color-muted)',
-                    border: `1px solid ${active ? 'var(--color-crimson)' : 'var(--color-rule)'}`,
-                  }}
-                >
-                  {filter.label}
-                </button>
-              )
-            })}
+        {/* Masthead — editorial section header */}
+        <div className="flex items-baseline justify-between border-b border-[var(--color-ink)] pb-2 mt-2">
+          <div className="flex items-baseline gap-3">
+            <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">04</span>
+            <h1 className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)]">
+              My World
+            </h1>
           </div>
+          <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)] hidden sm:block">
+            {filteredPhotos.length} moments
+          </span>
+        </div>
+
+        <div className="flex items-center gap-4 mt-2">
+          {FILTER_OPTIONS.map((filter) => {
+            const active = activeFilter === filter.id
+            return (
+              <button
+                key={filter.id}
+                onClick={() => {
+                  const nextFilter = filter.id
+                  setActiveFilter(nextFilter)
+                  if (selected) {
+                    const willRemainVisible = photoLocations.some((photo) => {
+                      if (photo.id !== selected.id) return false
+                      if (nextFilter === 'all') return true
+                      return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
+                    })
+
+                    if (!willRemainVisible) {
+                      handleClose()
+                    }
+                  }
+                }}
+                className="font-mono text-[11px] tracking-widest uppercase transition-colors duration-200 cursor-pointer bg-transparent border-none pb-1"
+                style={{
+                  color: active ? 'var(--color-crimson)' : 'var(--color-subtle)',
+                  borderBottom: active ? '1.5px solid var(--color-crimson)' : '1.5px solid transparent',
+                }}
+              >
+                {filter.label}
+              </button>
+            )
+          })}
         </div>
       </div>
 
@@ -1210,19 +1201,20 @@ export function MapPage() {
                 {/* Info */}
                 <div className="px-5 pt-4 pb-6">
                   {/* Category + location */}
-                  <div className="flex items-center gap-2 mb-2 flex-wrap">
+                  <div className="flex items-center gap-3 mb-3 flex-wrap">
                     {visibleSelected.category && (
-                      <span
-                        className={`font-body text-[11px] font-medium px-2 py-0.5 rounded-full ${categoryColour(visibleSelected.category)}`}
-                      >
-                        {visibleSelected.category}
-                      </span>
+                      <>
+                        <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)]">
+                          {visibleSelected.category}
+                        </span>
+                        <div className="h-px w-4 bg-[var(--color-rule)]" />
+                      </>
                     )}
                     <span
-                      className="flex items-center gap-1 font-body text-[12px]"
-                      style={{ color: 'var(--color-muted)' }}
+                      className="flex items-center gap-1 font-mono text-[10px] tracking-widest uppercase"
+                      style={{ color: 'var(--color-subtle)' }}
                     >
-                      <FiMapPin size={11} />
+                      <FiMapPin size={10} />
                       {visibleSelected.location}
                     </span>
                   </div>
@@ -1258,19 +1250,19 @@ export function MapPage() {
                   {/* Date */}
                   {visibleSelected.date && (
                     <div
-                      className="flex items-center gap-1.5 font-body text-[12px] mb-4"
+                      className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase mb-4"
                       style={{ color: 'var(--color-subtle)' }}
                     >
-                      <FiCalendar size={11} />
+                      <FiCalendar size={10} />
                       {formatDate(visibleSelected.date)}
                     </div>
                   )}
 
                   {/* Related posts */}
                   {visibleSelected.relatedPosts && visibleSelected.relatedPosts.length > 0 && (
-                    <div className="flex flex-col gap-2">
+                    <div className="flex flex-col gap-2 border-t border-[var(--color-rule)] pt-4">
                       <p
-                        className="font-mono text-[10px] tracking-[0.18em] uppercase"
+                        className="font-mono text-[10px] tracking-widest uppercase mb-1"
                         style={{ color: 'var(--color-subtle)' }}
                       >
                         {visibleSelected.relatedPosts.length === 1 ? 'Related Article' : 'Related Articles'}
@@ -1284,29 +1276,12 @@ export function MapPage() {
                               backLabel: 'Back to map',
                             },
                           })}
-                          className="w-full flex items-center gap-3 px-3 py-3 rounded-xl font-body text-[13px] font-medium transition-all duration-200 cursor-pointer"
-                          style={{
-                            background: 'var(--color-paper)',
-                            color:      'var(--color-ink)',
-                            border:     '1px solid var(--color-rule)',
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.background = 'var(--color-surface)'
-                            e.currentTarget.style.borderColor = 'var(--color-crimson)'
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.background = 'var(--color-paper)'
-                            e.currentTarget.style.borderColor = 'var(--color-rule)'
-                          }}
+                          className="group w-full flex items-center gap-3 py-2 font-display text-[14px] font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none text-left"
+                          style={{ color: 'var(--color-ink)' }}
                         >
-                          <span
-                            className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
-                            style={{ background: 'color-mix(in srgb, var(--color-crimson) 12%, transparent)', color: 'var(--color-crimson)' }}
-                          >
-                            <FiBookOpen size={14} />
-                          </span>
-                          <span className="flex-1 text-left">{post.title}</span>
-                          <FiArrowUpRight size={14} style={{ color: 'var(--color-subtle)' }} />
+                          <FiBookOpen size={13} className="flex-shrink-0 text-[var(--color-crimson)]" />
+                          <span className="flex-1 group-hover:text-[var(--color-crimson)] transition-colors duration-200">{post.title}</span>
+                          <FiArrowUpRight size={12} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
                         </button>
                       ))}
                     </div>
