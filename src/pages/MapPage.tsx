@@ -410,11 +410,6 @@ function categoryColour(cat: string | undefined) {
   return cat ? (CATEGORY_COLOURS[cat] ?? 'bg-gray-500/15 text-gray-600') : ''
 }
 
-/* ─── Summary stats ──────────────────────────────────────────────────────── */
-
-function countUnique<T>(arr: T[]): number {
-  return new Set(arr).size
-}
 
 const FILTER_OPTIONS = [
   { id: 'all', label: 'All' },
@@ -759,7 +754,6 @@ export function MapPage() {
     }
   }, [activeClusterPhotos, handleClose, navigatePhoto, selected])
 
-  const mappedLocations = countUnique(filteredPhotos.map((p) => `${p.lat.toFixed(4)},${p.lng.toFixed(4)}`))
 
   return (
     <div
@@ -793,7 +787,7 @@ export function MapPage() {
               My World
             </h1>
             <p className="font-body text-[11px] text-[var(--color-muted)] mt-0.5 leading-none">
-              {filteredPhotos.length} visible moments · {mappedLocations} mapped locations
+              {filteredPhotos.length} moments
             </p>
           </div>
 
