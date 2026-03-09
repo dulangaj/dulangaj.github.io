@@ -173,7 +173,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     category: 'Travel',
   },
   '25.04_atacama.jpeg': {
-    title: 'Three layers of Atacama',
+    title: 'Layers of Atacama',
     location: 'Atacama Desert, Chile',
     description: 'Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view',
     category: 'Travel',
