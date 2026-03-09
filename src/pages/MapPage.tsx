@@ -804,40 +804,37 @@ export function MapPage() {
           </span>
         </div>
 
-        <div className="w-full overflow-x-auto no-scrollbar">
-          <div className="flex items-center gap-2 min-w-max">
-            {FILTER_OPTIONS.map((filter) => {
-              const active = activeFilter === filter.id
-              return (
-                <button
-                  key={filter.id}
-                  onClick={() => {
-                    const nextFilter = filter.id
-                    setActiveFilter(nextFilter)
-                    if (selected) {
-                      const willRemainVisible = photoLocations.some((photo) => {
-                        if (photo.id !== selected.id) return false
-                        if (nextFilter === 'all') return true
-                        return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
-                      })
+        <div className="flex items-center gap-4 mt-2">
+          {FILTER_OPTIONS.map((filter) => {
+            const active = activeFilter === filter.id
+            return (
+              <button
+                key={filter.id}
+                onClick={() => {
+                  const nextFilter = filter.id
+                  setActiveFilter(nextFilter)
+                  if (selected) {
+                    const willRemainVisible = photoLocations.some((photo) => {
+                      if (photo.id !== selected.id) return false
+                      if (nextFilter === 'all') return true
+                      return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
+                    })
 
-                      if (!willRemainVisible) {
-                        handleClose()
-                      }
+                    if (!willRemainVisible) {
+                      handleClose()
                     }
-                  }}
-                  className="px-3 py-1.5 rounded-full font-body text-[12px] transition-colors duration-200 cursor-pointer"
-                  style={{
-                    background: active ? 'var(--color-crimson)' : 'var(--color-surface)',
-                    color: active ? '#fff' : 'var(--color-muted)',
-                    border: `1px solid ${active ? 'var(--color-crimson)' : 'var(--color-rule)'}`,
-                  }}
-                >
-                  {filter.label}
-                </button>
-              )
-            })}
-          </div>
+                  }
+                }}
+                className="font-mono text-[11px] tracking-widest uppercase transition-colors duration-200 cursor-pointer bg-transparent border-none pb-1"
+                style={{
+                  color: active ? 'var(--color-crimson)' : 'var(--color-subtle)',
+                  borderBottom: active ? '1.5px solid var(--color-crimson)' : '1.5px solid transparent',
+                }}
+              >
+                {filter.label}
+              </button>
+            )
+          })}
         </div>
       </div>
 
