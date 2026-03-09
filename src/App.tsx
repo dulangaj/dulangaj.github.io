@@ -1,5 +1,5 @@
-import { lazy, Suspense } from 'react'
-import { HashRouter, Routes, Route } from 'react-router-dom'
+import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } from 'react'
+import { HashRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { Header }     from '@/components/layout/Header'
 import { Footer }     from '@/components/layout/Footer'
 import { Hero }       from '@/components/sections/Hero'
@@ -38,9 +38,71 @@ function HomePage() {
   )
 }
 
-export default function App() {
+interface RouteErrorBoundaryProps {
+  children: ReactNode
+  resetKey: string
+}
+
+interface RouteErrorBoundaryState {
+  hasError: boolean
+}
+
+class RouteErrorBoundary extends Component<RouteErrorBoundaryProps, RouteErrorBoundaryState> {
+  state: RouteErrorBoundaryState = { hasError: false }
+
+  static getDerivedStateFromError() {
+    return { hasError: true }
+  }
+
+  componentDidCatch(error: Error, errorInfo: ErrorInfo) {
+    console.error('Route rendering failed.', error, errorInfo)
+  }
+
+  componentDidUpdate(prevProps: RouteErrorBoundaryProps) {
+    if (this.state.hasError && prevProps.resetKey !== this.props.resetKey) {
+      this.setState({ hasError: false })
+    }
+  }
+
+  render() {
+    if (this.state.hasError) {
+      return (
+        <main className="min-h-screen bg-[var(--color-paper)] flex items-center justify-center px-6">
+          <div className="flex max-w-sm flex-col items-center gap-4 text-center">
+            <div className="h-px w-10 bg-[var(--color-crimson)]" aria-hidden="true" />
+            <p className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">
+              Site failed to load
+            </p>
+            <p className="text-sm leading-6 text-[var(--color-muted)]">
+              Refresh and try again.
+            </p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)] transition-colors hover:text-[var(--color-crimson-hover)]"
+            >
+              Reload
+            </button>
+          </div>
+        </main>
+      )
+    }
+
+    return this.props.children
+  }
+}
+
+function AppShell() {
+  const location = useLocation()
+
+  useEffect(() => {
+    window.dispatchEvent(new Event('app:mounted'))
+  }, [])
+
+  const resetKey = location.key || `${location.pathname}${location.search}${location.hash}`
+
   return (
-    <HashRouter>
+    <RouteErrorBoundary resetKey={resetKey}>
       <Suspense fallback={
         <main className="min-h-screen bg-[var(--color-paper)] flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
@@ -57,6 +119,14 @@ export default function App() {
           <Route path="/map"      element={<MapPage />} />
         </Routes>
       </Suspense>
+    </RouteErrorBoundary>
+  )
+}
+
+export default function App() {
+  return (
+    <HashRouter>
+      <AppShell />
     </HashRouter>
   )
 }
