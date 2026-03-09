@@ -1,6 +1,6 @@
 # License
 
-Copyright (c) 2026 Dulanja Jayaweera. All rights reserved.
+Copyright (c) 2026 Dulanga Jayawardena. All rights reserved.
 
 ## Personal Content
 
