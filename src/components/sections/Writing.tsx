@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { FiArrowRight, FiChevronDown } from 'react-icons/fi'
 import { posts } from '@/data/posts'
 import { Post } from '@/models/Post'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionLabel } from '@/components/ui/SectionLabel'
+import { getPostPath } from '@/utils/postUrls'
 
 const VISIBLE_INITIAL = 5
 
@@ -20,9 +20,11 @@ interface PostCardProps {
 }
 
 function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
+  const href = getPostPath(post.id)
+
   if (featured) {
     return (
-      <Link to={`/post/${post.id}`} className="block">
+      <a href={href} className="block">
       <FadeIn delay={delay} className="group cursor-pointer">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-0 overflow-hidden rounded-lg border border-[var(--color-rule)] hover:border-[var(--color-crimson)] transition-colors duration-500">
           {/* Image */}
@@ -77,12 +79,12 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
           </div>
         </div>
       </FadeIn>
-      </Link>
+      </a>
     )
   }
 
   return (
-    <Link to={`/post/${post.id}`} className="block h-full">
+    <a href={href} className="block h-full">
     <FadeIn delay={delay} className="group cursor-pointer h-full">
       <div className="h-full flex flex-col overflow-hidden rounded-lg border border-[var(--color-rule)] hover:border-[var(--color-crimson)] transition-colors duration-500 bg-[var(--color-surface)]">
         {/* Image */}
@@ -132,7 +134,7 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
         </div>
       </div>
     </FadeIn>
-    </Link>
+    </a>
   )
 }
 
