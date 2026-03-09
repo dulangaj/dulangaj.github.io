@@ -9,6 +9,7 @@ import { getPostContent } from '@/data/postContent'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Tag } from '@/components/ui/Tag'
+import { getPostCanonicalUrl } from '@/utils/postUrls'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
 /* Full article page rendered from posts/*.md markdown files.                 */
@@ -29,7 +30,7 @@ export function PostDetail() {
     const baseTitle = 'Dulanga Jayawardena | Software Engineer'
     const title = `${post.title} | Dulanga Jayawardena`
     const description = post.excerpt ?? post.title
-    const canonical = `https://dulangaj.github.io/#/post/${post.id}`
+    const canonical = getPostCanonicalUrl(post.id)
 
     const descriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="description"]')
     const ogTitleMeta = document.querySelector<HTMLMetaElement>('meta[property="og:title"]')

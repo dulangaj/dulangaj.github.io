@@ -10,7 +10,7 @@ Personal portfolio site. Live at [dulangaj.github.io](https://dulangaj.github.io
 | Build tool | Vite 7 |
 | Styling | Tailwind CSS v4 (CSS-first config) |
 | Animation | Framer Motion |
-| Routing | React Router v7 (HashRouter — works on GitHub Pages) |
+| Routing | React Router v7 for the app shell, plus build-time static HTML pages for writing |
 | Markdown | react-markdown + remark-gfm |
 | Hosting | GitHub Pages via Actions (`/.github/workflows/deploy.yml`) |
 
@@ -81,17 +81,19 @@ npm run preview   # preview production build locally
 ## What the app contains
 
 - Home page with Hero, Featured work, Experience, and Writing sections
-- Individual article pages rendered from markdown
+- Individual article pages rendered from markdown, then emitted as static HTML for search indexing
 - A full-screen interactive photo map at `#/map`
 - Light and dark themes with user preference persistence
-- Build-time content generation for post metadata, EXIF data, image thumbnails, and photo-to-post backlinks
+- Build-time content generation for post metadata, EXIF data, image thumbnails, photo-to-post backlinks, static article pages, and sitemap entries
 
 ## Routes
 
 | Route | Purpose |
 |---|---|
 | `#/` | Home page |
-| `#/post/:id` | Post or project detail page |
+| `/<slug>/` | Static article page for search and direct links |
+| `/writing/` | Static writing archive page |
+| `#/post/:id` | Legacy client-side post detail route |
 | `#/map` | Interactive world photo map |
 
 ## Content and configuration
@@ -124,7 +126,8 @@ posts/2025-05-01-morgan-stanley-equity-risk.md
 becomes:
 
 - post id: `2025-05-01-morgan-stanley-equity-risk`
-- route: `#/post/2025-05-01-morgan-stanley-equity-risk`
+- static route: `/morgan-stanley-equity-risk/`
+- legacy app route: `#/post/2025-05-01-morgan-stanley-equity-risk`
 - publish date: `2025-05-01` (derived from the filename prefix)
 
 Supported frontmatter fields currently used by the app:
@@ -212,7 +215,7 @@ Notes:
 ## Build and deployment behavior
 
 - `npm run dev` starts Vite and also runs the EXIF/backlink generation plugin at startup.
-- `npm run build` runs `tsc -b` and then the Vite production build.
+- `npm run build` runs `tsc -b`, the Vite production build, and then generates crawlable static article pages plus `dist/sitemap.xml`.
 - CI in `.github/workflows/ci.yml` runs lint and build on pushes to `main` and pull requests.
 - Deployment in `.github/workflows/deploy.yml` publishes `dist/` to GitHub Pages.
 

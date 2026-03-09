@@ -1,9 +1,9 @@
 import { motion } from 'framer-motion'
-import { Link } from 'react-router-dom'
 import { FiArrowRight } from 'react-icons/fi'
 import { featuredPosts } from '@/data/posts'
 import { Post } from '@/models/Post'
 import { FadeIn } from '@/components/ui/FadeIn'
+import { getPostPath } from '@/utils/postUrls'
 
 /* ─── Featured / Front Page ───────────────────────────────────────────────── */
 /* Newspaper front page: one dominant lead story, secondary column headlines.  */
@@ -12,8 +12,8 @@ import { FadeIn } from '@/components/ui/FadeIn'
 function LeadStory({ post }: { post: Post }) {
   return (
     <FadeIn>
-      <Link
-        to={`/post/${post.id}`}
+      <a
+        href={getPostPath(post.id)}
         className="group grid grid-cols-1 md:grid-cols-5 border-b border-[var(--color-rule)] cursor-pointer min-w-0"
       >
         {/* Text column — left 3/5 */}
@@ -64,7 +64,7 @@ function LeadStory({ post }: { post: Post }) {
             <div className="absolute inset-0 bg-[var(--color-crimson)] opacity-0 group-hover:opacity-5 transition-opacity duration-500" />
           </div>
         )}
-      </Link>
+      </a>
     </FadeIn>
   )
 }
@@ -72,8 +72,8 @@ function LeadStory({ post }: { post: Post }) {
 function SecondaryStory({ post, index }: { post: Post; index: number }) {
   return (
     <FadeIn delay={0.05 * index} className="h-full">
-      <Link
-        to={`/post/${post.id}`}
+      <a
+        href={getPostPath(post.id)}
         className="group flex h-full flex-col pt-5 cursor-pointer border-t border-[var(--color-rule)]"
       >
         <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)] mb-3">
@@ -94,7 +94,7 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
           </span>
           <FiArrowRight size={11} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
         </div>
-      </Link>
+      </a>
     </FadeIn>
   )
 }
