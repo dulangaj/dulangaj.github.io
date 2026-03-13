@@ -25,11 +25,14 @@ export function Footer() {
             {SiteConfig.name}
           </p>
           <p className="font-mono text-[12px] text-[var(--color-subtle)] tracking-wide">
-            {SiteConfig.location} &nbsp;
+            {SiteConfig.location}
+          </p>
+          <p className="mt-3 max-w-md font-body text-[14px] leading-relaxed text-[var(--color-muted)]">
+            Open to meaningful engineering opportunities, collaboration, and conversations around reliable systems, automation, and fintech.
           </p>
           <a
             href={SiteConfig.mailtoLink}
-            className="mt-3 inline-block font-mono text-[12px] text-[var(--color-crimson)] hover:underline tracking-wide"
+            className="mt-4 inline-block font-mono text-[12px] text-[var(--color-crimson)] hover:underline tracking-wide"
           >
             {SiteConfig.email}
           </a>
@@ -54,6 +57,32 @@ export function Footer() {
               )
             })}
           </div>
+
+          <div className="flex flex-wrap gap-2">
+            <a
+              href="https://linkedin.com/in/dulangaj"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[11px] tracking-widest uppercase border border-[var(--color-rule)] px-3 py-1.5 text-[var(--color-muted)] hover:text-[var(--color-ink)] hover:border-[var(--color-crimson)] transition-colors duration-200"
+            >
+              LinkedIn
+            </a>
+            <a
+              href="https://github.com/dulangaj"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-mono text-[11px] tracking-widest uppercase border border-[var(--color-rule)] px-3 py-1.5 text-[var(--color-muted)] hover:text-[var(--color-ink)] hover:border-[var(--color-crimson)] transition-colors duration-200"
+            >
+              GitHub
+            </a>
+            <a
+              href={SiteConfig.mailtoLink}
+              className="font-mono text-[11px] tracking-widest uppercase border border-[var(--color-rule)] px-3 py-1.5 text-[var(--color-muted)] hover:text-[var(--color-ink)] hover:border-[var(--color-crimson)] transition-colors duration-200"
+            >
+              Email
+            </a>
+          </div>
+
           <p className="font-mono text-[11px] text-[var(--color-subtle)] tracking-wide">
             © {year} {SiteConfig.name}
           </p>
