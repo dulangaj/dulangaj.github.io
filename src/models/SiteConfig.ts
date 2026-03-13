@@ -66,7 +66,7 @@ export const SiteConfig = new SiteConfigClass({
   location: 'Hong Kong',
   email:    'dulangajay@gmail.com',
   nav: [
-    { label: 'Featured',    href: '#featured'    },
+    { label: 'Projects',    href: '#featured'    },
     { label: 'Experience',  href: '#experience'  },
     { label: 'Writing',     href: '#writing'     },
     { label: 'Contact',     href: '#contact'     },

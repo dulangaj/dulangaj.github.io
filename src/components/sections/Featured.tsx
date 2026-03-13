@@ -47,6 +47,11 @@ function LeadStory({ post }: { post: Post }) {
           <span className="inline-flex items-center gap-2 font-mono text-[12px] tracking-widest uppercase text-[var(--color-crimson)] group-hover:gap-3 transition-all duration-200">
             Read more <FiArrowRight size={12} />
           </span>
+          {post.link && (
+            <span className="ml-4 inline-flex items-center gap-2 font-mono text-[12px] tracking-widest uppercase text-[var(--color-muted)] group-hover:text-[var(--color-ink)] transition-colors duration-200">
+              · Project link
+            </span>
+          )}
         </div>
 
         {/* Image — right 2/5, full bleed */}
@@ -90,7 +95,7 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
 
         <div className="mt-4 pt-4 border-t border-[var(--color-rule)] flex items-center justify-between">
           <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)]">
-            {post.subtitle ? `${post.subtitle} · ` : ''}{post.year}
+            {post.subtitle ? `${post.subtitle} · ` : ''}{post.year}{post.link ? ' · GitHub' : ''}
           </span>
           <FiArrowRight size={11} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
         </div>
@@ -116,7 +121,7 @@ export function Featured() {
           <div className="flex items-baseline justify-between border-b-2 border-[var(--color-ink)] pb-3 mb-0">
             <div className="flex items-baseline gap-4">
               <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">01</span>
-              <span className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)]">Featured</span>
+              <span className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)]">Selected Projects</span>
             </div>
             <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)] hidden sm:block">
               Vol. I · Est. 2015
