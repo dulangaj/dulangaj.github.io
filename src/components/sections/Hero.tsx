@@ -114,7 +114,7 @@ export function Hero() {
 
             {/* Bio */}
             <motion.p
-              className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed"
+              className="font-body text-[14px] text-[var(--color-muted)] leading-[1.8] max-w-sm"
               variants={lineVariants}
               transition={lineTransition}
             >
