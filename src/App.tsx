@@ -7,6 +7,7 @@ import { NowStrip }   from '@/components/ui/NowStrip'
 import { Featured }   from '@/components/sections/Featured'
 import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
+import { Skills }     from '@/components/sections/Skills'
 import { homeSections } from '@/data/homeSections'
 
 const PostDetail = lazy(async () => {
@@ -31,6 +32,7 @@ function HomePage() {
         {homeSections.now && <NowStrip />}
         {homeSections.featured && <Featured />}
         {homeSections.experience && <Experience />}
+        {homeSections.skills && <Skills />}
         {homeSections.writing && <Writing />}
       </main>
       <Footer />

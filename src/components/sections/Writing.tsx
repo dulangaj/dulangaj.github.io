@@ -148,7 +148,7 @@ export function Writing() {
     <section id="writing" className="px-6 md:px-12 py-24">
       <div className="max-w-7xl mx-auto">
         <FadeIn>
-          <SectionLabel text="Writing" index="03" />
+          <SectionLabel text="Writing" index="04" />
           <h2 className="font-display text-[clamp(2rem,5vw,3.5rem)] text-[var(--color-ink)] mb-4 leading-tight">
             Notes from the field.
           </h2>

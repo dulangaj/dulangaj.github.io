@@ -3,6 +3,7 @@ export const homeSections = {
   now:        false,
   featured:   true,
   experience: true,
+  skills:     true,
   writing:    true,
 } as const
 
