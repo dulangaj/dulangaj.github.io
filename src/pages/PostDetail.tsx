@@ -184,7 +184,21 @@ export function PostDetail() {
             className="post-body"
           >
             {body ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+              <ReactMarkdown
+                remarkPlugins={[remarkGfm]}
+                components={{
+                  img: ({ ...props }) => (
+                    <img
+                      {...props}
+                      loading="lazy"
+                      decoding="async"
+                    />
+                  ),
+                  a: ({ ...props }) => (
+                    <a {...props} target="_blank" rel="noopener noreferrer" />
+                  ),
+                }}
+              >
                 {body}
               </ReactMarkdown>
             ) : (
