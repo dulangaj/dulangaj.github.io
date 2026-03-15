@@ -221,6 +221,16 @@ button:focus-visible,
   background: var(--color-surface);
 }
 
+/* Warm the dark map tiles to match the site's brown-black palette */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .leaflet-tile-pane {
+    filter: sepia(0.18) brightness(0.92);
+  }
+}
+:root[data-theme="dark"] .leaflet-tile-pane {
+  filter: sepia(0.18) brightness(0.92);
+}
+
 .leaflet-container a {
   color: var(--color-crimson);
 }
