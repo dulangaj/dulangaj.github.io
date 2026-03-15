@@ -40,12 +40,12 @@ const TILES = {
 
 const SPIDER_LEG_STYLES = {
   light: {
-    color: '#94a3b8',
+    color: '#a8a8a4',
     opacity: 0.45,
     weight: 1.25,
   },
   dark: {
-    color: '#64748b',
+    color: '#9b938a',
     opacity: 0.55,
     weight: 1.25,
   },
