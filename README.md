@@ -62,11 +62,10 @@ These are used directly in the map UI outside the core token set:
 
 | Value | Usage |
 |---|---|
-| `#94a3b8` | Light-mode cluster spider leg stroke |
-| `#64748b` | Dark-mode cluster spider leg stroke |
-| `#ef4444` | Active/hover marker ring |
 | `#fff` / `rgba(255,255,255,0.9)` | Map overlay and active text |
 | `rgba(0,0,0,0.5)` | Map overlay scrim |
+
+All marker ring, cluster badge, and spider leg colors now use the core tokens (`--color-crimson`, `--color-crimson-hover`, `--color-subtle`, `--color-muted`) so they automatically adapt to light/dark mode.
 
 ## Running locally
 

@@ -27,7 +27,7 @@ import { photoLocations, type PhotoLocation } from '@/data/photoLocations'
 
 const TILES = {
   light: {
-    url: 'https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',
+    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
     attribution:
       '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
   },
@@ -40,12 +40,12 @@ const TILES = {
 
 const SPIDER_LEG_STYLES = {
   light: {
-    color: '#94a3b8',
+    color: '#a8a8a4',
     opacity: 0.45,
     weight: 1.25,
   },
   dark: {
-    color: '#64748b',
+    color: '#9b938a',
     opacity: 0.55,
     weight: 1.25,
   },
