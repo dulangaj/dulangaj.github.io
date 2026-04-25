@@ -19,8 +19,10 @@ export function PostDetail() {
   const location = useLocation()
   const post = posts.find((p) => getPostSlug(p.id) === slug)
   const navigationState = location.state as { backTo?: string, backLabel?: string } | null
-  const backTo = navigationState?.backTo ?? '/'
-  const backLabel = navigationState?.backLabel ?? 'Back to portfolio'
+  const searchParams = new URLSearchParams(location.search)
+  const requestedBackTo = navigationState?.backTo ?? searchParams.get('backTo') ?? '/'
+  const backTo = requestedBackTo.startsWith('/') && !requestedBackTo.startsWith('//') ? requestedBackTo : '/'
+  const backLabel = navigationState?.backLabel ?? searchParams.get('backLabel') ?? 'Back to portfolio'
 
   useEffect(() => { window.scrollTo(0, 0) }, [slug])
 

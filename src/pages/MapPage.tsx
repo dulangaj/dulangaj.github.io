@@ -15,7 +15,7 @@ import { memo, useState, useCallback, useEffect, useMemo, useRef, type PointerEv
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { motion, AnimatePresence, useDragControls, type PanInfo } from 'framer-motion'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
@@ -562,6 +562,7 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
 /* ─── MapPage ────────────────────────────────────────────────────────────── */
 
 export function MapPage() {
+  const location = useLocation()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const filterParam = searchParams.get('filter')
@@ -587,6 +588,14 @@ export function MapPage() {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
   const sheetDragControls = useDragControls()
+  const backLinkParams = useMemo(() => {
+    const params = new URLSearchParams({
+      backTo: `${location.pathname}${location.search}`,
+      backLabel: 'Back to map',
+    })
+
+    return params.toString()
+  }, [location.pathname, location.search])
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
   )
@@ -1220,7 +1229,7 @@ export function MapPage() {
                       {visibleSelected.relatedPosts.map((post) => (
                         <a
                           key={post.postId}
-                          href={getPostPath(post.postId)}
+                          href={`${getPostPath(post.postId)}?${backLinkParams}`}
                           className="group w-full flex items-center gap-3 py-2 font-display text-[14px] font-medium transition-colors duration-200 text-left"
                           style={{ color: 'var(--color-ink)' }}
                         >
