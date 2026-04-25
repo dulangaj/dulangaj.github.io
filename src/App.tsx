@@ -1,5 +1,5 @@
 import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } from 'react'
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { Routes, Route, useLocation } from 'react-router-dom'
 import { Header }     from '@/components/layout/Header'
 import { Footer }     from '@/components/layout/Footer'
 import { Hero }       from '@/components/sections/Hero'
@@ -8,11 +8,8 @@ import { Featured }   from '@/components/sections/Featured'
 import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
 import { homeSections } from '@/data/homeSections'
-
-const PostDetail = lazy(async () => {
-  const module = await import('@/pages/PostDetail')
-  return { default: module.PostDetail }
-})
+import { PostDetail } from '@/pages/PostDetail'
+import { WritingPage } from '@/pages/WritingPage'
 
 const MapPage = lazy(async () => {
   const module = await import('@/pages/MapPage')
@@ -34,7 +31,15 @@ const MAP_METADATA = {
   canonical: `${SITE_URL}/map`,
 }
 
+const WRITING_METADATA = {
+  title: 'Writing Archive | Dulanga Jayawardena',
+  description: 'Index of articles, project notes, and engineering write-ups by Dulanga Jayawardena.',
+  canonical: `${SITE_URL}/writing/`,
+}
+
 function applyDocumentMetadata({ title, description, canonical }: typeof HOME_METADATA) {
+  if (typeof document === 'undefined') return
+
   const descriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="description"]')
   const ogTypeMeta = document.querySelector<HTMLMetaElement>('meta[property="og:type"]')
   const ogUrlMeta = document.querySelector<HTMLMetaElement>('meta[property="og:url"]')
@@ -59,6 +64,13 @@ function applyDocumentMetadata({ title, description, canonical }: typeof HOME_ME
   if (twitterDescriptionMeta) twitterDescriptionMeta.content = description
   if (twitterImageMeta) twitterImageMeta.content = OG_IMAGE
   if (canonicalLink) canonicalLink.href = canonical
+}
+
+function isPostRoute(pathname: string): boolean {
+  if (pathname === '/' || pathname === '') return false
+  if (pathname === '/map' || pathname === '/map/') return false
+  if (pathname === '/writing' || pathname === '/writing/') return false
+  return true
 }
 
 /* ─── App ────────────────────────────────────────────────────────────────── */
@@ -134,7 +146,7 @@ class RouteErrorBoundary extends Component<RouteErrorBoundaryProps, RouteErrorBo
   }
 }
 
-function AppShell() {
+export default function App() {
   const location = useLocation()
 
   useEffect(() => {
@@ -142,8 +154,16 @@ function AppShell() {
   }, [])
 
   useEffect(() => {
-    const isMapRoute = location.pathname === '/map' || location.pathname === '/map/'
-    applyDocumentMetadata(isMapRoute ? MAP_METADATA : HOME_METADATA)
+    const path = location.pathname
+    if (isPostRoute(path)) return
+
+    if (path === '/map' || path === '/map/') {
+      applyDocumentMetadata(MAP_METADATA)
+    } else if (path === '/writing' || path === '/writing/') {
+      applyDocumentMetadata(WRITING_METADATA)
+    } else {
+      applyDocumentMetadata(HOME_METADATA)
+    }
   }, [location.pathname])
 
   const resetKey = location.key || `${location.pathname}${location.search}${location.hash}`
@@ -162,18 +182,11 @@ function AppShell() {
       }>
         <Routes>
           <Route path="/" element={<HomePage />} />
+          <Route path="/writing" element={<WritingPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/:slug" element={<PostDetail />} />
         </Routes>
       </Suspense>
     </RouteErrorBoundary>
-  )
-}
-
-export default function App() {
-  return (
-    <BrowserRouter>
-      <AppShell />
-    </BrowserRouter>
   )
 }
