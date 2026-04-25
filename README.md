@@ -1,6 +1,6 @@
-# dulangaj.github.io
+# dulangaj.com
 
-Personal portfolio site. Live at [dulangaj.github.io](https://dulangaj.github.io/).
+Personal portfolio site. Live at [dulangaj.com](https://dulangaj.com/).
 
 ## Tech stack
 
@@ -81,7 +81,7 @@ npm run preview   # preview production build locally
 
 - Home page with Hero, Featured work, Experience, and Writing sections
 - Individual article pages rendered from markdown, then emitted as static HTML for search indexing
-- A full-screen interactive photo map at `#/map`
+- A full-screen interactive photo map at `/map`
 - Light and dark themes with user preference persistence
 - Build-time content generation for post metadata, EXIF data, image thumbnails, photo-to-post backlinks, static article pages, and sitemap entries
 
@@ -89,11 +89,10 @@ npm run preview   # preview production build locally
 
 | Route | Purpose |
 |---|---|
-| `#/` | Home page |
+| `/` | Home page |
 | `/<slug>/` | Static article page for search and direct links |
 | `/writing/` | Static writing archive page |
-| `#/post/:id` | Legacy client-side post detail route |
-| `#/map` | Interactive world photo map |
+| `/map` | Interactive world photo map |
 
 ## Content and configuration
 
@@ -126,7 +125,6 @@ becomes:
 
 - post id: `2025-05-01-morgan-stanley-equity-risk`
 - static route: `/morgan-stanley-equity-risk/`
-- legacy app route: `#/post/2025-05-01-morgan-stanley-equity-risk`
 - publish date: `2025-05-01` (derived from the filename prefix)
 
 Supported frontmatter fields currently used by the app:
@@ -214,7 +212,7 @@ Notes:
 ## Build and deployment behavior
 
 - `npm run dev` starts Vite and also runs the EXIF/backlink generation plugin at startup.
-- `npm run build` runs `tsc -b`, the Vite production build, and then generates crawlable static article pages plus `dist/sitemap.xml`.
+- `npm run build` runs `tsc -b`, the Vite production build, and then generates crawlable static article pages, a static `/map` entry point, `dist/CNAME`, `dist/.nojekyll`, and `dist/sitemap.xml`.
 - CI in `.github/workflows/ci.yml` runs lint and build on pushes to `main` and pull requests.
 - Deployment in `.github/workflows/deploy.yml` publishes `dist/` to GitHub Pages.
 
