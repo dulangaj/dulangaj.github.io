@@ -5,10 +5,12 @@ import { renderToStaticMarkup } from 'react-dom/server'
 import ReactMarkdown from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 
-const SITE_URL = 'https://dulangaj.github.io'
+const SITE_URL = 'https://dulangaj.com'
 const SITE_NAME = 'Dulanga Jayawardena'
 const SITE_TITLE = `${SITE_NAME} | Software Engineer`
 const SITE_DESCRIPTION = 'Software engineer building production-grade systems for financial markets across risk technology, analytics, and infrastructure.'
+const MAP_PAGE_TITLE = `My World Map | ${SITE_NAME}`
+const MAP_PAGE_DESCRIPTION = 'Interactive world photo map tracing Dulanga Jayawardena’s travels, photography, and related writing.'
 const ROOT_DIR = process.cwd()
 const DIST_DIR = path.join(ROOT_DIR, 'dist')
 const POSTS_DIR = path.join(ROOT_DIR, 'posts')
@@ -156,6 +158,53 @@ function renderMarkdown(body) {
 
 function extractStylesheetHrefs(indexHtml) {
   return [...indexHtml.matchAll(/<link rel="stylesheet"[^>]*href="([^"]+)"/g)].map((match) => match[1])
+}
+
+function replaceFirst(source, pattern, replacement, label) {
+  if (!pattern.test(source)) {
+    throw new Error(`Could not find ${label} in dist/index.html.`)
+  }
+
+  return source.replace(pattern, replacement)
+}
+
+function buildSpaRoutePage(indexHtml, {
+  title,
+  description,
+  canonicalPath,
+  structuredData,
+  ogType = 'website',
+  ogImage = `${SITE_URL}/assets/social/og-home.png`,
+}) {
+  const canonicalUrl = getCanonicalUrl(canonicalPath)
+  let html = indexHtml
+
+  html = replaceFirst(html, /<title>[\s\S]*?<\/title>/, `<title>${escapeHtml(title)}</title>`, 'document title')
+  html = replaceFirst(html, /<meta name="description" content="[^"]*" \/>/, `<meta name="description" content="${escapeAttribute(description)}" />`, 'description meta tag')
+  html = replaceFirst(html, /<link rel="canonical" href="[^"]*" \/>/, `<link rel="canonical" href="${escapeAttribute(canonicalUrl)}" />`, 'canonical link')
+  html = replaceFirst(html, /<meta property="og:type" content="[^"]*" \/>/, `<meta property="og:type" content="${escapeAttribute(ogType)}" />`, 'Open Graph type')
+  html = replaceFirst(html, /<meta property="og:url" content="[^"]*" \/>/, `<meta property="og:url" content="${escapeAttribute(canonicalUrl)}" />`, 'Open Graph URL')
+  html = replaceFirst(html, /<meta property="og:title" content="[^"]*" \/>/, `<meta property="og:title" content="${escapeAttribute(title)}" />`, 'Open Graph title')
+  html = replaceFirst(html, /<meta property="og:description" content="[^"]*" \/>/, `<meta property="og:description" content="${escapeAttribute(description)}" />`, 'Open Graph description')
+  html = replaceFirst(html, /<meta property="og:image" content="[^"]*" \/>/, `<meta property="og:image" content="${escapeAttribute(ogImage)}" />`, 'Open Graph image')
+  html = replaceFirst(html, /<meta property="og:image:secure_url" content="[^"]*" \/>/, `<meta property="og:image:secure_url" content="${escapeAttribute(ogImage)}" />`, 'Open Graph secure image')
+  html = replaceFirst(html, /<meta name="twitter:title" content="[^"]*" \/>/, `<meta name="twitter:title" content="${escapeAttribute(title)}" />`, 'Twitter title')
+  html = replaceFirst(html, /<meta name="twitter:description" content="[^"]*" \/>/, `<meta name="twitter:description" content="${escapeAttribute(description)}" />`, 'Twitter description')
+  html = replaceFirst(html, /<meta name="twitter:image" content="[^"]*" \/>/, `<meta name="twitter:image" content="${escapeAttribute(ogImage)}" />`, 'Twitter image')
+  html = replaceFirst(
+    html,
+    /<script type="application\/ld\+json">[\s\S]*?<\/script>/,
+    `<script type="application/ld+json">\n      ${toJsonLd(structuredData)}\n    </script>`,
+    'structured data block',
+  )
+  html = replaceFirst(
+    html,
+    /<p class="app-loading__label" id="app-loading-label">[\s\S]*?<\/p>/,
+    '<p class="app-loading__label" id="app-loading-label">Loading map</p>',
+    'loading label',
+  )
+
+  return html
 }
 
 function buildDocument({
@@ -549,6 +598,7 @@ function buildWritingPage(posts) {
 function buildSitemap(posts) {
   const entries = [
     { loc: `${SITE_URL}/`, lastmod: posts[0]?.date ?? '2026-03-09', changefreq: 'weekly', priority: '1.0' },
+    { loc: `${SITE_URL}/map`, lastmod: posts[0]?.date ?? '2026-03-09', changefreq: 'weekly', priority: '0.9' },
     { loc: `${SITE_URL}/writing/`, lastmod: posts[0]?.date ?? '2026-03-09', changefreq: 'weekly', priority: '0.9' },
     ...posts.map((post) => ({
       loc: getCanonicalUrl(getPostPath(post.id)),
@@ -621,8 +671,32 @@ async function main() {
     await writeFile(path.join(getPostSlug(post.id), 'index.html'), buildArticlePage.call(context, post))
   }
 
+  await writeFile(path.join('map', 'index.html'), buildSpaRoutePage(indexHtml, {
+    title: MAP_PAGE_TITLE,
+    description: MAP_PAGE_DESCRIPTION,
+    canonicalPath: '/map',
+    structuredData: {
+      '@context': 'https://schema.org',
+      '@type': 'WebPage',
+      name: 'My World Map',
+      description: MAP_PAGE_DESCRIPTION,
+      url: getCanonicalUrl('/map'),
+      isPartOf: {
+        '@type': 'WebSite',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+      about: {
+        '@type': 'Person',
+        name: SITE_NAME,
+        url: SITE_URL,
+      },
+    },
+  }))
   await writeFile(path.join('writing', 'index.html'), buildWritingPage.call(context, posts))
   await writeFile('sitemap.xml', buildSitemap(posts))
+  await writeFile('CNAME', 'dulangaj.com\n')
+  await writeFile('.nojekyll', '')
 }
 
 await main()

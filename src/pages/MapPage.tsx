@@ -15,13 +15,14 @@ import { memo, useState, useCallback, useEffect, useMemo, useRef, type PointerEv
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { motion, AnimatePresence, useDragControls, type PanInfo } from 'framer-motion'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { useNavigate, useSearchParams } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useTheme } from '@/hooks/useTheme'
 import { ThemeToggle } from '@/components/ui/ThemeToggle'
 import { photoLocations, type PhotoLocation } from '@/data/photoLocations'
+import { getPostPath } from '@/utils/postUrls'
 
 /* ─── Tile layers ────────────────────────────────────────────────────────── */
 
@@ -561,7 +562,6 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
 /* ─── MapPage ────────────────────────────────────────────────────────────── */
 
 export function MapPage() {
-  const location = useLocation()
   const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const filterParam = searchParams.get('filter')
@@ -1218,21 +1218,16 @@ export function MapPage() {
                         {visibleSelected.relatedPosts.length === 1 ? 'Related Article' : 'Related Articles'}
                       </p>
                       {visibleSelected.relatedPosts.map((post) => (
-                        <button
+                        <a
                           key={post.postId}
-                          onClick={() => navigate(`/post/${post.postId}`, {
-                            state: {
-                              backTo: `${location.pathname}${location.search}`,
-                              backLabel: 'Back to map',
-                            },
-                          })}
-                          className="group w-full flex items-center gap-3 py-2 font-display text-[14px] font-medium transition-colors duration-200 cursor-pointer bg-transparent border-none text-left"
+                          href={getPostPath(post.postId)}
+                          className="group w-full flex items-center gap-3 py-2 font-display text-[14px] font-medium transition-colors duration-200 text-left"
                           style={{ color: 'var(--color-ink)' }}
                         >
                           <FiBookOpen size={13} className="flex-shrink-0 text-[var(--color-crimson)]" />
                           <span className="flex-1 group-hover:text-[var(--color-crimson)] transition-colors duration-200">{post.title}</span>
                           <FiArrowUpRight size={12} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
-                        </button>
+                        </a>
                       ))}
                     </div>
                   )}

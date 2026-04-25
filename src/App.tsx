@@ -1,5 +1,5 @@
 import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } from 'react'
-import { HashRouter, Routes, Route, useLocation } from 'react-router-dom'
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom'
 import { Header }     from '@/components/layout/Header'
 import { Footer }     from '@/components/layout/Footer'
 import { Hero }       from '@/components/sections/Hero'
@@ -18,6 +18,48 @@ const MapPage = lazy(async () => {
   const module = await import('@/pages/MapPage')
   return { default: module.MapPage }
 })
+
+const SITE_URL = 'https://dulangaj.com'
+const OG_IMAGE = `${SITE_URL}/assets/social/og-home.png`
+
+const HOME_METADATA = {
+  title: 'Dulanga Jayawardena | Software Engineer',
+  description: 'Software engineer building production-grade systems for financial markets across risk technology, analytics, and infrastructure.',
+  canonical: `${SITE_URL}/`,
+}
+
+const MAP_METADATA = {
+  title: 'My World Map | Dulanga Jayawardena',
+  description: 'Interactive world photo map tracing Dulanga Jayawardena’s travels, photography, and related writing.',
+  canonical: `${SITE_URL}/map`,
+}
+
+function applyDocumentMetadata({ title, description, canonical }: typeof HOME_METADATA) {
+  const descriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="description"]')
+  const ogTypeMeta = document.querySelector<HTMLMetaElement>('meta[property="og:type"]')
+  const ogUrlMeta = document.querySelector<HTMLMetaElement>('meta[property="og:url"]')
+  const ogTitleMeta = document.querySelector<HTMLMetaElement>('meta[property="og:title"]')
+  const ogDescriptionMeta = document.querySelector<HTMLMetaElement>('meta[property="og:description"]')
+  const ogImageMeta = document.querySelector<HTMLMetaElement>('meta[property="og:image"]')
+  const ogImageSecureMeta = document.querySelector<HTMLMetaElement>('meta[property="og:image:secure_url"]')
+  const twitterTitleMeta = document.querySelector<HTMLMetaElement>('meta[name="twitter:title"]')
+  const twitterDescriptionMeta = document.querySelector<HTMLMetaElement>('meta[name="twitter:description"]')
+  const twitterImageMeta = document.querySelector<HTMLMetaElement>('meta[name="twitter:image"]')
+  const canonicalLink = document.querySelector<HTMLLinkElement>('link[rel="canonical"]')
+
+  document.title = title
+  if (descriptionMeta) descriptionMeta.content = description
+  if (ogTypeMeta) ogTypeMeta.content = 'website'
+  if (ogUrlMeta) ogUrlMeta.content = canonical
+  if (ogTitleMeta) ogTitleMeta.content = title
+  if (ogDescriptionMeta) ogDescriptionMeta.content = description
+  if (ogImageMeta) ogImageMeta.content = OG_IMAGE
+  if (ogImageSecureMeta) ogImageSecureMeta.content = OG_IMAGE
+  if (twitterTitleMeta) twitterTitleMeta.content = title
+  if (twitterDescriptionMeta) twitterDescriptionMeta.content = description
+  if (twitterImageMeta) twitterImageMeta.content = OG_IMAGE
+  if (canonicalLink) canonicalLink.href = canonical
+}
 
 /* ─── App ────────────────────────────────────────────────────────────────── */
 
@@ -99,6 +141,11 @@ function AppShell() {
     window.dispatchEvent(new Event('app:mounted'))
   }, [])
 
+  useEffect(() => {
+    const isMapRoute = location.pathname === '/map' || location.pathname === '/map/'
+    applyDocumentMetadata(isMapRoute ? MAP_METADATA : HOME_METADATA)
+  }, [location.pathname])
+
   const resetKey = location.key || `${location.pathname}${location.search}${location.hash}`
 
   return (
@@ -114,9 +161,9 @@ function AppShell() {
         </main>
       }>
         <Routes>
-          <Route path="/"         element={<HomePage />} />
-          <Route path="/post/:id" element={<PostDetail />} />
-          <Route path="/map"      element={<MapPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/map" element={<MapPage />} />
+          <Route path="/:slug" element={<PostDetail />} />
         </Routes>
       </Suspense>
     </RouteErrorBoundary>
@@ -125,8 +172,8 @@ function AppShell() {
 
 export default function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <AppShell />
-    </HashRouter>
+    </BrowserRouter>
   )
 }

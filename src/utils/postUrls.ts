@@ -7,5 +7,5 @@ export function getPostPath(id: string): string {
 }
 
 export function getPostCanonicalUrl(id: string): string {
-  return `https://dulangaj.github.io${getPostPath(id)}`
+  return `https://dulangaj.com${getPostPath(id)}`
 }

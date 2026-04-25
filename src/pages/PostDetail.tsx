@@ -9,20 +9,20 @@ import { getPostContent } from '@/data/postContent'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Tag } from '@/components/ui/Tag'
-import { getPostCanonicalUrl } from '@/utils/postUrls'
+import { getPostCanonicalUrl, getPostSlug } from '@/utils/postUrls'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
 /* Full article page rendered from posts/*.md markdown files.                 */
 
 export function PostDetail() {
-  const { id } = useParams<{ id: string }>()
+  const { slug } = useParams<{ slug: string }>()
   const location = useLocation()
-  const post = posts.find((p) => p.id === id)
+  const post = posts.find((p) => getPostSlug(p.id) === slug)
   const navigationState = location.state as { backTo?: string, backLabel?: string } | null
   const backTo = navigationState?.backTo ?? '/'
   const backLabel = navigationState?.backLabel ?? 'Back to portfolio'
 
-  useEffect(() => { window.scrollTo(0, 0) }, [id])
+  useEffect(() => { window.scrollTo(0, 0) }, [slug])
 
   useEffect(() => {
     if (!post) return
