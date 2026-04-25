@@ -9,6 +9,11 @@ import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
 import { homeSections } from '@/data/homeSections'
 
+const PostDetail = lazy(async () => {
+  const module = await import('@/pages/PostDetail')
+  return { default: module.PostDetail }
+})
+
 const MapPage = lazy(async () => {
   const module = await import('@/pages/MapPage')
   return { default: module.MapPage }
@@ -158,6 +163,7 @@ function AppShell() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/map" element={<MapPage />} />
+          <Route path="/:slug" element={<PostDetail />} />
         </Routes>
       </Suspense>
     </RouteErrorBoundary>
