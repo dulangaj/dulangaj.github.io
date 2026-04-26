@@ -18,6 +18,7 @@ export function Header() {
   const safeAreaTop = 'env(safe-area-inset-top, 0px)'
   const safeAreaBottom = 'env(safe-area-inset-bottom, 0px)'
   const mobileHeaderHeight = `calc(${safeAreaTop} + 64px)`
+  const resolveNavHref = (href: string) => href.startsWith('#') ? `/${href}` : href
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -115,7 +116,7 @@ export function Header() {
       >
         {/* Wordmark */}
         <a
-          href="#top"
+          href="/"
           className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors duration-200"
           onClick={(event) => {
             event.preventDefault()
@@ -136,7 +137,7 @@ export function Header() {
           {SiteConfig.nav.map((item) => (
             <a
               key={item.href}
-              href={item.href}
+              href={resolveNavHref(item.href)}
               onClick={(event) => {
                 event.preventDefault()
                 navigateToHref(item.href)
@@ -206,7 +207,7 @@ export function Header() {
                 {SiteConfig.nav.map((item) => (
                   <a
                     key={item.href}
-                    href={item.href}
+                    href={resolveNavHref(item.href)}
                     onClick={(event) => {
                       event.preventDefault()
                       closeMobileAndNavigate(item.href)
