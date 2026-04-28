@@ -70,29 +70,45 @@ function LeadStory({ post }: { post: Post }) {
 }
 
 function SecondaryStory({ post, index }: { post: Post; index: number }) {
+  const folio = String(index + 2).padStart(2, '0')
   return (
     <FadeIn delay={0.05 * index} className="h-full">
       <a
         href={getPostPath(post.id)}
         className="group flex h-full flex-col pt-5 cursor-pointer border-t border-[var(--color-rule)]"
       >
-        <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)] mb-3">
-          {post.category}
-        </span>
+        {/* Folio numeral + kicker */}
+        <div className="flex items-baseline gap-4 mb-5">
+          <span className="font-display text-[3rem] leading-none text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+            {folio}
+          </span>
+          <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)]">
+            {post.category}
+          </span>
+        </div>
 
-        <h3 className="font-display text-[1.1rem] leading-snug text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+        <h3 className="font-display text-[1.25rem] leading-snug text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
           {post.title}
         </h3>
 
-        <p className="font-body text-[12px] leading-relaxed text-[var(--color-muted)] flex-1 line-clamp-3">
+        <p className="font-body text-[13px] leading-relaxed text-[var(--color-muted)] flex-1 line-clamp-4">
           {post.excerpt}
         </p>
 
-        <div className="mt-4 pt-4 border-t border-[var(--color-rule)] flex items-center justify-between">
-          <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)]">
-            {post.subtitle ? `${post.subtitle} · ` : ''}{post.year}
-          </span>
-          <FiArrowRight size={11} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
+        {/* Denser metadata footer */}
+        <div className="mt-6 pt-4 border-t border-[var(--color-rule)] flex items-end justify-between gap-3">
+          <div className="flex flex-col gap-1 min-w-0">
+            {post.subtitle && (
+              <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)] truncate">
+                {post.subtitle}
+              </span>
+            )}
+            <span className="font-mono text-[10px] tracking-wider text-[var(--color-subtle)] truncate">
+              {post.formattedDate}
+              {post.readTime ? ` · ${post.readTime} min read` : ''}
+            </span>
+          </div>
+          <FiArrowRight size={11} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200 shrink-0" />
         </div>
       </a>
     </FadeIn>

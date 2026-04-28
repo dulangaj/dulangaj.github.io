@@ -23,12 +23,4 @@ export const featuredConfig: FeaturedPostConfig[] = [
     id:      '2020-12-31-vbrands',
     excerpt: 'At a Hong Kong multi-brand retailer, I modernized e-commerce operations with automation, integrations, and staff enablement.',
   },
-  {
-    id:      '2018-12-01-wearable-safety-backpack',
-    excerpt: 'A Dartmouth project to make night walking safer: a visibility-first backpack with embedded LEDs, conductive thread, and smart power control.',
-  },
-  {
-    id:      '2017-12-01-restaurant-recommender',
-    excerpt: "A restaurant discovery tool built with university friends: rank OpenRice results by your own priorities instead of the default algorithm.",
-  },
 ]
