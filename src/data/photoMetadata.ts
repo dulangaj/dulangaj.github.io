@@ -39,6 +39,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Edexcel · Sri Lanka',
     location: 'Colombo, Sri Lanka',
     description: "Receiving a Pearson Edexcel High Achiever's Award for Mathematics.",
+    photoCredit: '',
     category: 'Education',
   },
   'dulanga-jayawardena-graduation-2016.jpeg': {
@@ -49,6 +50,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'The Chinese University of Hong Kong',
     location: 'Shatin, Hong Kong',
     description: 'A mock graduation ceremony at The Chinese University of Hong Kong.',
+    photoCredit: '',
     category: 'Education',
   },
   'dulanga-jayawardena-heatmap-2017.png': {
@@ -83,6 +85,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Dulanga Jayawardena canoeing along the Connecticut River with Dartmouth Outing Club',
     location: 'Hanover, NH, USA',
     description: 'Canoeing the Connecticut River with the Dartmouth Outing Club.',
+    photoCredit: '',
     category: 'Travel',
   },
   'dulanga-jayawardena-roadtest-2018.jpeg': {
@@ -112,6 +115,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Dartmouth Engineering Exchange',
     location: 'Hanover, NH, USA',
     description: 'CAD renders of the Lit Pak design.',
+    photoCredit: '',
     category: 'Education',
   },
   'dulanga-jayawardena-grand-canyon-2018.jpeg': {
@@ -136,6 +140,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'National Taiwan University',
     location: 'Taipei, Taiwan',
     description: 'With the Hong Kong Institution of Engineers delegation at National Taiwan University.',
+    photoCredit: '',
     category: 'Work',
   },
   'dulanga-jayawardena-vbrands-2020.jpeg': {
@@ -214,6 +219,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     subtitle: 'Rapa Nui',
     location: 'Easter Island, Chile',
     description: 'Standing amongst the fifteen restored moai at Ahu Tongariki, the largest ceremonial platform on Rapa Nui',
+    photoCredit: 'Romario Vaz',
     category: 'Travel',
   },
   'dulanga-jayawardena-icc-2022.jpeg': {
