@@ -22,3 +22,4 @@ export function render(url: string): RenderResult {
 export { posts } from './data/posts'
 export { getPostContent } from './data/postContent'
 export { getPostSlug, getPostPath, getPostCanonicalUrl } from './utils/postUrls'
+export { photoLocations } from './data/photoLocations'
