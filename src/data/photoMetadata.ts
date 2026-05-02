@@ -39,7 +39,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: "Dulanga Jayawardena accepting a Pearson Edexcel High Achiever's Award, June 2015",
     subtitle: 'Edexcel · Sri Lanka',
     location: 'Colombo, Sri Lanka',
-    description: "Receiving a Pearson Edexcel High Achiever's Award.",
+    description: "Receiving a Pearson Edexcel High Achiever's Award for Mathematics.",
     category: 'Education',
   },
   'dulanga-jayawardena-graduation-2016.jpeg': {
@@ -150,7 +150,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'A couture handbag at the VBrands store',
     subtitle: 'VBrands',
     location: 'Hong Kong',
-    description: 'A couture handbag at the VBrands store.',
+    description: 'A couture handbag at the VBrands store, where I managed the web store.',
     category: 'Work',
   },
   'dulanga-jayawardena-icc-2023.jpeg': {
@@ -215,7 +215,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Layers of Atacama',
     alt: 'Snow-covered peaks, dusty desert roads, and a moss-covered lake show the unique and varied terrain of the Atacamas',
     location: 'Atacama Desert, Chile',
-    description: 'Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view',
+    description: 'Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view.',
     category: 'Travel',
   },
   'dulanga-jayawardena-easter-island-2025.jpeg': {
@@ -223,7 +223,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Dulanga Jayawardena standing amongst the Moai at Ahu Tongariki, Rapa Nui (Easter Island)',
     subtitle: 'Rapa Nui',
     location: 'Easter Island, Chile',
-    description: 'A view across the moai at Ahu Tongariki on Easter Island.',
+    description: 'Standing amongst the fifteen restored moai at Ahu Tongariki, the largest ceremonial platform on Rapa Nui',
     category: 'Travel',
   },
   'dulanga-jayawardena-icc-2022.jpeg': {
@@ -241,7 +241,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Jagged cliffs in Patagonia',
     subtitle: 'Patagonia',
     location: 'Torres del Paine National Park, Chile',
-    description: 'A Patagonia landscape from Torres del Paine National Park.',
+    description: 'The jagged face of Paine Massif, seen after an 8-hour hike.',
     category: 'Travel',
   },
   'dulanga-jayawardena-patagonia-2025.jpeg': {
