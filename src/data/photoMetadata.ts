@@ -29,6 +29,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Tiny Planet of Elizabeth Moir School Colombo',
     subtitle: 'Elizabeth Moir School',
     location: 'Colombo, Sri Lanka',
+    description: 'A tiny-planet projection of Elizabeth Moir School in Colombo.',
     category: 'Education',
   },
   'dulanga-jayawardena-edexcel-2015.jpeg': {
@@ -38,6 +39,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: "Dulanga Jayawardena accepting a Pearson Edexcel High Achiever's Award, June 2015",
     subtitle: 'Edexcel · Sri Lanka',
     location: 'Colombo, Sri Lanka',
+    description: "Receiving a Pearson Edexcel High Achiever's Award.",
     category: 'Education',
   },
   'dulanga-jayawardena-graduation-2016.jpeg': {
@@ -47,6 +49,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Dulanga Jayawardena having a mock graduation ceremony at The Chinese University of Hong Kong',
     subtitle: 'The Chinese University of Hong Kong',
     location: 'Shatin, Hong Kong',
+    description: 'A mock graduation ceremony at The Chinese University of Hong Kong.',
     category: 'Education',
   },
   'dulanga-jayawardena-heatmap-2017.png': {
@@ -72,6 +75,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: "Peering out from Dartmouth College's library during a study session",
     subtitle: 'Dartmouth College',
     location: 'Hanover, NH, USA',
+    description: "Peering out from Dartmouth College's library during a study session.",
     category: 'Education',
   },
   'dulanga-jayawardena-canoe-2018.jpeg': {
@@ -81,6 +85,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Dulanga Jayawardena canoeing along the Connecticut River with Dartmouth Outing Club',
     subtitle: 'Hanover, New Hampshire',
     location: 'Hanover, NH, USA',
+    description: 'Canoeing the Connecticut River with the Dartmouth Outing Club.',
     category: 'Travel',
   },
   'dulanga-jayawardena-roadtest-2018.jpeg': {
@@ -90,6 +95,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Testing the visibility of various materials for building Lit Pak',
     subtitle: 'Hanover, New Hampshire',
     location: 'Hanover, NH, USA',
+    description: 'Testing the visibility of different materials while building Lit Pak.',
     category: 'Travel',
   },
   'dulanga-jayawardena-stitching-2018.jpeg': {
@@ -99,6 +105,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'A teammate stitches together the Lit Pak backpack at the Thayer School',
     subtitle: 'Thayer School of Engineering',
     location: 'Hanover, NH, USA',
+    description: 'A teammate stitching together the Lit Pak prototype at the Thayer School.',
     category: 'Education',
   },
   'dulanga-jayawardena-cad-2018.png': {
@@ -108,6 +115,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'CAD renders of Lit Pak',
     subtitle: 'Dartmouth Engineering Exchange',
     location: 'Hanover, NH, USA',
+    description: 'CAD renders of the Lit Pak design.',
     category: 'Education',
   },
   'dulanga-jayawardena-grand-canyon-2018.jpeg': {
@@ -121,7 +129,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     title: 'Lone Chapel',
     alt: 'A lone church at Yosemite National Park on a snowy December day',
     location: 'Yosemite National Park, CA, USA',
-    description: 'Almost died going off-trail in Yosemite',
+    description: 'A lone chapel at Yosemite National Park on a snowy December day. Almost died going off-trail to reach this spot.',
     category: 'Travel',
   },
   'dulanga-jayawardena-hkie-2019.jpeg': {
@@ -131,6 +139,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Dulanga Jayawardena with the Hong Kong Institution of Engineers Delegation to Taiwan, 2019',
     subtitle: 'National Taiwan University',
     location: 'Taipei, Taiwan',
+    description: 'With the Hong Kong Institution of Engineers delegation at National Taiwan University.',
     category: 'Work',
   },
   'dulanga-jayawardena-vbrands-2020.jpeg': {
@@ -141,6 +150,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'A couture handbag at the VBrands store',
     subtitle: 'VBrands',
     location: 'Hong Kong',
+    description: 'A couture handbag at the VBrands store.',
     category: 'Work',
   },
   'dulanga-jayawardena-icc-2023.jpeg': {
@@ -156,7 +166,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'The Po Toi lighthouse at dawn, perched up on its hill',
     subtitle: 'Hong Kong’s southern edge',
     location: 'Po Toi, Hong Kong',
-    description: 'My favorite place to look at the night sky, and second favorite camping spot in Hong Kong',
+    description: 'The Po Toi lighthouse at dawn, perched on its hill. My favorite place to look at the night sky, and second favorite camping spot in Hong Kong.',
     category: 'Travel',
   },
   'dulanga-jayawardena-okinawa-2024.jpeg': {
@@ -174,7 +184,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'The Milky Way, as seen from Lake Tekapo, shot on an iPhone',
     subtitle: 'Mackenzie Basin',
     location: 'Lake Tekapo, New Zealand',
-    description: 'While my iPhone did its 30-second exposure',
+    description: 'The Milky Way over Lake Tekapo, captured on iPhone with a 30-second exposure from the sunroof of a parked car.',
     category: 'Travel',
   },
   'dulanga-jayawardena-tekapo-2024.jpeg': {
@@ -182,6 +192,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Panoramic view of The Church of the Good Shepherd on the shores of Lake Tekapo',
     subtitle: 'Church of the Good Shepherd',
     location: 'Lake Tekapo, New Zealand',
+    description: 'A panoramic view of the Church of the Good Shepherd on the shores of Lake Tekapo.',
     category: 'Travel',
   },
   'dulanga-jayawardena-lucerne-2024.jpeg': {
@@ -189,6 +200,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Nighttime view across the Reuss River',
     subtitle: 'Above Lake Lucerne',
     location: 'Lucerne, Switzerland',
+    description: 'A nighttime view across the Reuss River.',
     category: 'Travel',
   },
   'dulanga-jayawardena-greenland-2025.jpeg': {
@@ -196,7 +208,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'The textured surface of Greenland, as seen from Cathay Pacific CX812',
     subtitle: 'Somewhere over the ice sheet',
     location: 'Greenland',
-    description: 'A window-seat view over Greenland that made the whole island look endless.',
+    description: 'A window-seat view over Greenland from Cathay Pacific CX812 that made the whole island look endless.',
     category: 'Travel',
   },
   'dulanga-jayawardena-atacama-2025.jpeg': {
@@ -221,7 +233,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: "A view out of an aircraft, showing the International Commerce Centre, Victoria Harbour, and Dulanga Jayawardena's home at the time",
     subtitle: 'Hong Kong reopening after COVID',
     location: 'Hong Kong',
-    description: 'A view of ICC while flying out of Hong Kong, with both my office and home visible in the frame.',
+    description: 'A view from the aircraft while flying out of Hong Kong — the International Commerce Centre and Victoria Harbour in frame, with both my office and home visible.',
     category: 'Work',
   },
   'dulanga-jayawardena-torres-del-paine-2025.jpeg': {
@@ -245,6 +257,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Self-portrait of Dulanga Jayawardena enjoying a morning coffee whilst overlooking the city of Perth',
     subtitle: 'Golden hour in Perth',
     location: 'Perth, Western Australia',
+    description: 'A self-portrait, enjoying a morning coffee while overlooking the city of Perth at golden hour.',
     category: 'Travel',
   },
   'dulanga-jayawardena-malacca-2025.jpeg': {
@@ -270,6 +283,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'Dulanga Jayawardena with his teammates who worked on Lit Pak at their final presentation at Dartmouth College',
     subtitle: 'Dartmouth Engineering Exchange',
     location: 'Hanover, NH, USA',
+    description: 'With my teammates at the final presentation for Lit Pak at Dartmouth College.',
     category: 'Education',
   },
   'dulanga-jayawardena-pilpil-2025.jpeg': {
@@ -277,7 +291,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     alt: 'A dish of pil pil, containing shrimp, beef, and chicken',
     subtitle: 'Southern Chile',
     location: 'Patagonia, Chile',
-    description: 'A Patagonia travel photograph that I use as a banner for something else.',
+    description: 'A dish of pil pil — shrimp, beef, and chicken.',
     category: 'Travel',
     disableGeneratedPosts: true,
   },
