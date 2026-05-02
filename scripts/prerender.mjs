@@ -216,6 +216,11 @@ function homeStructuredData() {
     '@type': 'Person',
     name: SITE_NAME,
     url: `${SITE_URL}/`,
+    // Headshot used by Google's knowledge-panel-style results when someone
+    // searches the name. The Person.image property is the highest-leverage
+    // place to publish a portrait — far more impactful than alt text on
+    // the same file would be.
+    image: `${SITE_URL}/assets/img/profile.jpeg`,
     jobTitle: 'Software Engineer',
     email: 'mailto:dulangajay@gmail.com',
     sameAs: [
