@@ -90,14 +90,25 @@ function injectSsrIntoRoot(template, bodyHtml) {
 }
 
 function buildSitemap(posts, photoLocations) {
-  const latest = posts[0]?.date ?? new Date().toISOString().slice(0, 10)
+  // Use the latest post date for site-level pages (home, writing index).
+  // The map page tracks its own freshness from the photo timeline so adding
+  // a photo bumps /map's lastmod without touching unrelated pages.
+  const today = new Date().toISOString().slice(0, 10)
+  const latestPost = posts[0]?.date ?? today
+  const latestPhoto = photoLocations
+    .map((p) => p.date)
+    .filter(Boolean)
+    .sort()
+    .at(-1) ?? today
+
+  // Note: <changefreq> and <priority> are intentionally omitted. Google has
+  // confirmed both are ignored, and maintaining honest values is a chore.
+  // <lastmod> is the only freshness signal that matters.
   const entries = [
-    { loc: `${SITE_URL}/`, lastmod: latest, changefreq: 'weekly', priority: '1.0' },
+    { loc: `${SITE_URL}/`, lastmod: latestPost },
     {
       loc: `${SITE_URL}/map`,
-      lastmod: latest,
-      changefreq: 'weekly',
-      priority: '0.9',
+      lastmod: latestPhoto,
       // Embed every map photo as <image:image> on the /map URL entry. Per
       // Google's image sitemap docs, images are associated with the page
       // they appear on, not standalone — so they live under /map's <url>.
@@ -107,12 +118,10 @@ function buildSitemap(posts, photoLocations) {
         caption: photo.alt,
       })),
     },
-    { loc: `${SITE_URL}/writing/`, lastmod: latest, changefreq: 'weekly', priority: '0.9' },
+    { loc: `${SITE_URL}/writing/`, lastmod: latestPost },
     ...posts.map((post) => ({
       loc: `${SITE_URL}/${post.id.replace(/^\d{4}-\d{2}-\d{2}-/, '')}/`,
       lastmod: post.date,
-      changefreq: 'monthly',
-      priority: '0.8',
     })),
   ]
 
@@ -131,9 +140,7 @@ ${entries.map((entry) => {
     : ''
   return `  <url>
     <loc>${entry.loc}</loc>
-    <lastmod>${entry.lastmod}</lastmod>
-    <changefreq>${entry.changefreq}</changefreq>
-    <priority>${entry.priority}</priority>${imageBlock}
+    <lastmod>${entry.lastmod}</lastmod>${imageBlock}
   </url>`
 }).join('\n')}
 </urlset>
