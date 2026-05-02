@@ -4,6 +4,7 @@ import { pathToFileURL } from 'node:url'
 
 const SITE_URL = 'https://dulangaj.com'
 const SITE_NAME = 'Dulanga Jayawardena'
+const PERSON_ID = `${SITE_URL}/#person`
 const HOME_TITLE = `${SITE_NAME} | Software Engineer`
 const HOME_DESCRIPTION = 'Software engineer building production-grade systems for financial markets across risk technology, analytics, and infrastructure.'
 const MAP_TITLE = `My World Map | ${SITE_NAME}`
@@ -187,7 +188,7 @@ function mapImageObjectsGraph(photoLocations) {
     description: MAP_DESCRIPTION,
     url: getCanonicalUrl('/map'),
     isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },
-    about: { '@type': 'Person', name: SITE_NAME, url: SITE_URL },
+    about: { '@id': PERSON_ID },
   }
   const images = photoLocations.map((photo) => ({
     '@type': 'ImageObject',
@@ -197,9 +198,13 @@ function mapImageObjectsGraph(photoLocations) {
     name: photo.title,
     caption: photo.alt,
     description: photo.description ?? photo.alt,
-    creator: photo.photoCredit
-      ? { '@type': 'Person', name: photo.photoCredit }
-      : { '@type': 'Person', name: SITE_NAME, url: SITE_URL },
+    // If the photo is credited to the site owner, point at the canonical
+    // Person node so every shot consolidates under one entity. Otherwise
+    // (third-party photographer), inline a separate Person.
+    creator:
+      !photo.photoCredit || photo.photoCredit === SITE_NAME
+        ? { '@id': PERSON_ID }
+        : { '@type': 'Person', name: photo.photoCredit },
     contentLocation: { '@type': 'Place', name: photo.location },
     datePublished: photo.date,
     isPartOf: { '@id': `${getCanonicalUrl('/map')}#webpage` },
@@ -214,15 +219,55 @@ function homeStructuredData() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
+    '@id': PERSON_ID,
     name: SITE_NAME,
     url: `${SITE_URL}/`,
-    // Headshot used by Google's knowledge-panel-style results when someone
-    // searches the name. The Person.image property is the highest-leverage
-    // place to publish a portrait — far more impactful than alt text on
-    // the same file would be.
     image: `${SITE_URL}/assets/img/profile.jpeg`,
+    description:
+      'Sri Lankan software engineer working on risk technology and analytics for financial market, based in Hong Kong. Photographer and travel writer in side interests.',
     jobTitle: 'Software Engineer',
     email: 'mailto:dulangajay@gmail.com',
+    nationality: { '@type': 'Country', name: 'Sri Lanka' },
+    knowsAbout: [
+      'Technology',
+      'Financial Markets',
+      'Software Engineering',
+      'Photography',
+      'Travel Writing',
+    ],
+    hasOccupation: {
+      '@type': 'Occupation',
+      name: 'Software Engineer',
+      occupationalCategory: 'Risk Technology',
+    },
+    worksFor: {
+      '@type': 'Organization',
+      name: 'Bullish',
+      url: 'https://bullish.com',
+    },
+    alumniOf: [
+      {
+        '@type': 'CollegeOrUniversity',
+        name: 'The Chinese University of Hong Kong',
+        url: 'https://www.cuhk.edu.hk',
+      },
+      {
+        '@type': 'CollegeOrUniversity',
+        name: 'Dartmouth College',
+        url: 'https://www.dartmouth.edu',
+      },
+      {
+        '@type': 'EducationalOrganization',
+        name: 'Elizabeth Moir School',
+        url: 'https://www.elizabethmoirschool.com',
+      },
+      {
+        '@type': 'Organization',
+        name: 'Morgan Stanley',
+        url: 'https://www.morganstanley.com',
+      },
+    ],
+    award: 'Pearson Edexcel Outstanding Learner Award',
     sameAs: [
       'https://github.com/dulangaj',
       'https://linkedin.com/in/dulangaj',
@@ -237,11 +282,7 @@ function writingStructuredData() {
     name: 'Writing Archive',
     description: WRITING_DESCRIPTION,
     url: getCanonicalUrl('/writing/'),
-    about: {
-      '@type': 'Person',
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
+    about: { '@id': PERSON_ID },
   }
 }
 
@@ -253,16 +294,8 @@ function articleStructuredData(post, canonicalUrl, ogImage) {
     description: post.excerpt || post.title,
     datePublished: post.date,
     dateModified: post.date,
-    author: {
-      '@type': 'Person',
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
-    publisher: {
-      '@type': 'Person',
-      name: SITE_NAME,
-      url: SITE_URL,
-    },
+    author: { '@id': PERSON_ID },
+    publisher: { '@id': PERSON_ID },
     mainEntityOfPage: canonicalUrl,
     image: ogImage,
     articleSection: post.category,
