@@ -219,6 +219,17 @@ function MapViewportSync({
 
 /* ─── Custom photo pin marker icon ──────────────────────────────────────── */
 
+/** Escape a string for safe inclusion in an HTML attribute (used in Leaflet
+ *  divIcon HTML strings, which are interpolated raw into the DOM). */
+function escapeHtmlAttr(value: string): string {
+  return value
+    .replace(/&/g, '&amp;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#39;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+}
+
 class PhotoIconFactory {
   private readonly cache = new Map<string, L.DivIcon>()
 
@@ -231,7 +242,7 @@ class PhotoIconFactory {
     const size = 56
     const border = 2.5
     const icon = L.divIcon({
-      html: `<div class="map-photo-pin" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" /></div>`,
+      html: `<div class="map-photo-pin" style="width:${size}px;height:${size}px;border-width:${border}px"><img src="${photo.thumbnail}" alt="${escapeHtmlAttr(photo.alt)}" loading="lazy" decoding="async" /></div>`,
       className: '',
       iconSize:   [size, size],
       iconAnchor: [size / 2, size / 2],
@@ -366,7 +377,7 @@ class ClusterIconFactory {
       html: `
       <div class="map-cluster-wrap" style="width:${outer}px;height:${outer}px">
         <div class="map-cluster-photo" style="width:${size}px;height:${size}px">
-          <img src="${photo.thumbnail}" alt="" loading="lazy" decoding="async" />
+          <img src="${photo.thumbnail}" alt="${escapeHtmlAttr(photo.alt)}" loading="lazy" decoding="async" />
         </div>
         <div class="map-cluster-badge">${count}</div>
       </div>`,
@@ -978,8 +989,8 @@ export function MapPage() {
                 </button>
               </div>
 
-              {/* Scrollable content */}
-              <div className="overflow-y-auto overscroll-contain">
+              {/* Scrollable content — <figure> so img + figcaption are semantically paired (SEO) */}
+              <figure className="overflow-y-auto overscroll-contain m-0">
                 {/* Photo with swipe */}
                 <div
                   className="relative w-full overflow-hidden"
@@ -1078,7 +1089,9 @@ export function MapPage() {
                       >
                         <img
                           src={visibleSelected.image}
-                          alt={visibleSelected.title}
+                          srcSet={`${visibleSelected.thumbnail} 160w, ${visibleSelected.image} 1600w`}
+                          sizes="(max-width: 640px) 100vw, 720px"
+                          alt={visibleSelected.alt}
                           className="block max-w-full max-h-full w-auto h-auto rounded-2xl shadow-[0_10px_28px_rgba(0,0,0,0.16)]"
                           onLoad={() => setImageLoaded(true)}
                           draggable={false}
@@ -1145,8 +1158,8 @@ export function MapPage() {
                   )}
                 </div>
 
-                {/* Info */}
-                <div className="px-5 pt-4 pb-6">
+                {/* Info — <figcaption> pairs this caption text with the image above for image SEO */}
+                <figcaption className="px-5 pt-4 pb-6">
                   {/* Category + location */}
                   <div className="flex items-center gap-3 mb-3 flex-wrap">
                     {visibleSelected.category && (
@@ -1240,8 +1253,18 @@ export function MapPage() {
                       ))}
                     </div>
                   )}
-                </div>
-              </div>
+
+                  {/* Photo credit — carries the "Dulanga Jayawardena" name signal for image SEO */}
+                  {visibleSelected.photoCredit && (
+                    <p
+                      className="font-mono text-[10px] tracking-widest uppercase mt-4"
+                      style={{ color: 'var(--color-subtle)' }}
+                    >
+                      Photo: {visibleSelected.photoCredit}
+                    </p>
+                  )}
+                </figcaption>
+              </figure>
 
               {/* Keyboard shortcut hints — desktop only */}
               <div

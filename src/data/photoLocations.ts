@@ -36,6 +36,8 @@ export interface PhotoLocation {
   title:          string
   subtitle?:      string
   description?:   string
+  alt:            string   // Honest description of image content (for `alt` attribute)
+  photoCredit:    string   // Name shown in "Photo: …" credit line; "" suppresses
   location:       string   // Human-readable label shown on the map
   date:           string   // YYYY-MM-DD
   relatedPosts?:  GeneratedPhotoPostLink[]
@@ -116,6 +118,8 @@ export const photoLocations: PhotoLocation[] = filenames
       title:          metadata?.title ?? exif.title ?? labelFromFilename(filename),
       subtitle:       metadata?.subtitle,
       description:    metadata?.description ?? exif.description,
+      alt:            metadata?.alt ?? `${metadata?.title ?? exif.title ?? labelFromFilename(filename)}`,
+      photoCredit:    metadata?.photoCredit ?? 'Dulanga Jayawardena',
       location:       metadata?.location ?? locationFromCoordinates(lat, lng),
       date:           metadata?.date ?? exif.date ?? dateFromFilename(filename),
       relatedPosts:   relatedPosts.length > 0 ? relatedPosts : undefined,
