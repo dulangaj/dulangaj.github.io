@@ -22,7 +22,7 @@ export interface PhotoMetadata {
 }
 
 export const photoMetadata: Record<string, PhotoMetadata> = {
-  '15.02_moir.jpeg': {
+  'dulanga-jayawardena-moir-2015.jpeg': {
     lat: 6.8778,
     lng: 79.8769,
     title: 'Excelling at Elizabeth Moir School',
@@ -31,7 +31,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Colombo, Sri Lanka',
     category: 'Education',
   },
-  '15.07_edexcel.jpeg': {
+  'dulanga-jayawardena-edexcel-2015.jpeg': {
     lat: 6.9271,
     lng: 79.8612,
     title: 'A Level Examinations',
@@ -40,7 +40,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Colombo, Sri Lanka',
     category: 'Education',
   },
-  '16.11_graduation.jpeg': {
+  'dulanga-jayawardena-graduation-2016.jpeg': {
     lat: 22.4194,
     lng: 114.2063,
     title: 'Studying Systems Engineering at CUHK',
@@ -49,7 +49,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Shatin, Hong Kong',
     category: 'Education',
   },
-  '17.12_heatmap.png': {
+  'dulanga-jayawardena-heatmap-2017.png': {
     lat: 22.4196,
     lng: 114.2060,
     title: 'Restaurant Recommender — Heatmap Analysis',
@@ -58,14 +58,14 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     category: 'Education',
     excludeFromMap: true,
   },
-  '18.07_london_bridge.jpeg': {
+  'dulanga-jayawardena-london-bridge-2018.jpeg': {
     title: 'Following my roommate through London Bridge',
     alt: 'Dulanga Jayawardena cycling along London Bridge',
     location: 'London, England',
     description: 'My heart was in my mouth, as I dropped my phone snapping this.',
     category: 'Travel',
   },
-  '18.09_window.jpeg': {
+  'dulanga-jayawardena-window-2018.jpeg': {
     lat: 43.7022,
     lng: -72.2896,
     title: 'Exchange Semester at Dartmouth College',
@@ -74,7 +74,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hanover, NH, USA',
     category: 'Education',
   },
-  '18.10_canoe.jpeg': {
+  'dulanga-jayawardena-canoe-2018.jpeg': {
     lat: 43.6983,
     lng: -72.3067,
     title: 'Canoeing on the Connecticut River',
@@ -83,7 +83,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hanover, NH, USA',
     category: 'Travel',
   },
-  '18.10_roadTest.jpeg': {
+  'dulanga-jayawardena-roadtest-2018.jpeg': {
     lat: 43.7035,
     lng: -72.2889,
     title: 'Road Test',
@@ -92,7 +92,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hanover, NH, USA',
     category: 'Travel',
   },
-  '18.11_stitching.jpeg': {
+  'dulanga-jayawardena-stitching-2018.jpeg': {
     lat: 43.7042,
     lng: -72.2897,
     title: 'Lit Pak — Stitching the Prototype',
@@ -101,7 +101,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hanover, NH, USA',
     category: 'Education',
   },
-  '18.12_cad.png': {
+  'dulanga-jayawardena-cad-2018.png': {
     lat: 43.7048,
     lng: -72.2885,
     title: 'CAD Design at Thayer School',
@@ -110,21 +110,21 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hanover, NH, USA',
     category: 'Education',
   },
-  '18.12_grand_canyon.jpeg': {
+  'dulanga-jayawardena-grand-canyon-2018.jpeg': {
     title: 'Strolling through the Grand Canyon with one of my best friends',
     alt: 'Dulanga Jayawardena strolling along Grand Canyon National Park',
     location: 'Grand Canyon National Park, AZ, USA',
     description: 'A winter walk along the South Rim, with the canyon opening up wider at every turn.',
     category: 'Travel',
   },
-  '18.12_yosemite.jpeg': {
+  'dulanga-jayawardena-yosemite-2018.jpeg': {
     title: 'Lone Chapel',
     alt: 'A lone church at Yosemite National Park on a snowy December day',
     location: 'Yosemite National Park, CA, USA',
     description: 'Almost died going off-trail in Yosemite',
     category: 'Travel',
   },
-  '19.05_hkie.jpeg': {
+  'dulanga-jayawardena-hkie-2019.jpeg': {
     lat: 25.0174,
     lng: 121.5396,
     title: 'HKIE Delegation Visit',
@@ -133,7 +133,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Taipei, Taiwan',
     category: 'Work',
   },
-  '20.12_vbrands.jpeg': {
+  'dulanga-jayawardena-vbrands-2020.jpeg': {
     lat: 22.2800,
     lng: 114.1838,
     date: '2020-12-01',
@@ -143,7 +143,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hong Kong',
     category: 'Work',
   },
-  '23.10_icc.jpeg': {
+  'dulanga-jayawardena-icc-2023.jpeg': {
     lat: 22.303725,
     lng: 114.16009,
     title: 'ICC — International Commerce Centre',
@@ -151,7 +151,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'West Kowloon, Hong Kong',
     excludeFromMap: true,
   },
-  '23.12_po_toi.jpeg': {
+  'dulanga-jayawardena-po-toi-2023.jpeg': {
     title: 'Po Toi Island',
     alt: 'The Po Toi lighthouse at dawn, perched up on its hill',
     subtitle: 'Hong Kong’s southern edge',
@@ -159,7 +159,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'My favorite place to look at the night sky, and second favorite camping spot in Hong Kong',
     category: 'Travel',
   },
-  '24.01_okinawa.jpeg': {
+  'dulanga-jayawardena-okinawa-2024.jpeg': {
     lat: 26.4585704366135,
     lng: 127.77522749264577,
     title: 'Snorkeling in Okinawa',
@@ -169,7 +169,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'A GoPro frame from one of those swims where the water was clearer than it looked real.',
     category: 'Travel',
   },
-  '24.06_milky_way.jpeg': {
+  'dulanga-jayawardena-milky-way-2024.jpeg': {
     title: 'Plonked my phone on the sunroof and waited inside',
     alt: 'The Milky Way, as seen from Lake Tekapo, shot on an iPhone',
     subtitle: 'Mackenzie Basin',
@@ -177,21 +177,21 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'While my iPhone did its 30-second exposure',
     category: 'Travel',
   },
-  '24.06_tekapo.jpeg': {
+  'dulanga-jayawardena-tekapo-2024.jpeg': {
     title: 'Lake Tekapo',
     alt: 'Panoramic view of The Church of the Good Shepherd on the shores of Lake Tekapo',
     subtitle: 'Church of the Good Shepherd',
     location: 'Lake Tekapo, New Zealand',
     category: 'Travel',
   },
-  '24.09_lucerne.jpeg': {
+  'dulanga-jayawardena-lucerne-2024.jpeg': {
     title: 'Lucerne After Dark',
     alt: 'Nighttime view across the Reuss River',
     subtitle: 'Above Lake Lucerne',
     location: 'Lucerne, Switzerland',
     category: 'Travel',
   },
-  '25.01_greenland.jpeg': {
+  'dulanga-jayawardena-greenland-2025.jpeg': {
     title: 'Greenland',
     alt: 'The textured surface of Greenland, as seen from Cathay Pacific CX812',
     subtitle: 'Somewhere over the ice sheet',
@@ -199,14 +199,14 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'A window-seat view over Greenland that made the whole island look endless.',
     category: 'Travel',
   },
-  '25.04_atacama.jpeg': {
+  'dulanga-jayawardena-atacama-2025.jpeg': {
     title: 'Layers of Atacama',
     alt: 'Snow-covered peaks, dusty desert roads, and a moss-covered lake show the unique and varied terrain of the Atacamas',
     location: 'Atacama Desert, Chile',
     description: 'Visited the Atacama desert (the driest place on Earth) after a rare rain. It was incredible seeing rows of snowy mountains, desert sand, and a moss-covered lake, all in one view',
     category: 'Travel',
   },
-  '25.04_easter_island.jpeg': {
+  'dulanga-jayawardena-easter-island-2025.jpeg': {
     title: 'Ahu Tongariki',
     alt: 'Dulanga Jayawardena standing amongst the Moai at Ahu Tongariki, Rapa Nui (Easter Island)',
     subtitle: 'Rapa Nui',
@@ -214,7 +214,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'A view across the moai at Ahu Tongariki on Easter Island.',
     category: 'Travel',
   },
-  '22_icc.jpeg': {
+  'dulanga-jayawardena-icc-2022.jpeg': {
     lat: 22.2796,
     lng: 114.1666,
     title: 'ICC from the Flight Path',
@@ -224,7 +224,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'A view of ICC while flying out of Hong Kong, with both my office and home visible in the frame.',
     category: 'Work',
   },
-  '25.04_torres_del_paine.jpeg': {
+  'dulanga-jayawardena-torres-del-paine-2025.jpeg': {
     title: 'Torres del Paine',
     alt: 'Jagged cliffs in Patagonia',
     subtitle: 'Patagonia',
@@ -232,7 +232,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'A Patagonia landscape from Torres del Paine National Park.',
     category: 'Travel',
   },
-  '25.04_patagonia.jpeg': {
+  'dulanga-jayawardena-patagonia-2025.jpeg': {
     title: 'Driving into Patagonia way past curfew',
     alt: 'A car lights up a bumpy road paving the way to the peaks of Patagonia, showing the traces of the famous Patagonia logo, dimly lit by the setting sun',
     subtitle: 'Torres del Paine',
@@ -240,21 +240,21 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     description: 'The road, the headlights, and the skyline all felt a little too cinematic to be real.',
     category: 'Travel',
   },
-  '25.04_perth.jpeg': {
+  'dulanga-jayawardena-perth-2025.jpeg': {
     title: 'Self-portrait',
     alt: 'Self-portrait of Dulanga Jayawardena enjoying a morning coffee whilst overlooking the city of Perth',
     subtitle: 'Golden hour in Perth',
     location: 'Perth, Western Australia',
     category: 'Travel',
   },
-  '25.10_malacca.jpeg': {
+  'dulanga-jayawardena-malacca-2025.jpeg': {
     title: 'Deepavali Celebrations in Malacca',
     alt: 'Malaysians celebrate Diwali with fireworks, as seen from a hotel window in Malacca',
     location: 'Malacca, Malaysia',
     description: 'Fireworks going off below the hotel window during Deepavali celebrations in Malacca.',
     category: 'Travel',
   },
-  'leaves.jpeg': {
+  'dulanga-jayawardena-leaves-2023.jpeg': {
     lat: 22.4190,
     lng: 114.2075,
     title: 'Simulating Opinion Dynamics in Social Networks',
@@ -263,7 +263,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     category: 'Education',
     excludeFromMap: true,
   },
-  'litpak.jpeg': {
+  'dulanga-jayawardena-litpak-2018.jpeg': {
     lat: 43.7055,
     lng: -72.2901,
     title: 'Lit Pak — Wearable Safety Backpack',
@@ -272,7 +272,7 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     location: 'Hanover, NH, USA',
     category: 'Education',
   },
-  'pilpil.jpeg': {
+  'dulanga-jayawardena-pilpil-2025.jpeg': {
     title: 'Patagonia',
     alt: 'A dish of pil pil, containing shrimp, beef, and chicken',
     subtitle: 'Southern Chile',

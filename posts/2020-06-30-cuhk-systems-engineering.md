@@ -5,7 +5,7 @@ author: "Dulanga Jayawardena"
 categories: profile
 category: Education
 tags: [Systems Engineering, CUHK, Hong Kong]
-image: 16.11_graduation.jpeg
+image: dulanga-jayawardena-graduation-2016.jpeg
 read_time: 4
 ---
 
@@ -29,7 +29,7 @@ As a side project, I built a data analysis pipeline for Hong Kong’s OpenRice (
 
 - **HKIE Delegation (Hong Kong Institution of Engineers)** — Represented CUHK and engaged with industry professionals through seminars and site visits.
 
-![HKIE 2019 Delegation Photo](/assets/img/19.05_hkie.jpeg)
+![HKIE 2019 Delegation Photo](/assets/img/dulanga-jayawardena-hkie-2019.jpeg)
 
 - **Human Library** — Leader in CUHK’s Human Library program, an initiative focused on breaking down stereotypes and fostering meaningful conversations through personal storytelling.
 

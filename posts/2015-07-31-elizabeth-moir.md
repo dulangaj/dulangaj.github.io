@@ -5,7 +5,7 @@ author: "Dulanga Jayawardena"
 categories: profile
 category: Education
 tags: [A Levels, Edexcel, Mathematics]
-image: 15.02_moir.jpeg
+image: dulanga-jayawardena-moir-2015.jpeg
 read_time: 3
 ---
 
@@ -13,7 +13,7 @@ I completed my A-Level studies at **Elizabeth Moir School** in Colombo, Sri Lank
 
 As part of a highly competitive cohort, I placed within the **Top 30 in Sri Lanka** at the UK-based Edexcel A Levels, contributing to one of the highest-performing graduating classes in the world.
 
-![Receiving my High Achiever's Award](/assets/img/15.07_edexcel.jpeg)
+![Receiving my High Achiever's Award](/assets/img/dulanga-jayawardena-edexcel-2015.jpeg)
 
 [Elizabeth Moir School — Best A-Level Results in Sri Lanka (News Article)](https://elizabethmoirschool.com/news/best-ever-a-level-results-in-sri-lanka-2/)
 

@@ -6,7 +6,7 @@ categories: projects
 category: Engineering
 subtitle: Academic Project
 tags: [Python, Tkinter, Machine Learning, Collaborative Filtering]
-image: pilpil.jpeg
+image: dulanga-jayawardena-pilpil-2025.jpeg
 read_time: 5
 link: https://github.com/RiceProjectTeam/RestaurantAnalyzer
 ---
@@ -25,7 +25,7 @@ Customer satisfaction tended to increase with price — but only up to around **
 
 Analysis across districts (Sha Tin, Mong Kok, TST, CUHK area) revealed significant gaps in certain cuisine types, which led us to propose business opportunities in underserved areas — such as Japanese restaurants near CUHK.
 
-![Japanese Restaurant Heatmap](/assets/img/17.12_heatmap.png)
+![Japanese Restaurant Heatmap](/assets/img/dulanga-jayawardena-heatmap-2017.png)
 
 We used scatter plots, heatmaps, histograms, and pie charts to better understand pricing, popularity, cuisine diversity, and geographic gaps across districts.
 

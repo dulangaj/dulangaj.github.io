@@ -17,7 +17,7 @@ export const featuredConfig: FeaturedPostConfig[] = [
   {
     id:      '2020-05-31-social-network-opinion-dynamics',
     excerpt: 'How opinions spread in networks: comparing DeGroot and Bounded Confidence models, then proposing a dynamic self-appraisal mechanism.',
-    image:   '/assets/img/17.12_heatmap.png',
+    image:   '/assets/img/dulanga-jayawardena-heatmap-2017.png',
   },
   {
     id:      '2020-12-31-vbrands',

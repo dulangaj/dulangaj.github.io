@@ -6,7 +6,7 @@ categories: projects
 category: Engineering
 subtitle: Dartmouth Engineering Exchange
 tags: [Arduino, C, SolidWorks, IoT]
-image: litpak.jpeg
+image: dulanga-jayawardena-litpak-2018.jpeg
 read_time: 6
 ---
 
@@ -34,8 +34,8 @@ We designed **LitPak**, a backpack that integrates:
 - **Rechargeable battery system** for all-day usage
 - **Smart power management** using motion-sensing gyroscopes to automatically shut off lights when idle
 
-![Litpak CAD](/assets/img/18.12_cad.png)
-![Litpak Stitching](/assets/img/18.11_stitching.jpeg)
+![Litpak CAD](/assets/img/dulanga-jayawardena-cad-2018.png)
+![Litpak Stitching](/assets/img/dulanga-jayawardena-stitching-2018.jpeg)
 
 The LitPak functions as both a daily-use backpack and a nighttime safety device—without sacrificing style.
 
@@ -49,7 +49,7 @@ Throughout development, we conducted extensive:
 - **User testing (8 participants per iteration)** to evaluate comfort, appearance, and usability
 - **Iterative prototyping (3 full hardware iterations)** to refine design, materials, electronics, and usability
 
-![Litpak Prototyping](/assets/img/18.10_roadTest.jpeg)
+![Litpak Prototyping](/assets/img/dulanga-jayawardena-roadtest-2018.jpeg)
 
 By the final prototype, our product scored:
 

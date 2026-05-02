@@ -7,94 +7,94 @@ export interface GeneratedPhotoPostLink {
 }
 
 export const generatedPhotoPostLinks: Record<string, GeneratedPhotoPostLink[]> = {
-  "15.02_moir.jpeg": [
+  "dulanga-jayawardena-cad-2018.png": [
+    {
+      "postId": "2018-12-01-wearable-safety-backpack",
+      "title": "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
+    }
+  ],
+  "dulanga-jayawardena-canoe-2018.jpeg": [
+    {
+      "postId": "2018-12-01-dartmouth-engineering-exchange",
+      "title": "Doing my exchange semester at Dartmouth College"
+    }
+  ],
+  "dulanga-jayawardena-edexcel-2015.jpeg": [
     {
       "postId": "2015-07-31-elizabeth-moir",
       "title": "Excelling at Elizabeth Moir School"
     }
   ],
-  "15.07_edexcel.jpeg": [
-    {
-      "postId": "2015-07-31-elizabeth-moir",
-      "title": "Excelling at Elizabeth Moir School"
-    }
-  ],
-  "16.11_graduation.jpeg": [
+  "dulanga-jayawardena-graduation-2016.jpeg": [
     {
       "postId": "2020-06-30-cuhk-systems-engineering",
       "title": "Studying Systems Engineering at CUHK"
     }
   ],
-  "17.12_heatmap.png": [
+  "dulanga-jayawardena-heatmap-2017.png": [
     {
       "postId": "2017-12-01-restaurant-recommender",
       "title": "Restaurant Recommender — Data-Driven Restaurant Discovery"
     }
   ],
-  "18.09_window.jpeg": [
-    {
-      "postId": "2018-12-01-dartmouth-engineering-exchange",
-      "title": "Doing my exchange semester at Dartmouth College"
-    }
-  ],
-  "18.10_canoe.jpeg": [
-    {
-      "postId": "2018-12-01-dartmouth-engineering-exchange",
-      "title": "Doing my exchange semester at Dartmouth College"
-    }
-  ],
-  "18.10_roadTest.jpeg": [
-    {
-      "postId": "2018-12-01-wearable-safety-backpack",
-      "title": "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
-    }
-  ],
-  "18.11_stitching.jpeg": [
-    {
-      "postId": "2018-12-01-wearable-safety-backpack",
-      "title": "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
-    }
-  ],
-  "18.12_cad.png": [
-    {
-      "postId": "2018-12-01-wearable-safety-backpack",
-      "title": "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
-    }
-  ],
-  "19.05_hkie.jpeg": [
+  "dulanga-jayawardena-hkie-2019.jpeg": [
     {
       "postId": "2020-06-30-cuhk-systems-engineering",
       "title": "Studying Systems Engineering at CUHK"
     }
   ],
-  "20.12_vbrands.jpeg": [
-    {
-      "postId": "2020-12-31-vbrands",
-      "title": "VBrands — Technology Consultant & Digital Operations"
-    }
-  ],
-  "22_icc.jpeg": [
+  "dulanga-jayawardena-icc-2022.jpeg": [
     {
       "postId": "2025-05-01-morgan-stanley-equity-risk",
-      "title": "Building Software for Equity Risk Management at Morgan Stanley"
+      "title": "Building Software for Equity Risk at Morgan Stanley"
     }
   ],
-  "leaves.jpeg": [
+  "dulanga-jayawardena-leaves-2023.jpeg": [
     {
       "postId": "2020-05-31-social-network-opinion-dynamics",
       "title": "Simulating the Spread of Opinions in Social Networks"
     }
   ],
-  "litpak.jpeg": [
+  "dulanga-jayawardena-litpak-2018.jpeg": [
     {
       "postId": "2018-12-01-wearable-safety-backpack",
       "title": "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
     }
   ],
-  "pilpil.jpeg": [
+  "dulanga-jayawardena-moir-2015.jpeg": [
+    {
+      "postId": "2015-07-31-elizabeth-moir",
+      "title": "Excelling at Elizabeth Moir School"
+    }
+  ],
+  "dulanga-jayawardena-pilpil-2025.jpeg": [
     {
       "postId": "2017-12-01-restaurant-recommender",
       "title": "Restaurant Recommender — Data-Driven Restaurant Discovery"
+    }
+  ],
+  "dulanga-jayawardena-roadtest-2018.jpeg": [
+    {
+      "postId": "2018-12-01-wearable-safety-backpack",
+      "title": "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
+    }
+  ],
+  "dulanga-jayawardena-stitching-2018.jpeg": [
+    {
+      "postId": "2018-12-01-wearable-safety-backpack",
+      "title": "Lit Pak — Designing a Safer, Smarter Backpack for Nighttime Visibility"
+    }
+  ],
+  "dulanga-jayawardena-vbrands-2020.jpeg": [
+    {
+      "postId": "2020-12-31-vbrands",
+      "title": "VBrands — Technology Consultant & Digital Operations"
+    }
+  ],
+  "dulanga-jayawardena-window-2018.jpeg": [
+    {
+      "postId": "2018-12-01-dartmouth-engineering-exchange",
+      "title": "Doing my exchange semester at Dartmouth College"
     }
   ]
 }
