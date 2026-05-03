@@ -30,7 +30,7 @@ const ROUTE_CHECKS = [
   },
   {
     pathname: '/morgan-stanley-equity-risk/',
-    expectedTitle: '<title>Building Software for Equity Risk Management at Morgan Stanley | Dulanga Jayawardena</title>',
+    expectedTitle: '<title>Building Software for Equity Risk at Morgan Stanley | Dulanga Jayawardena</title>',
   },
 ]
 
