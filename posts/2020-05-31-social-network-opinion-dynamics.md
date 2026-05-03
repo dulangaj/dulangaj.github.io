@@ -6,7 +6,7 @@ categories: projects
 category: Research
 subtitle: CUHK
 tags: [Python, NumPy, NetworkX, Research]
-image: leaves.jpeg
+image: dulanga-jayawardena-leaves-2023.jpeg
 read_time: 7
 link: https://github.com/dulangaj/Modelling-and-Simulating-Opinion-Dynamics-in-Social-Networks
 ---

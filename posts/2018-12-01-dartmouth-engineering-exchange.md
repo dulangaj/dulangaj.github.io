@@ -5,7 +5,7 @@ author: "Dulanga Jayawardena"
 categories: profile
 category: Education
 tags: [Thayer School, Dartmouth, Engineering]
-image: 18.09_window.jpeg
+image: dulanga-jayawardena-window-2018.jpeg
 read_time: 4
 ---
 
@@ -27,7 +27,7 @@ My coursework combined the technical and human aspects of engineering, with a st
 
 Beyond academics, I participated in Dartmouth’s **South House Residential Community Executive Committee**, contributing to campus life through student-led events.
 
-![Canoeing along the Connecticut](/assets/img/18.10_canoe.jpeg)
+![Canoeing along the Connecticut](/assets/img/dulanga-jayawardena-canoe-2018.jpeg)
 
 ---
 

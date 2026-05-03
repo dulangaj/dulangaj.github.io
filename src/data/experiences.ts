@@ -19,7 +19,7 @@ export const experiences = [
       'Automated end-of-day and QA workflows with Python, Perl, Bash, and SQL, while providing Level 3 support for JVM and C++ systems across four regions',
     ],
     tags: ['Java', 'Spring', 'Python', 'Perl', 'Bash', 'SQL', 'Kafka', 'MQ', 'Jenkins'],
-    image: '/assets/img/22_icc.jpeg',
+    image: '/assets/img/dulanga-jayawardena-icc-2022.jpeg',
   }),
   new Experience({
     id:          'vbrands',
@@ -36,7 +36,7 @@ export const experiences = [
       'Partnered with operations teams to roll out new workflows and train staff for sustained adoption',
     ],
     tags: ['Python', 'E-commerce', 'Automation', 'Integrations', 'Operations'],
-    image: '/assets/img/20.12_vbrands.jpeg',
+    image: '/assets/img/dulanga-jayawardena-vbrands-2020.jpeg',
   }),
   new Experience({
     id:          'cuhk',
@@ -53,7 +53,7 @@ export const experiences = [
       "Named to the Master's List",
     ],
     tags: ['Systems Engineering', 'Dartmouth Exchange', 'Scholarships'],
-    image: '/assets/img/16.11_graduation.jpeg',
+    image: '/assets/img/dulanga-jayawardena-graduation-2016.jpeg',
   }),
   new Experience({
     id:          'we-are-designers',
