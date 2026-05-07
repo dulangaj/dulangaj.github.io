@@ -28,7 +28,7 @@ const HOME_METADATA = {
 const MAP_METADATA = {
   title: 'My World Map | Dulanga Jayawardena',
   description: 'Interactive world photo map tracing Dulanga Jayawardena’s travels, photography, and related writing.',
-  canonical: `${SITE_URL}/map`,
+  canonical: `${SITE_URL}/map/`,
 }
 
 const WRITING_METADATA = {

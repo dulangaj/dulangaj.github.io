@@ -9,7 +9,7 @@ import { getPostContent } from '@/data/postContent'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Tag } from '@/components/ui/Tag'
-import { getPostCanonicalUrl, getPostSlug } from '@/utils/postUrls'
+import { getPostCanonicalUrl, getPostPath, getPostSlug } from '@/utils/postUrls'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
 /* Full article page rendered from posts/*.md markdown files.                 */
@@ -93,6 +93,12 @@ export function PostDetail() {
   }
 
   const body = post.file ? getPostContent(post.file) : null
+
+  const tagSet = new Set(post.tags)
+  const related = [
+    ...posts.filter((p) => p.id !== post.id && p.tags.some((t) => tagSet.has(t))),
+    ...posts.filter((p) => p.id !== post.id && !p.tags.some((t) => tagSet.has(t))),
+  ].slice(0, 3)
 
   return (
     <>
@@ -226,6 +232,38 @@ export function PostDetail() {
                 View the full project <FiExternalLink size={13} />
               </a>
             </motion.div>
+          )}
+
+          {/* Related posts — internal links for crawl equity and reader flow */}
+          {related.length > 0 && (
+            <motion.nav
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4 }}
+              aria-label="Related writing"
+              className="mt-16 pt-8 border-t border-[var(--color-rule)]"
+            >
+              <h2 className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] mb-6">
+                Related writing
+              </h2>
+              <ul className="space-y-4">
+                {related.map((r) => (
+                  <li key={r.id}>
+                    <Link
+                      to={getPostPath(r.id)}
+                      className="group block"
+                    >
+                      <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)]">
+                        {r.category}
+                      </span>
+                      <span className="block font-display text-[20px] leading-snug text-[var(--color-ink)] group-hover:text-[var(--color-crimson)] transition-colors duration-200">
+                        {r.title}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
           )}
 
         </div>

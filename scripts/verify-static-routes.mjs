@@ -21,7 +21,7 @@ const ROUTE_CHECKS = [
     expectedTitle: '<title>Dulanga Jayawardena | Software Engineer</title>',
   },
   {
-    pathname: '/map',
+    pathname: '/map/',
     expectedTitle: '<title>My World Map | Dulanga Jayawardena</title>',
   },
   {
@@ -109,8 +109,39 @@ async function fetchRoute(baseUrl, { pathname, expectedTitle }) {
   }
 }
 
+async function assertSitemapCanonicalConsistency() {
+  const sitemapPath = path.join(DIST_DIR, 'sitemap.xml')
+  const sitemap = await fs.readFile(sitemapPath, 'utf8')
+  const locs = [...sitemap.matchAll(/<loc>([^<]+)<\/loc>/g)]
+    .map((m) => m[1])
+    .filter((url) => !url.includes('/assets/'))
+
+  for (const loc of locs) {
+    const url = new URL(loc)
+    const pathname = url.pathname
+    const relative = pathname === '/'
+      ? 'index.html'
+      : path.join(pathname.replace(/^\/+/, '').replace(/\/+$/, ''), 'index.html')
+    const filePath = path.join(DIST_DIR, relative)
+    const html = await fs.readFile(filePath, 'utf8').catch(() => null)
+    if (!html) {
+      throw new Error(`Sitemap loc ${loc} has no matching file at dist/${relative}.`)
+    }
+    const canonicalMatch = html.match(/<link rel="canonical" href="([^"]+)"/)
+    if (!canonicalMatch) {
+      throw new Error(`dist/${relative} is missing a <link rel="canonical">.`)
+    }
+    if (canonicalMatch[1] !== loc) {
+      throw new Error(
+        `Canonical mismatch for dist/${relative}: sitemap says ${loc}, page says ${canonicalMatch[1]}.`,
+      )
+    }
+  }
+}
+
 async function main() {
   await assertRequiredFiles()
+  await assertSitemapCanonicalConsistency()
 
   const server = createStaticServer()
 

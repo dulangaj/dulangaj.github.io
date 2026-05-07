@@ -1,3 +1,4 @@
+import { execFileSync } from 'node:child_process'
 import fs from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
@@ -16,6 +17,22 @@ const DEFAULT_OG_IMAGE = `${SITE_URL}/assets/social/og-home.png`
 const ROOT_DIR = process.cwd()
 const DIST_DIR = path.join(ROOT_DIR, 'dist')
 const SSR_BUNDLE_PATH = path.join(ROOT_DIR, 'dist-ssr', 'entry-server.js')
+
+/** Last commit time for a tracked file, as an ISO 8601 timestamp.
+ *  Falls back to null when the file isn't tracked yet (new post in a dirty
+ *  worktree) so callers can substitute the post's own publish date. */
+function gitMtime(relativePath) {
+  try {
+    const stdout = execFileSync(
+      'git',
+      ['log', '-1', '--format=%cI', '--', relativePath],
+      { cwd: ROOT_DIR, encoding: 'utf8' },
+    ).trim()
+    return stdout || null
+  } catch {
+    return null
+  }
+}
 
 function escapeHtml(value) {
   return String(value)
@@ -91,24 +108,38 @@ function injectSsrIntoRoot(template, bodyHtml) {
 }
 
 function buildSitemap(posts, photoLocations) {
-  // Use the latest post date for site-level pages (home, writing index).
-  // The map page tracks its own freshness from the photo timeline so adding
-  // a photo bumps /map's lastmod without touching unrelated pages.
-  const today = new Date().toISOString().slice(0, 10)
-  const latestPost = posts[0]?.date ?? today
+  // Use git commit time per file for honest <lastmod> values. Site-level
+  // pages (home, writing index) inherit the most recent change across the
+  // pages or content they aggregate. The map page tracks its own freshness
+  // from the photo timeline so adding a photo bumps /map's lastmod without
+  // touching unrelated pages.
+  const today = new Date().toISOString()
+  const postMtimes = new Map(
+    posts.map((post) => [post.id, gitMtime(`posts/${post.id}.md`) ?? `${post.date}T00:00:00+00:00`]),
+  )
+  const latestPostMtime = [...postMtimes.values()].sort().at(-1) ?? today
+  const homeMtime = [
+    gitMtime('src/components/sections/Home.tsx'),
+    gitMtime('index.html'),
+    latestPostMtime,
+  ].filter(Boolean).sort().at(-1) ?? today
+  const writingMtime = [
+    gitMtime('src/pages/WritingPage.tsx'),
+    latestPostMtime,
+  ].filter(Boolean).sort().at(-1) ?? today
   const latestPhoto = photoLocations
     .map((p) => p.date)
     .filter(Boolean)
     .sort()
-    .at(-1) ?? today
+    .at(-1) ?? today.slice(0, 10)
 
   // Note: <changefreq> and <priority> are intentionally omitted. Google has
   // confirmed both are ignored, and maintaining honest values is a chore.
   // <lastmod> is the only freshness signal that matters.
   const entries = [
-    { loc: `${SITE_URL}/`, lastmod: latestPost },
+    { loc: `${SITE_URL}/`, lastmod: homeMtime },
     {
-      loc: `${SITE_URL}/map`,
+      loc: `${SITE_URL}/map/`,
       lastmod: latestPhoto,
       // Embed every map photo as <image:image> on the /map URL entry. Per
       // Google's image sitemap docs, images are associated with the page
@@ -119,10 +150,10 @@ function buildSitemap(posts, photoLocations) {
         caption: photo.alt,
       })),
     },
-    { loc: `${SITE_URL}/writing/`, lastmod: latestPost },
+    { loc: `${SITE_URL}/writing/`, lastmod: writingMtime },
     ...posts.map((post) => ({
       loc: `${SITE_URL}/${post.id.replace(/^\d{4}-\d{2}-\d{2}-/, '')}/`,
-      lastmod: post.date,
+      lastmod: postMtimes.get(post.id),
     })),
   ]
 
@@ -183,10 +214,10 @@ ${items}
 function mapImageObjectsGraph(photoLocations) {
   const webPage = {
     '@type': 'WebPage',
-    '@id': `${getCanonicalUrl('/map')}#webpage`,
+    '@id': `${getCanonicalUrl('/map/')}#webpage`,
     name: 'My World Map',
     description: MAP_DESCRIPTION,
-    url: getCanonicalUrl('/map'),
+    url: getCanonicalUrl('/map/'),
     isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },
     about: { '@id': PERSON_ID },
   }
@@ -207,7 +238,7 @@ function mapImageObjectsGraph(photoLocations) {
         : { '@type': 'Person', name: photo.photoCredit },
     contentLocation: { '@type': 'Place', name: photo.location },
     datePublished: photo.date,
-    isPartOf: { '@id': `${getCanonicalUrl('/map')}#webpage` },
+    isPartOf: { '@id': `${getCanonicalUrl('/map/')}#webpage` },
   }))
   return {
     '@context': 'https://schema.org',
@@ -286,14 +317,14 @@ function writingStructuredData() {
   }
 }
 
-function articleStructuredData(post, canonicalUrl, ogImage) {
+function articleStructuredData(post, canonicalUrl, ogImage, dateModified) {
   return {
     '@context': 'https://schema.org',
     '@type': 'Article',
     headline: post.title,
     description: post.excerpt || post.title,
     datePublished: post.date,
-    dateModified: post.date,
+    dateModified: dateModified ?? post.date,
     author: { '@id': PERSON_ID },
     publisher: { '@id': PERSON_ID },
     mainEntityOfPage: canonicalUrl,
@@ -349,7 +380,7 @@ async function main() {
   let mapHtml = applyMetadata(shell, {
     title: MAP_TITLE,
     description: MAP_DESCRIPTION,
-    canonicalPath: '/map',
+    canonicalPath: '/map/',
     structuredData: mapImageObjectsGraph(photoLocations),
   }).replace(
     /<p class="app-loading__label" id="app-loading-label">[\s\S]*?<\/p>/,
@@ -376,7 +407,12 @@ async function main() {
       canonicalPath,
       ogType: 'article',
       ogImage,
-      structuredData: articleStructuredData(post, canonicalUrl, ogImage),
+      structuredData: articleStructuredData(
+        post,
+        canonicalUrl,
+        ogImage,
+        gitMtime(`posts/${post.id}.md`),
+      ),
     })
     articleHtml = injectSsrIntoRoot(articleHtml, articleRender.html)
     await writeFile(path.join(slug, 'index.html'), articleHtml)
