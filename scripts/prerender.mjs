@@ -108,7 +108,7 @@ function buildSitemap(posts, photoLocations) {
   const entries = [
     { loc: `${SITE_URL}/`, lastmod: latestPost },
     {
-      loc: `${SITE_URL}/map`,
+      loc: `${SITE_URL}/map/`,
       lastmod: latestPhoto,
       // Embed every map photo as <image:image> on the /map URL entry. Per
       // Google's image sitemap docs, images are associated with the page
@@ -183,10 +183,10 @@ ${items}
 function mapImageObjectsGraph(photoLocations) {
   const webPage = {
     '@type': 'WebPage',
-    '@id': `${getCanonicalUrl('/map')}#webpage`,
+    '@id': `${getCanonicalUrl('/map/')}#webpage`,
     name: 'My World Map',
     description: MAP_DESCRIPTION,
-    url: getCanonicalUrl('/map'),
+    url: getCanonicalUrl('/map/'),
     isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },
     about: { '@id': PERSON_ID },
   }
@@ -207,7 +207,7 @@ function mapImageObjectsGraph(photoLocations) {
         : { '@type': 'Person', name: photo.photoCredit },
     contentLocation: { '@type': 'Place', name: photo.location },
     datePublished: photo.date,
-    isPartOf: { '@id': `${getCanonicalUrl('/map')}#webpage` },
+    isPartOf: { '@id': `${getCanonicalUrl('/map/')}#webpage` },
   }))
   return {
     '@context': 'https://schema.org',
@@ -349,7 +349,7 @@ async function main() {
   let mapHtml = applyMetadata(shell, {
     title: MAP_TITLE,
     description: MAP_DESCRIPTION,
-    canonicalPath: '/map',
+    canonicalPath: '/map/',
     structuredData: mapImageObjectsGraph(photoLocations),
   }).replace(
     /<p class="app-loading__label" id="app-loading-label">[\s\S]*?<\/p>/,

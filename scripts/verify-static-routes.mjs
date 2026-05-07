@@ -21,7 +21,7 @@ const ROUTE_CHECKS = [
     expectedTitle: '<title>Dulanga Jayawardena | Software Engineer</title>',
   },
   {
-    pathname: '/map',
+    pathname: '/map/',
     expectedTitle: '<title>My World Map | Dulanga Jayawardena</title>',
   },
   {
