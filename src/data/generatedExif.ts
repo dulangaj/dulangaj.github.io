@@ -73,6 +73,13 @@ export const rawExifData: Record<string, ExifEntry> = {
     "make": "Apple",
     "model": "iPhone 15 Pro Max"
   },
+  "dulanga-jayawardena-kids4kids-2024.jpeg": {
+    "lat": 22.322783333333334,
+    "lng": 114.15569166666667,
+    "date": "2024-05-25",
+    "make": "Apple",
+    "model": "iPhone 13 Pro Max"
+  },
   "dulanga-jayawardena-leaves-2023.jpeg": {
     "date": "2023-03-31",
     "make": "Apple",
