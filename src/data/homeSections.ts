@@ -1,6 +1,7 @@
 export const homeSections = {
+  masthead:   true,
   hero:       true,
-  now:        false,
+  stopPress:  true,
   featured:   true,
   experience: true,
   writing:    true,

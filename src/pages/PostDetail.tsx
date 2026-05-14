@@ -123,33 +123,25 @@ export function PostDetail() {
             </Link>
           </motion.div>
 
-          {/* Dateline */}
+          {/* Section folio + section name */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.05 }}
-            className="flex flex-wrap items-center gap-3 mb-6 pb-6 border-b border-[var(--color-rule)]"
+            className="flex flex-wrap items-center gap-3 mb-6"
           >
-            <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)]">
+            <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
+              Page B
+            </span>
+            <span aria-hidden="true" className="text-[var(--color-crimson)] font-display text-[14px] leading-none">❦</span>
+            <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
               {post.category}
             </span>
             {post.subtitle && (
               <>
-                <div className="h-px w-6 bg-[var(--color-rule)]" />
-                <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-subtle)]">
+                <span aria-hidden="true" className="text-[var(--color-subtle)]">·</span>
+                <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
                   {post.subtitle}
-                </span>
-              </>
-            )}
-            <div className="h-px w-6 bg-[var(--color-rule)]" />
-            <span className="font-mono text-[11px] tracking-widest text-[var(--color-subtle)]">
-              {post.formattedDate}
-            </span>
-            {post.readTime && (
-              <>
-                <div className="h-px w-6 bg-[var(--color-rule)]" />
-                <span className="font-mono text-[11px] tracking-widest text-[var(--color-subtle)]">
-                  {post.readTime} min read
                 </span>
               </>
             )}
@@ -160,10 +152,30 @@ export function PostDetail() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[1.08] text-[var(--color-ink)] mb-8"
+            className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[1.08] text-[var(--color-ink)] mb-4"
           >
             {post.title}
           </motion.h1>
+
+          {/* Byline + dateline */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.13 }}
+            className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] mb-8 pb-6 border-b border-[var(--color-ink)]"
+          >
+            <span className="text-[var(--color-ink)]">Hong Kong</span>
+            <span className="mx-2">—</span>
+            By <span className="text-[var(--color-ink)]">Dulanga Jayawardena</span>
+            <span className="mx-2">·</span>
+            {post.formattedDate}
+            {post.readTime && (
+              <>
+                <span className="mx-2">·</span>
+                {post.readTime} min read
+              </>
+            )}
+          </motion.p>
 
           {/* Hero image */}
           {post.image && (

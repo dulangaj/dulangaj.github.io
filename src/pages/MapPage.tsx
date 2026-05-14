@@ -20,7 +20,7 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useTheme } from '@/hooks/useTheme'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { EditionToggle } from '@/components/ui/EditionToggle'
 import { photoLocations, type PhotoLocation } from '@/data/photoLocations'
 import { getPostPath } from '@/utils/postUrls'
 
@@ -794,7 +794,7 @@ export function MapPage() {
 
           <div className="flex-1 min-w-0" />
 
-          <ThemeToggle />
+          <EditionToggle />
         </div>
 
         {/* Masthead — editorial section header */}

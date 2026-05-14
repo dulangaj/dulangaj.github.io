@@ -2,19 +2,17 @@ import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { SiteConfig } from '@/models/SiteConfig'
-import { useScrollProgress } from '@/hooks/useScrollProgress'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { EditionToggle } from '@/components/ui/EditionToggle'
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
-/* Fixed top bar: logo/initials left, nav right. Fades in border on scroll. */
-/* Crimson scroll-progress bar runs along the bottom edge of the header.    */
+/* Fixed top bar: wordmark left, nav right. A printed triple rule (thick /   */
+/* hairline / thick) anchors the bottom edge once the reader scrolls down.    */
 
 export function Header() {
   const [scrolled,     setScrolled]     = useState(false)
   const [mobileOpen,   setMobileOpen]   = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
-  const scrollProgress = useScrollProgress()
   const safeAreaTop = 'env(safe-area-inset-top, 0px)'
   const safeAreaBottom = 'env(safe-area-inset-bottom, 0px)'
   const mobileHeaderHeight = `calc(${safeAreaTop} + 64px)`
@@ -149,9 +147,9 @@ export function Header() {
           ))}
         </nav>
 
-        {/* Theme toggle + Mobile Hamburger */}
+        {/* Edition toggle + Mobile Hamburger */}
         <div className="flex items-center gap-1">
-          <ThemeToggle />
+          <EditionToggle />
 
           {/* Mobile Hamburger */}
           <button
@@ -223,12 +221,15 @@ export function Header() {
         )}
       </AnimatePresence>
 
-      {/* Scroll progress bar — runs along the very bottom edge of the header */}
-      <motion.div
-        className="absolute bottom-0 left-0 h-[2px] bg-[var(--color-crimson)] origin-left"
-        style={{ scaleX: scrollProgress }}
-        transition={{ duration: 0 }}
-      />
+      {/* Printed triple rule — thick / hairline / thick — appears once the reader scrolls */}
+      <div
+        aria-hidden="true"
+        className="absolute bottom-[-7px] left-0 right-0 pointer-events-none"
+        style={{ opacity: scrolled ? 1 : 0, transition: 'opacity 0.3s ease' }}
+      >
+        <div className="h-[2px] bg-[var(--color-ink)]" />
+        <div className="h-[1px] mt-[2px] bg-[var(--color-ink)]" />
+      </div>
     </motion.header>
   )
 }

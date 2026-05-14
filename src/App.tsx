@@ -2,8 +2,9 @@ import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } 
 import { Routes, Route, useLocation } from 'react-router-dom'
 import { Header }     from '@/components/layout/Header'
 import { Footer }     from '@/components/layout/Footer'
+import { Masthead }   from '@/components/layout/Masthead'
 import { Hero }       from '@/components/sections/Hero'
-import { NowStrip }   from '@/components/ui/NowStrip'
+import { StopPress }  from '@/components/ui/StopPress'
 import { Featured }   from '@/components/sections/Featured'
 import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
@@ -81,8 +82,9 @@ function HomePage() {
       <a href="#main-content" className="skip-link">Skip to content</a>
       <Header />
       <main id="main-content">
+        {homeSections.masthead && <Masthead />}
+        {homeSections.stopPress && <StopPress />}
         {homeSections.hero && <Hero />}
-        {homeSections.now && <NowStrip />}
         {homeSections.featured && <Featured />}
         {homeSections.experience && <Experience />}
         {homeSections.writing && <Writing />}

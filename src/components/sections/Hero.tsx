@@ -29,7 +29,7 @@ export function Hero() {
   return (
     <section
       id="top"
-      className="min-h-screen flex flex-col justify-center px-6 md:px-12 pt-24 pb-16"
+      className="flex flex-col justify-center px-6 md:px-12 pt-12 md:pt-16 pb-16"
     >
       <div className="max-w-7xl mx-auto w-full">
         <motion.div
@@ -40,15 +40,18 @@ export function Hero() {
         >
           {/* ── Main heading ─────────────────────────────────────────── */}
           <div className="md:col-span-9 flex flex-col gap-4">
-            {/* Eyebrow */}
-            <motion.div className="flex items-center gap-4" variants={lineVariants} transition={lineTransition}>
-              <div className="h-px w-8 bg-[var(--color-crimson)]" />
-              <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)]">
-                Software Engineer
+            {/* Kicker — newspaper-style section + byline */}
+            <motion.div className="flex flex-wrap items-baseline gap-3" variants={lineVariants} transition={lineTransition}>
+              <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
+                A1 · Front Page Profile
+              </span>
+              <span className="h-px w-6 bg-[var(--color-rule)] hidden md:inline-block" />
+              <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
+                Filed by the Editor
               </span>
             </motion.div>
 
-            {/* Name — large display type */}
+            {/* Name — large display type (page H1) */}
             <motion.h1
               className="font-display text-[clamp(3rem,8vw,7rem)] leading-[1.0] tracking-tight text-[var(--color-ink)]"
               variants={lineVariants}
@@ -59,9 +62,20 @@ export function Hero() {
               <span className="italic text-[var(--color-crimson)]">Jayawardena</span>
             </motion.h1>
 
-            {/* Tagline */}
+            {/* Byline + Dateline */}
             <motion.p
-              className="font-body text-[clamp(1rem,2vw,1.25rem)] text-[var(--color-muted)] max-w-xl leading-relaxed"
+              className="font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)]"
+              variants={lineVariants}
+              transition={lineTransition}
+            >
+              <span className="text-[var(--color-ink)]">Hong Kong</span>
+              <span className="mx-2">—</span>
+              <span>{SiteConfig.title}, at large.</span>
+            </motion.p>
+
+            {/* Lede with drop cap */}
+            <motion.p
+              className="hero-lede font-body text-[clamp(1rem,2vw,1.25rem)] text-[var(--color-muted)] max-w-xl leading-relaxed"
               variants={lineVariants}
               transition={lineTransition}
             >
@@ -150,20 +164,20 @@ export function Hero() {
             </motion.div>
           </div>
 
-          {/* ── Horizontal rule with scroll cue ───────────────────────── */}
+          {/* ── Jump line — newspaper "continued on page" cue ──────── */}
           <motion.div
-            className="md:col-span-12 flex items-center justify-between pt-8 border-t border-[var(--color-rule)]"
+            className="md:col-span-12 flex items-center justify-between pt-8 border-t border-[var(--color-ink)]"
             variants={lineVariants}
             transition={lineTransition}
           >
-            <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-subtle)]">
-              Scroll to explore
+            <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
+              Inside this issue
             </span>
             <button
               onClick={() => document.querySelector('#featured')?.scrollIntoView({ behavior: 'smooth' })}
-              className="group flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
+              className="group flex items-center gap-2 font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
             >
-              Featured
+              Continued on Front Page
               <FiArrowDownRight
                 size={14}
                 className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:translate-y-0.5"

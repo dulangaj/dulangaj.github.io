@@ -34,18 +34,24 @@ function LeadStory({ post }: { post: Post }) {
           </div>
 
           {/* Headline */}
-          <h2 className="font-display text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-[var(--color-ink)] mb-6 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+          <h2 className="font-display text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
             {post.title}
           </h2>
 
-          {/* Standfirst — one sentence only */}
-          <p className="min-w-0 font-body text-[15px] leading-relaxed text-[var(--color-muted)] mb-8 max-w-prose line-clamp-2">
+          {/* Byline */}
+          <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] mb-6">
+            By <span className="text-[var(--color-ink)]">Dulanga Jayawardena</span>
+            <span className="mx-2">·</span> Staff Correspondent
+          </p>
+
+          {/* Standfirst — drop cap on the first letter */}
+          <p className="lead-standfirst min-w-0 font-body text-[15px] leading-relaxed text-[var(--color-muted)] mb-8 max-w-prose line-clamp-2">
             {post.excerpt}
           </p>
 
-          {/* Read more */}
-          <span className="inline-flex items-center gap-2 font-mono text-[12px] tracking-widest uppercase text-[var(--color-crimson)] group-hover:gap-3 transition-all duration-200">
-            Read more <FiArrowRight size={12} />
+          {/* Continued on the inside — newspaper "jump" line */}
+          <span className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-crimson)] group-hover:gap-3 transition-all duration-200">
+            Continued inside <FiArrowRight size={12} />
           </span>
         </div>
 
@@ -133,16 +139,20 @@ export function Featured() {
     <section id="featured" className="px-6 md:px-12 py-24 overflow-hidden">
       <div className="max-w-7xl mx-auto">
 
-        {/* Masthead */}
+        {/* Section masthead — double-rule, folio left, byline right */}
         <FadeIn>
-          <div className="flex items-baseline justify-between border-b-2 border-[var(--color-ink)] pb-3 mb-0">
-            <div className="flex items-baseline gap-4">
-              <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">01</span>
-              <span className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)]">Featured</span>
+          <div className="border-t-2 border-[var(--color-ink)] mb-0">
+            <div className="border-t border-[var(--color-ink)] mt-[3px]" />
+            <div className="flex items-baseline justify-between pt-3 pb-3 border-b-2 border-[var(--color-ink)]">
+              <div className="flex items-baseline gap-3">
+                <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">PAGE A1</span>
+                <span aria-hidden="true" className="text-[var(--color-crimson)] font-display text-[14px] leading-none">❦</span>
+                <span className="font-display text-[1.15rem] tracking-wide text-[var(--color-ink)]">Front Page</span>
+              </div>
+              <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] hidden sm:block">
+                The Lead &nbsp;·&nbsp; Inside this Issue
+              </span>
             </div>
-            <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)] hidden sm:block">
-              Vol. I · Est. 2015
-            </span>
           </div>
         </FadeIn>
 
