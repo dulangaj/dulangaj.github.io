@@ -65,4 +65,6 @@ The principle I took from it: anywhere you can't audit a divergence, you've crea
 
 ---
 
+![Speaking at the Kids4Kids Empowered Futures Exchange, representing Morgan Stanley](/assets/img/dulanga-jayawardena-kids4kids-2024.jpeg)
+
 *Outside the core engineering work, I co-chaired Morgan Stanley's CodeClub, running coding workshops for underprivileged kids in partnership with the Zubin Foundation and Kids4Kids, and served as Communications Officer for the Multicultural Alliance.*

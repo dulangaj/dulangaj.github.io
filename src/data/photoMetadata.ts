@@ -222,6 +222,17 @@ export const photoMetadata: Record<string, PhotoMetadata> = {
     photoCredit: 'Romario Vaz',
     category: 'Travel',
   },
+  'dulanga-jayawardena-kids4kids-2024.jpeg': {
+    lat: 22.3193,
+    lng: 114.1694,
+    title: 'Kids4Kids Career Day',
+    alt: 'Dulanga Jayawardena on stage representing Morgan Stanley at the Kids4Kids Empowered Futures Exchange career day',
+    subtitle: 'Empowered Futures Exchange',
+    location: 'Hong Kong',
+    description: "Speaking to students at Kids4Kids' Empowered Futures Exchange career day, representing Morgan Stanley.",
+    photoCredit: '',
+    category: 'Work',
+  },
   'dulanga-jayawardena-icc-2022.jpeg': {
     lat: 22.2796,
     lng: 114.1666,
