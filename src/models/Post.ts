@@ -2,6 +2,8 @@
 /* Single source of truth for all portfolio items — writing, projects,        */
 /* education. The Featured section is just a filtered view (featured: true).  */
 
+import { SiteConfig } from '@/models/SiteConfig'
+
 export interface PostProps {
   id:       string
   title:    string
@@ -48,11 +50,15 @@ export class Post {
   }
 
   get formattedDate(): string {
-    return new Date(this.date).toLocaleDateString('en-GB', {
+    return new Date(this.date).toLocaleDateString(SiteConfig.paper.dateLocale, {
       year:  'numeric',
       month: 'long',
       day:   'numeric',
     })
+  }
+
+  get formattedReadTime(): string | null {
+    return this.readTime ? `${this.readTime} ${SiteConfig.paper.cta.minRead}` : null
   }
 
   get year(): string {

@@ -1,5 +1,7 @@
 /* ─── Tag ────────────────────────────────────────────────────────────────── */
-/* Minimal pill label for tech tags, categories, etc.                        */
+/* Print-notation label for tech tags, categories, etc. — [ JAVA ] style,    */
+/* squared off to match the broadsheet rules. Brackets are CSS-generated so   */
+/* they stay out of copied text and screen-reader output.                     */
 
 interface TagProps {
   label: string
@@ -7,11 +9,11 @@ interface TagProps {
 }
 
 export function Tag({ label, variant = 'default' }: TagProps) {
-  const base = 'inline-block px-2.5 py-0.5 text-[11px] tracking-widest uppercase font-mono rounded-full border'
+  const base = 'tag-brackets inline-block py-0.5 text-[10px] tracking-[0.22em] uppercase font-mono'
 
   const styles = {
-    default: 'border-[var(--color-rule)] text-[var(--color-muted)] bg-transparent',
-    accent:  'border-[var(--color-crimson)] text-[var(--color-crimson)] bg-transparent',
+    default: 'text-[var(--color-muted)]',
+    accent:  'text-[var(--color-crimson)]',
   }[variant]
 
   return <span className={`${base} ${styles}`}>{label}</span>

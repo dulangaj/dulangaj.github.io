@@ -16,6 +16,6 @@ export const nowConfig: NowConfig = {
   items: [
     { label: 'Filed from',  value: 'Hong Kong' },
     { label: 'On the desk', value: 'A calmer publishing workflow for this paper' },
-    { label: 'In the wire', value: 'Notes from the equity-risk beat' },
+    { label: 'On the wire', value: 'Notes from the equity-risk beat' },
   ],
 }

@@ -16,6 +16,7 @@
 
   --font-display:    'Playfair Display', Georgia, serif;
   --font-body:       'Inter', system-ui, sans-serif;
+  --font-serif:      'Source Serif 4', Georgia, serif;
   --font-mono:       'JetBrains Mono', 'Courier New', monospace;
 }
 
@@ -170,50 +171,69 @@ button:focus-visible,
 }
 
 /* ─── Typography Utilities ───────────────────────────────────────────────── */
+/* font-serif is for running copy (ledes, standfirsts, article prose);        */
+/* font-body (Inter) stays on UI chrome: nav, buttons, bios, metadata.        */
 .font-display  { font-family: var(--font-display); }
 .font-body     { font-family: var(--font-body); }
+.font-serif    { font-family: var(--font-serif); }
 .font-mono     { font-family: var(--font-mono); }
 
-/* ─── Drop caps ──────────────────────────────────────────────────────────── */
-/* A printer's drop cap for the lead paragraph of a story, plus a smaller    */
-/* "kicker" drop cap for Featured standfirsts. Both fall back gracefully.    */
-.post-body p:first-of-type::first-letter {
-  font-family: var(--font-display);
-  font-weight: 700;
-  float: left;
-  font-size: 3.6rem;
-  line-height: 0.9;
-  padding: 0.35rem 0.6rem 0 0;
-  margin: 0.15rem 0.1rem 0 0;
-  color: var(--color-crimson);
-  font-feature-settings: "lnum";
+.text-balance  { text-wrap: balance; }
+
+/* ─── Story images ───────────────────────────────────────────────────────── */
+/* Newsprint halftone feel: grayscale at rest, color on hover. Scoped to      */
+/* hover-capable pointers so touch devices keep full-color images.            */
+@media (hover: hover) and (pointer: fine) {
+  .story-image { filter: grayscale(1); transition: filter 0.5s ease; }
+  .group:hover .story-image,
+  .group:focus-visible .story-image { filter: grayscale(0); }
 }
 
+/* ─── Print-style tag brackets ───────────────────────────────────────────── */
+.tag-brackets::before { content: '[ '; color: var(--color-subtle); }
+.tag-brackets::after  { content: ' ]'; color: var(--color-subtle); }
+
+/* ─── Drop caps ──────────────────────────────────────────────────────────── */
+/* One shared two-line drop cap base; each context only sets the size and    */
+/* padding needed for its own body leading so the cap's foot lands on the    */
+/* second baseline instead of hanging between lines.                         */
+.hero-lede::first-letter,
+.post-body p:first-of-type::first-letter,
 .lead-standfirst::first-letter {
   font-family: var(--font-display);
   font-weight: 700;
   float: left;
+  line-height: 0.83;
+  color: var(--color-crimson);
+  font-feature-settings: "lnum";
+}
+
+/* Hero lede: 17–18px / 1.65 body */
+.hero-lede::first-letter {
+  font-size: 3.1rem;
+  padding: 0.28rem 0.5rem 0 0;
+}
+
+/* Article body: 17px / 1.8 body — taller two-line span than the hero */
+.post-body p:first-of-type::first-letter {
+  font-size: 3.4rem;
+  padding: 0.3rem 0.55rem 0 0;
+}
+
+/* Featured standfirst kicker cap — smaller, ink-colored */
+.lead-standfirst::first-letter {
   font-size: 2.6rem;
-  line-height: 0.9;
-  padding: 0.2rem 0.45rem 0 0;
+  padding: 0.24rem 0.45rem 0 0;
   color: var(--color-ink);
 }
 
-.hero-lede::first-letter {
-  font-family: var(--font-display);
-  font-weight: 700;
-  float: left;
-  font-size: 2.4rem;
-  line-height: 0.9;
-  padding: 0.2rem 0.4rem 0 0;
-  color: var(--color-crimson);
-}
-
 /* ─── Post body prose ────────────────────────────────────────────────────── */
-.post-body { font-family: var(--font-body); color: var(--color-ink); }
+/* Article prose is set in the text serif, justified with hyphenation —      */
+/* the newspaper column treatment. UI chrome elsewhere stays in Inter.       */
+.post-body { font-family: var(--font-serif); color: var(--color-ink); }
 .post-body h2 { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; color: var(--color-ink); margin: 2.5rem 0 1rem; }
 .post-body h3 { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.3; color: var(--color-ink); margin: 2rem 0 0.75rem; }
-.post-body p  { font-size: 16px; line-height: 1.85; color: var(--color-ink); margin: 0 0 1.25rem; }
+.post-body p  { font-size: 17px; line-height: 1.8; color: var(--color-ink); margin: 0 0 1.25rem; text-align: justify; hyphens: auto; }
 .post-body ul, .post-body ol { padding-left: 1.5rem; margin: 0 0 1.25rem; }
 .post-body li { font-size: 15px; line-height: 1.7; color: var(--color-muted); margin-bottom: 0.4rem; }
 .post-body li strong { color: var(--color-ink); }
@@ -222,7 +242,7 @@ button:focus-visible,
 .post-body strong { font-weight: 600; color: var(--color-ink); }
 .post-body em { font-style: italic; }
 .post-body hr { border: none; border-top: 1px solid var(--color-rule); margin: 2rem 0; }
-.post-body img { width: 100%; border-radius: 6px; margin: 1.5rem 0; }
+.post-body img { width: 100%; margin: 1.5rem 0; }
 .post-body blockquote { border-left: 2px solid var(--color-crimson); padding-left: 1.25rem; margin: 1.5rem 0; color: var(--color-muted); font-style: italic; }
 .post-body code { font-family: var(--font-mono); font-size: 13px; background: var(--color-rule); padding: 0.15em 0.4em; border-radius: 3px; }
 .post-body pre { background: var(--color-surface); border: 1px solid var(--color-rule); border-radius: 6px; padding: 1.25rem; overflow-x: auto; margin: 1.5rem 0; }
@@ -440,4 +460,13 @@ button:focus-visible,
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
+}
+
+/* ── Stop Press wire ─────────────────────────────────────────────────────── */
+/* Motion lives in StopPress.tsx: the viewport's scrollLeft is advanced each  */
+/* frame so the reader can also scroll the wire by hand. Under reduced        */
+/* motion the script never starts; the duplicate runs collapse and the        */
+/* single run stays hand-scrollable.                                          */
+@media (prefers-reduced-motion: reduce) {
+  .stop-press-run[aria-hidden='true'] { display: none; }
 }

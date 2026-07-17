@@ -22,7 +22,7 @@ const ROUTE_CHECKS = [
   },
   {
     pathname: '/map/',
-    expectedTitle: '<title>My World Map | Dulanga Jayawardena</title>',
+    expectedTitle: '<title>Datelines: World Photo Map | Dulanga Jayawardena</title>',
   },
   {
     pathname: '/writing/',

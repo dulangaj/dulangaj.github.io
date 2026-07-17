@@ -1,22 +1,22 @@
 import { useState, useEffect } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { SiteConfig } from '@/models/SiteConfig'
 import { EditionToggle } from '@/components/ui/EditionToggle'
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
-/* Fixed top bar: wordmark left, nav right. A printed triple rule (thick /   */
-/* hairline / thick) anchors the bottom edge once the reader scrolls down.    */
+/* Slim fixed utility strip: wordmark left, edition toggle right. Navigation  */
+/* is the front page's job — the "Inside this Issue" index — so this bar only */
+/* carries the reader back to the top. On the homepage it stays hidden while  */
+/* the masthead is in view (nothing sits above a nameplate) and slides in     */
+/* once the reader scrolls; subpages have no masthead, so it is always shown. */
 
 export function Header() {
-  const [scrolled,     setScrolled]     = useState(false)
-  const [mobileOpen,   setMobileOpen]   = useState(false)
+  const [scrolled, setScrolled] = useState(false)
   const navigate = useNavigate()
   const location = useLocation()
-  const safeAreaTop = 'env(safe-area-inset-top, 0px)'
-  const safeAreaBottom = 'env(safe-area-inset-bottom, 0px)'
-  const mobileHeaderHeight = `calc(${safeAreaTop} + 64px)`
-  const resolveNavHref = (href: string) => href.startsWith('#') ? `/${href}` : href
+  const isHome = location.pathname === '/'
+  const visible = !isHome || scrolled
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 24)
@@ -24,85 +24,31 @@ export function Header() {
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
 
-  useEffect(() => {
-    const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setMobileOpen(false)
-    }
-
-    if (mobileOpen) {
-      document.body.style.overflow = 'hidden'
-      window.addEventListener('keydown', onKeyDown)
-    } else {
-      document.body.style.overflow = ''
-    }
-
-    return () => {
-      document.body.style.overflow = ''
-      window.removeEventListener('keydown', onKeyDown)
-    }
-  }, [mobileOpen])
-
-  const scrollToSection = (id: string) => {
-    const performScroll = () => {
-      const finishNavigationScroll = () => {
-        window.setTimeout(() => {
-          window.dispatchEvent(new CustomEvent('site:navigation-scroll-end'))
-        }, 900)
-      }
-
-      window.dispatchEvent(new CustomEvent('site:navigation-scroll-start'))
-
-      if (id === 'top') {
-        window.scrollTo({ top: 0, behavior: 'smooth' })
-        finishNavigationScroll()
-        return
-      }
-
-      const target = document.getElementById(id)
-      if (!target) {
-        finishNavigationScroll()
-        return
-      }
-
-      target.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      finishNavigationScroll()
-    }
-
+  const returnToTop = () => {
     if (location.pathname !== '/') {
       navigate('/')
-      requestAnimationFrame(() => requestAnimationFrame(performScroll))
       return
     }
 
-    performScroll()
-  }
-
-  const navigateToHref = (href: string) => {
-    if (href.startsWith('/')) {
-      navigate(href)
-      return
-    }
-
-    scrollToSection(href.replace(/^#/, ''))
-  }
-
-  const closeMobileAndNavigate = (href: string) => {
-    setMobileOpen(false)
-
-    // Wait for the drawer/body scroll lock to clear before starting smooth scroll.
-    requestAnimationFrame(() => {
-      requestAnimationFrame(() => {
-        navigateToHref(href)
-      })
-    })
+    window.dispatchEvent(new CustomEvent('site:navigation-scroll-start'))
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    window.setTimeout(() => {
+      window.dispatchEvent(new CustomEvent('site:navigation-scroll-end'))
+    }, 900)
   }
 
   return (
     <motion.header
-      className="site-header fixed top-0 inset-x-0 z-50 transition-all duration-300"
-      style={{ backgroundColor: 'var(--color-paper)' }}
-      animate={{ borderBottomColor: scrolled ? 'var(--color-rule)' : 'transparent' }}
-      transition={{ duration: 0.3 }}
+      className="site-header fixed top-0 inset-x-0 z-50"
+      style={{ backgroundColor: 'var(--color-paper)', pointerEvents: visible ? 'auto' : 'none' }}
+      inert={!visible}
+      initial={false}
+      animate={{
+        opacity: visible ? 1 : 0,
+        y: visible ? 0 : -16,
+        borderBottomColor: scrolled ? 'var(--color-rule)' : 'transparent',
+      }}
+      transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
     >
       <div
         className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between"
@@ -118,110 +64,17 @@ export function Header() {
           className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors duration-200"
           onClick={(event) => {
             event.preventDefault()
-            if (mobileOpen) {
-              closeMobileAndNavigate('#top')
-              return
-            }
-
-            navigateToHref('#top')
+            returnToTop()
           }}
         >
           {SiteConfig.initials}
           <span className="text-[var(--color-crimson)]">.</span>
         </a>
 
-        {/* Desktop Nav */}
-        <nav className="hidden md:flex items-center gap-8">
-          {SiteConfig.nav.map((item) => (
-            <a
-              key={item.href}
-              href={resolveNavHref(item.href)}
-              onClick={(event) => {
-                event.preventDefault()
-                navigateToHref(item.href)
-              }}
-              className="font-body text-[13px] text-[var(--color-muted)] hover:text-[var(--color-ink)] transition-colors duration-200 tracking-wide cursor-pointer bg-transparent border-none"
-            >
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        {/* Edition toggle + Mobile Hamburger */}
-        <div className="flex items-center gap-1">
-          <EditionToggle />
-
-          {/* Mobile Hamburger */}
-          <button
-            className="md:hidden flex flex-col gap-[5px] cursor-pointer bg-transparent border-none p-1"
-            onClick={() => setMobileOpen((v) => !v)}
-            aria-label="Toggle menu"
-            aria-expanded={mobileOpen}
-            aria-controls="mobile-nav"
-          >
-            <motion.span
-              className="block w-5 h-px bg-[var(--color-ink)]"
-              animate={{ rotate: mobileOpen ? 45 : 0, y: mobileOpen ? 6 : 0 }}
-            />
-            <motion.span
-              className="block w-5 h-px bg-[var(--color-ink)]"
-              animate={{ opacity: mobileOpen ? 0 : 1 }}
-            />
-            <motion.span
-              className="block w-5 h-px bg-[var(--color-ink)]"
-              animate={{ rotate: mobileOpen ? -45 : 0, y: mobileOpen ? -6 : 0 }}
-            />
-          </button>
-        </div>
+        <EditionToggle />
       </div>
 
-      {/* Mobile overlay */}
-      <AnimatePresence>
-        {mobileOpen && (
-          <motion.div
-            id="mobile-nav"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-            className="fixed inset-0 z-40 md:hidden bg-[var(--color-paper)]"
-            style={{
-              paddingTop: mobileHeaderHeight,
-              paddingBottom: safeAreaBottom,
-            }}
-          >
-            <motion.nav
-              initial={{ y: -16, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: -16, opacity: 0 }}
-              transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-              className="h-full overflow-y-auto border-t border-[var(--color-rule)] px-6 pb-8 pt-6"
-              style={{
-                WebkitOverflowScrolling: 'touch',
-                overscrollBehavior: 'contain',
-              }}
-            >
-              <div className="flex flex-col gap-4">
-                {SiteConfig.nav.map((item) => (
-                  <a
-                    key={item.href}
-                    href={resolveNavHref(item.href)}
-                    onClick={(event) => {
-                      event.preventDefault()
-                      closeMobileAndNavigate(item.href)
-                    }}
-                    className="text-left font-body text-[15px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer"
-                  >
-                    {item.label}
-                  </a>
-                ))}
-              </div>
-            </motion.nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Printed triple rule — thick / hairline / thick — appears once the reader scrolls */}
+      {/* Printed triple rule — thick / hairline — appears once the reader scrolls */}
       <div
         aria-hidden="true"
         className="absolute bottom-[-7px] left-0 right-0 pointer-events-none"

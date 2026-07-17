@@ -27,7 +27,7 @@ const HOME_METADATA = {
 }
 
 const MAP_METADATA = {
-  title: 'My World Map | Dulanga Jayawardena',
+  title: 'Datelines: World Photo Map | Dulanga Jayawardena',
   description: 'Interactive world photo map tracing Dulanga Jayawardena’s travels, photography, and related writing.',
   canonical: `${SITE_URL}/map/`,
 }
@@ -126,7 +126,7 @@ class RouteErrorBoundary extends Component<RouteErrorBoundaryProps, RouteErrorBo
         <main className="min-h-screen bg-[var(--color-paper)] flex items-center justify-center px-6">
           <div className="flex max-w-sm flex-col items-center gap-4 text-center">
             <div className="h-px w-10 bg-[var(--color-crimson)]" aria-hidden="true" />
-            <p className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">
+            <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
               Site failed to load
             </p>
             <p className="text-sm leading-6 text-[var(--color-muted)]">
@@ -135,7 +135,7 @@ class RouteErrorBoundary extends Component<RouteErrorBoundaryProps, RouteErrorBo
             <button
               type="button"
               onClick={() => window.location.reload()}
-              className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)] transition-colors hover:text-[var(--color-crimson-hover)]"
+              className="font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-crimson)] transition-colors hover:text-[var(--color-crimson-hover)]"
             >
               Reload
             </button>
@@ -176,7 +176,7 @@ export default function App() {
         <main className="min-h-screen bg-[var(--color-paper)] flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
             <div className="h-px w-10 bg-[var(--color-crimson)] animate-pulse" />
-            <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">
+            <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
               Loading
             </span>
           </div>

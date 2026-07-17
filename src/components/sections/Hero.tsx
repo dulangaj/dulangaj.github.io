@@ -1,11 +1,44 @@
 import { motion } from 'framer-motion'
-import { FiGithub, FiLinkedin, FiMail, FiArrowDownRight } from 'react-icons/fi'
+import { Link } from 'react-router-dom'
+import { FiGithub, FiLinkedin, FiMail, FiArrowDownRight, FiArrowUpRight } from 'react-icons/fi'
 import { SiteConfig } from '@/models/SiteConfig'
+import { photoLocations } from '@/data/photoLocations'
 
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
 /* Full-viewport landing section with staggered editorial text reveal.       */
 
 const EASE = [0.22, 1, 0.36, 1] as [number, number, number, number]
+
+const mapPaper = SiteConfig.paper.map
+
+/* Two-deck headline: given name over family name */
+const [givenName, ...familyNameParts] = SiteConfig.name.split(' ')
+const familyName = familyNameParts.join(' ')
+
+/* Front-page index in folio order — the Datelines page ('C') files between
+   the inside pages and the back page ('Z') */
+const indexEntries = [
+  ...SiteConfig.paper.sections.map((s) => ({
+    key: s.id, label: s.label, folio: s.folio, anchor: s.id, route: null as string | null,
+  })),
+  { key: 'map', label: mapPaper.label, folio: mapPaper.folio, anchor: null, route: '/map/' },
+].sort((a, b) => a.folio.localeCompare(b.folio))
+
+const indexLinkClass = 'group flex w-full items-baseline gap-2 p-0 text-left'
+
+function IndexLine({ label, folio }: { label: string; folio: string }) {
+  return (
+    <>
+      <span className="font-serif text-[13px] text-[var(--color-muted)] group-hover:text-[var(--color-crimson)] transition-colors duration-150">
+        {label}
+      </span>
+      <span aria-hidden="true" className="flex-1 border-b border-dotted border-[var(--color-subtle)] opacity-50" />
+      <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
+        {folio}
+      </span>
+    </>
+  )
+}
 
 const SocialIcon = {
   GitHub:   FiGithub,
@@ -43,23 +76,23 @@ export function Hero() {
             {/* Kicker — newspaper-style section + byline */}
             <motion.div className="flex flex-wrap items-baseline gap-3" variants={lineVariants} transition={lineTransition}>
               <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
-                A1 · Front Page Profile
+                {SiteConfig.paper.sections[0].folio} · {SiteConfig.paper.hero.kicker}
               </span>
               <span className="h-px w-6 bg-[var(--color-rule)] hidden md:inline-block" />
               <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
-                Filed by the Editor
+                By {SiteConfig.name}
               </span>
             </motion.div>
 
             {/* Name — large display type (page H1) */}
             <motion.h1
-              className="font-display text-[clamp(3rem,8vw,7rem)] leading-[1.0] tracking-tight text-[var(--color-ink)]"
+              className="font-display text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.0] tracking-tight text-[var(--color-ink)]"
               variants={lineVariants}
               transition={lineTransition}
             >
-              Dulanga
+              {givenName}
               <br />
-              <span className="italic text-[var(--color-crimson)]">Jayawardena</span>
+              {familyName}<span className="text-[var(--color-crimson)]">.</span>
             </motion.h1>
 
             {/* Byline + Dateline */}
@@ -68,19 +101,22 @@ export function Hero() {
               variants={lineVariants}
               transition={lineTransition}
             >
-              <span className="text-[var(--color-ink)]">Hong Kong</span>
+              <span className="text-[var(--color-ink)]">{SiteConfig.location}</span>
               <span className="mx-2">—</span>
-              <span>{SiteConfig.title}, at large.</span>
+              <span>{SiteConfig.title} at {SiteConfig.employer}</span>
             </motion.p>
 
             {/* Lede with drop cap */}
-            <motion.p
-              className="hero-lede font-body text-[clamp(1rem,2vw,1.25rem)] text-[var(--color-muted)] max-w-xl leading-relaxed"
-              variants={lineVariants}
-              transition={lineTransition}
-            >
-              {SiteConfig.tagline}
-            </motion.p>
+            {SiteConfig.lede.map((paragraph, idx) => (
+              <motion.p
+                key={idx}
+                className={`${idx === 0 ? 'hero-lede ' : ''}font-serif text-[17px] md:text-[18px] text-[var(--color-muted)] max-w-xl leading-[1.65]`}
+                variants={lineVariants}
+                transition={lineTransition}
+              >
+                {paragraph}
+              </motion.p>
+            ))}
           </div>
 
           {/* ── Side panel ────────────────────────────────────────────── */}
@@ -104,7 +140,7 @@ export function Hero() {
               >
                 <img
                   src="/assets/img/profile.jpeg"
-                  alt="Dulanga Jayawardena"
+                  alt={SiteConfig.name}
                   className="w-full h-full object-cover"
                   loading="eager"
                   decoding="async"
@@ -121,14 +157,14 @@ export function Hero() {
                   className="w-full h-full items-center justify-center font-display text-lg text-[var(--color-muted)] select-none"
                   style={{ display: 'none' }}
                 >
-                  DJ
+                  {SiteConfig.initials}
                 </div>
               </div>
             </motion.div>
 
-            {/* Bio */}
+            {/* Bio — set as a cutline under the portrait */}
             <motion.p
-              className="font-body text-[13px] text-[var(--color-muted)] leading-relaxed"
+              className="font-serif italic text-[13px] text-[var(--color-muted)] leading-relaxed"
               variants={lineVariants}
               transition={lineTransition}
             >
@@ -154,30 +190,76 @@ export function Hero() {
               })}
             </motion.div>
 
-            {/* Location */}
-            <motion.div
-              className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-subtle)]"
+            {/* Inside this Issue — classic front-page index */}
+            <motion.nav
+              aria-label="Inside this issue"
               variants={lineVariants}
               transition={lineTransition}
             >
-              {SiteConfig.location}
+              <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-ink)] border-t-2 border-[var(--color-ink)] pt-2 mb-3">
+                {SiteConfig.paper.hero.indexHeading}
+              </p>
+              <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
+                {indexEntries.map((entry) => (
+                  <li key={entry.key}>
+                    {entry.route ? (
+                      <Link to={entry.route} className={indexLinkClass}>
+                        <IndexLine label={entry.label} folio={entry.folio} />
+                      </Link>
+                    ) : (
+                      <a
+                        href={`/#${entry.anchor}`}
+                        onClick={(event) => {
+                          event.preventDefault()
+                          document.querySelector(`#${entry.anchor}`)?.scrollIntoView({ behavior: 'smooth' })
+                        }}
+                        className={indexLinkClass}
+                      >
+                        <IndexLine label={entry.label} folio={entry.folio} />
+                      </a>
+                    )}
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
+
+            {/* Datelines refer — boxed front-page promo for the picture section */}
+            <motion.div variants={lineVariants} transition={lineTransition}>
+              <Link
+                to="/map/"
+                className="group block border border-[var(--color-ink)] px-3 py-3"
+              >
+                <p className="m-0 font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
+                  {mapPaper.label}
+                </p>
+                <p className="mt-1.5 mb-0 font-serif text-[13px] leading-relaxed text-[var(--color-muted)]">
+                  {mapPaper.refer.body}
+                </p>
+                <p className="mt-2.5 mb-0 flex items-baseline justify-between gap-2 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
+                  <span>{photoLocations.length} {mapPaper.counterNoun}</span>
+                  <span className="flex items-center gap-1 text-[var(--color-muted)] group-hover:text-[var(--color-crimson)] transition-colors duration-200">
+                    {mapPaper.refer.cta} {mapPaper.folio}
+                    <FiArrowUpRight size={12} />
+                  </span>
+                </p>
+              </Link>
             </motion.div>
           </div>
 
           {/* ── Jump line — newspaper "continued on page" cue ──────── */}
           <motion.div
-            className="md:col-span-12 flex items-center justify-between pt-8 border-t border-[var(--color-ink)]"
+            className="md:col-span-12 flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-[var(--color-ink)]"
             variants={lineVariants}
             transition={lineTransition}
           >
             <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
-              Inside this issue
+              {SiteConfig.paper.hero.foldNote}
             </span>
             <button
               onClick={() => document.querySelector('#featured')?.scrollIntoView({ behavior: 'smooth' })}
               className="group flex items-center gap-2 font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
             >
-              Continued on Front Page
+              {SiteConfig.paper.hero.foldCta}
               <FiArrowDownRight
                 size={14}
                 className="transition-transform duration-200 group-hover:translate-x-0.5 group-hover:translate-y-0.5"

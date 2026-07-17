@@ -8,7 +8,7 @@ const SITE_NAME = 'Dulanga Jayawardena'
 const PERSON_ID = `${SITE_URL}/#person`
 const HOME_TITLE = `${SITE_NAME} | Software Engineer`
 const HOME_DESCRIPTION = 'Software engineer building production-grade systems for financial markets across risk technology, analytics, and infrastructure.'
-const MAP_TITLE = `My World Map | ${SITE_NAME}`
+const MAP_TITLE = `Datelines: World Photo Map | ${SITE_NAME}`
 const MAP_DESCRIPTION = 'Interactive world photo map tracing Dulanga Jayawardena’s travels, photography, and related writing.'
 const WRITING_TITLE = `Writing Archive | ${SITE_NAME}`
 const WRITING_DESCRIPTION = 'Index of articles, project notes, and engineering write-ups by Dulanga Jayawardena.'
@@ -215,7 +215,7 @@ function mapImageObjectsGraph(photoLocations) {
   const webPage = {
     '@type': 'WebPage',
     '@id': `${getCanonicalUrl('/map/')}#webpage`,
-    name: 'My World Map',
+    name: 'Datelines: World Photo Map',
     description: MAP_DESCRIPTION,
     url: getCanonicalUrl('/map/'),
     isPartOf: { '@type': 'WebSite', name: SITE_NAME, url: SITE_URL },

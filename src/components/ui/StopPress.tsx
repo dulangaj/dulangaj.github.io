@@ -1,50 +1,140 @@
-import { nowConfig } from '@/data/now'
+import { useEffect, useRef } from 'react'
+import { type NowItem } from '@/data/now'
+import { useLiveBulletins } from '@/hooks/useLiveBulletins'
+import { SiteConfig } from '@/models/SiteConfig'
 
 /* ─── StopPress ──────────────────────────────────────────────────────────── */
-/* The slim newspaper bulletin that ran across the top of the page in the     */
-/* moments before a paper went to press. Latest field reports, set in small   */
-/* caps and separated by typographer's daggers.                               */
+/* The slim newspaper bulletin strip that runs across the top of the page.    */
+/* Bulletins tick past like wire copy. Motion is driven by advancing the      */
+/* viewport's scrollLeft (not a CSS transform), so the strip is also a real   */
+/* scroll area: the reader can flick ahead or back at will, and hovering      */
+/* pauses the wire. Under prefers-reduced-motion the script never starts and  */
+/* the strip collapses to a single static, hand-scrollable run (globals.css). */
+/* Items start from the build-time fallback and are quietly replaced by the   */
+/* live wire feeds (useLiveBulletins).                                        */
 
-const LABEL = 'Stop Press'
+const stopPress = SiteConfig.paper.stopPress
+
+/* The track holds three identical runs; the scroll position wraps by exactly
+   one run width, which is invisible because the runs are identical. Three
+   runs (not two) keep headroom on both sides so the reader can scroll ahead
+   or back without hitting an edge. Only the first run is exposed to
+   assistive tech. */
+const REPEAT_RUNS = [false, true, true]
+
+function BulletinRun({ items, hidden }: { items: NowItem[]; hidden: boolean }) {
+  return (
+    <div aria-hidden={hidden || undefined} className="stop-press-run flex items-baseline whitespace-nowrap">
+      {items.map((item) => (
+        <span key={item.label} className="flex items-baseline">
+          <span className="font-mono text-[10px] tracking-[0.16em] uppercase text-[var(--color-subtle)] mr-2">
+            {item.label}
+          </span>
+          <span className="font-serif text-[13px] text-[var(--color-ink)]">
+            {item.value}
+          </span>
+          {/* Trailing dagger on every item so the junction between runs
+              reads as one continuous wire */}
+          <span aria-hidden="true" className="mx-4 font-serif text-[13px] text-[var(--color-crimson)]">
+            {stopPress.separator}
+          </span>
+        </span>
+      ))}
+    </div>
+  )
+}
 
 export function StopPress() {
-  if (nowConfig.items.length === 0) return null
+  const items = useLiveBulletins()
+  const viewportRef = useRef<HTMLDivElement>(null)
+
+  /* Auto-advance by mutating scrollLeft each frame. The reader's own
+     scrolling is folded into the position (diff against the last value we
+     set), so flicking the bar fast-forwards or rewinds the wire; the pace
+     resumes from wherever they let go. Position is kept a full run away
+     from either edge by wrapping ±1 run width. */
+  useEffect(() => {
+    const viewport = viewportRef.current
+    if (!viewport) return
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let raf = 0
+    let paused = false
+    let last = performance.now()
+    let pos = 0
+    let lastSet = -1
+
+    const onEnter = () => { paused = true }
+    const onLeave = () => { paused = false }
+    viewport.addEventListener('pointerenter', onEnter)
+    viewport.addEventListener('pointerleave', onLeave)
+
+    const tick = (now: number) => {
+      raf = requestAnimationFrame(tick)
+      /* Cap dt so a backgrounded tab doesn't leap on return */
+      const dt = Math.min((now - last) / 1000, 0.1)
+      last = now
+      const runWidth = viewport.scrollWidth / REPEAT_RUNS.length
+      if (runWidth <= 0) return
+      if (lastSet < 0) {
+        /* Start one run in so there is headroom to scroll backwards too */
+        pos = runWidth
+      } else {
+        pos += viewport.scrollLeft - lastSet
+        if (!paused) pos += (runWidth / stopPress.loopSeconds) * dt
+      }
+      if (pos >= runWidth * 1.5) pos -= runWidth
+      else if (pos < runWidth * 0.5) pos += runWidth
+      viewport.scrollLeft = pos
+      lastSet = viewport.scrollLeft
+    }
+    raf = requestAnimationFrame(tick)
+
+    return () => {
+      cancelAnimationFrame(raf)
+      viewport.removeEventListener('pointerenter', onEnter)
+      viewport.removeEventListener('pointerleave', onLeave)
+    }
+  }, [])
+
+  if (items.length === 0) return null
 
   return (
     <aside
-      aria-label="Late bulletins"
+      aria-label={stopPress.ariaLabel}
       className="border-y border-[var(--color-ink)] bg-[var(--color-paper)]"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-2 flex items-stretch gap-0 overflow-x-auto">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 py-2 flex items-center">
         <span
           className="
-            shrink-0 self-center mr-5 px-2 py-1
+            shrink-0 mr-5 px-2 py-1
             font-mono text-[10px] tracking-[0.28em] uppercase
             text-[var(--color-paper)] bg-[var(--color-crimson)]
           "
         >
-          {LABEL}
+          {stopPress.label}
         </span>
 
-        <div className="flex items-center text-[var(--color-ink)]">
-          {nowConfig.items.map((item, idx) => (
-            <span key={item.label} className="flex items-center whitespace-nowrap">
-              {idx > 0 && (
-                <span
-                  aria-hidden="true"
-                  className="mx-4 font-display text-[14px] text-[var(--color-crimson)]"
-                >
-                  †
-                </span>
-              )}
-              <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] mr-2">
-                {item.label}
-              </span>
-              <span className="font-display italic text-[13px] text-[var(--color-ink)]">
-                {item.value}
-              </span>
-            </span>
-          ))}
+        <div
+          ref={viewportRef}
+          className="stop-press-viewport relative flex-1 overflow-x-auto no-scrollbar overscroll-x-contain"
+        >
+          {/* Edge fades — copy slips in and out of the margins, not clipped mid-stroke */}
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8"
+            style={{ background: 'linear-gradient(to right, var(--color-paper), transparent)' }}
+          />
+          <div
+            aria-hidden="true"
+            className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8"
+            style={{ background: 'linear-gradient(to left, var(--color-paper), transparent)' }}
+          />
+          <div className="stop-press-track flex items-baseline w-max">
+            {REPEAT_RUNS.map((hidden, idx) => (
+              <BulletinRun key={idx} items={items} hidden={hidden} />
+            ))}
+          </div>
         </div>
       </div>
     </aside>
