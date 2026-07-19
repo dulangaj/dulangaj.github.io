@@ -20,9 +20,13 @@ import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
 import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useTheme } from '@/hooks/useTheme'
-import { ThemeToggle } from '@/components/ui/ThemeToggle'
+import { EditionToggle } from '@/components/ui/EditionToggle'
+import { SectionBanner } from '@/components/ui/SectionBanner'
+import { SiteConfig } from '@/models/SiteConfig'
 import { photoLocations, type PhotoLocation } from '@/data/photoLocations'
 import { getPostPath } from '@/utils/postUrls'
+
+const mapPaper = SiteConfig.paper.map
 
 /* ─── Tile layers ────────────────────────────────────────────────────────── */
 
@@ -401,7 +405,7 @@ function createClusterIcon(cluster: MarkerClusterLike) {
 function formatDate(iso: string): string {
   if (!iso) return ''
   try {
-    return new Date(iso).toLocaleDateString('en-GB', {
+    return new Date(iso).toLocaleDateString(SiteConfig.paper.dateLocale, {
       year:  'numeric',
       month: 'long',
     })
@@ -414,8 +418,8 @@ function formatDate(iso: string): string {
 
 
 const FILTER_OPTIONS = [
-  { id: 'all', label: 'All' },
-  { id: 'linked', label: 'Articles' },
+  { id: 'all', label: mapPaper.filters.all },
+  { id: 'linked', label: mapPaper.filters.linked },
 ] as const
 
 type FilterId = typeof FILTER_OPTIONS[number]['id']
@@ -602,7 +606,7 @@ export function MapPage() {
   const backLinkParams = useMemo(() => {
     const params = new URLSearchParams({
       backTo: `${location.pathname}${location.search}`,
-      backLabel: 'Back to map',
+      backLabel: mapPaper.backToMap,
     })
 
     return params.toString()
@@ -785,29 +789,27 @@ export function MapPage() {
         <div className="flex items-center gap-4 w-full">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer bg-transparent border-none"
+            className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer bg-transparent border-none"
             aria-label="Back to home"
           >
             <FiArrowLeft size={13} />
-            <span className="hidden sm:inline">Back</span>
+            <span className="hidden sm:inline">{mapPaper.back}</span>
           </button>
 
           <div className="flex-1 min-w-0" />
 
-          <ThemeToggle />
+          <EditionToggle />
         </div>
 
-        {/* Masthead — editorial section header */}
-        <div className="flex items-baseline justify-between border-b border-[var(--color-ink)] pb-2 mt-2">
-          <div className="flex items-baseline gap-3">
-            <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-subtle)]">04</span>
-            <h1 className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)]">
-              My World
-            </h1>
-          </div>
-          <span className="font-mono text-[10px] tracking-widest text-[var(--color-subtle)] hidden sm:block">
-            {filteredPhotos.length} moments
-          </span>
+        {/* Section banner — shared masthead template */}
+        <div className="mt-2">
+          <SectionBanner
+            folio={mapPaper.folio}
+            label={mapPaper.label}
+            note={`${filteredPhotos.length} ${mapPaper.counterNoun}`}
+            bottomRule="single"
+            labelAs="h1"
+          />
         </div>
 
         <div className="flex items-center gap-4 mt-2">
@@ -831,7 +833,7 @@ export function MapPage() {
                     }
                   }
                 }}
-                className="font-mono text-[11px] tracking-widest uppercase transition-colors duration-200 cursor-pointer bg-transparent border-none pb-1"
+                className="font-mono text-[11px] tracking-[0.22em] uppercase transition-colors duration-200 cursor-pointer bg-transparent border-none pb-1"
                 style={{
                   color: active ? 'var(--color-crimson)' : 'var(--color-subtle)',
                   borderBottom: active ? '1.5px solid var(--color-crimson)' : '1.5px solid transparent',
@@ -884,10 +886,10 @@ export function MapPage() {
             <div className="flex flex-col items-center gap-3">
               <div className="h-px w-10 bg-[var(--color-crimson)] animate-pulse" />
               <span
-                className="font-mono text-[10px] tracking-widest uppercase"
+                className="font-mono text-[10px] tracking-[0.22em] uppercase"
                 style={{ color: 'var(--color-subtle)' }}
               >
-                Loading map
+                {mapPaper.loading}
               </span>
             </div>
           </motion.div>
@@ -1164,14 +1166,14 @@ export function MapPage() {
                   <div className="flex items-center gap-3 mb-3 flex-wrap">
                     {visibleSelected.category && (
                       <>
-                        <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)]">
+                        <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
                           {visibleSelected.category}
                         </span>
                         <div className="h-px w-4 bg-[var(--color-rule)]" />
                       </>
                     )}
                     <span
-                      className="flex items-center gap-1 font-mono text-[10px] tracking-widest uppercase"
+                      className="flex items-center gap-1 font-mono text-[10px] tracking-[0.22em] uppercase"
                       style={{ color: 'var(--color-subtle)' }}
                     >
                       <FiMapPin size={10} />
@@ -1202,7 +1204,7 @@ export function MapPage() {
                     <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
                       {visibleSelected.date && (
                         <div
-                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase"
+                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.22em] uppercase"
                           style={{ color: 'var(--color-subtle)' }}
                         >
                           <FiCalendar size={10} />
@@ -1211,7 +1213,7 @@ export function MapPage() {
                       )}
                       {visibleSelected.cameraModel && (
                         <div
-                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-widest uppercase"
+                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.22em] uppercase"
                           style={{ color: 'var(--color-subtle)' }}
                         >
                           <FiCamera size={10} />
@@ -1234,10 +1236,10 @@ export function MapPage() {
                   {visibleSelected.relatedPosts && visibleSelected.relatedPosts.length > 0 && (
                     <div className="flex flex-col gap-2 border-t border-[var(--color-rule)] pt-4">
                       <p
-                        className="font-mono text-[10px] tracking-widest uppercase mb-1"
+                        className="font-mono text-[10px] tracking-[0.28em] uppercase mb-1"
                         style={{ color: 'var(--color-subtle)' }}
                       >
-                        {visibleSelected.relatedPosts.length === 1 ? 'Related Article' : 'Related Articles'}
+                        {visibleSelected.relatedPosts.length === 1 ? mapPaper.related.one : mapPaper.related.many}
                       </p>
                       {visibleSelected.relatedPosts.map((post) => (
                         <a
@@ -1257,10 +1259,10 @@ export function MapPage() {
                   {/* Photo credit — carries the "Dulanga Jayawardena" name signal for image SEO */}
                   {visibleSelected.photoCredit && (
                     <p
-                      className="font-mono text-[10px] tracking-widest uppercase mt-4"
+                      className="font-mono text-[10px] tracking-[0.22em] uppercase mt-4"
                       style={{ color: 'var(--color-subtle)' }}
                     >
-                      Photo: {visibleSelected.photoCredit}
+                      {mapPaper.photoCreditLabel}: {visibleSelected.photoCredit}
                     </p>
                   )}
                 </figcaption>

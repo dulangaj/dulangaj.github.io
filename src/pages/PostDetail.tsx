@@ -9,6 +9,8 @@ import { getPostContent } from '@/data/postContent'
 import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Tag } from '@/components/ui/Tag'
+import { SectionBanner } from '@/components/ui/SectionBanner'
+import { SiteConfig } from '@/models/SiteConfig'
 import { getPostCanonicalUrl, getPostPath, getPostSlug } from '@/utils/postUrls'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
@@ -22,7 +24,8 @@ export function PostDetail() {
   const searchParams = new URLSearchParams(location.search)
   const requestedBackTo = navigationState?.backTo ?? searchParams.get('backTo') ?? '/'
   const backTo = requestedBackTo.startsWith('/') && !requestedBackTo.startsWith('//') ? requestedBackTo : '/'
-  const backLabel = navigationState?.backLabel ?? searchParams.get('backLabel') ?? 'Back to portfolio'
+  const backLabel =
+    navigationState?.backLabel ?? searchParams.get('backLabel') ?? SiteConfig.paper.article.defaultBackLabel
 
   useEffect(() => { window.scrollTo(0, 0) }, [slug])
 
@@ -77,11 +80,15 @@ export function PostDetail() {
         <Header />
         <main id="main-content" className="min-h-screen flex items-center justify-center px-6">
           <div className="text-center">
-            <p className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)] mb-4">404</p>
-            <h1 className="font-display text-4xl text-[var(--color-ink)] mb-6">Post not found.</h1>
+            <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)] mb-4">
+              {SiteConfig.paper.article.notFound.kicker}
+            </p>
+            <h1 className="font-display text-4xl text-[var(--color-ink)] mb-6">
+              {SiteConfig.paper.article.notFound.headline}
+            </h1>
             <Link
               to={backTo}
-              className="inline-flex items-center gap-2 font-mono text-[12px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
+              className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
             >
               <FiArrowLeft size={12} /> {backLabel}
             </Link>
@@ -105,7 +112,7 @@ export function PostDetail() {
       <a href="#main-content" className="skip-link">Skip to content</a>
       <Header />
 
-      <main id="main-content" className="pt-24 pb-32 px-6 md:px-12">
+      <main id="main-content" className="pt-24 pb-16 px-6 md:px-12">
         <div className="max-w-3xl mx-auto">
 
           {/* Back link */}
@@ -117,42 +124,25 @@ export function PostDetail() {
           >
             <Link
               to={backTo}
-              className="inline-flex items-center gap-2 font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
+              className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
             >
               <FiArrowLeft size={11} /> {backLabel}
             </Link>
           </motion.div>
 
-          {/* Dateline */}
+          {/* Section banner — shared masthead template */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5, delay: 0.05 }}
-            className="flex flex-wrap items-center gap-3 mb-6 pb-6 border-b border-[var(--color-rule)]"
+            className="mb-8"
           >
-            <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-crimson)]">
-              {post.category}
-            </span>
-            {post.subtitle && (
-              <>
-                <div className="h-px w-6 bg-[var(--color-rule)]" />
-                <span className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-subtle)]">
-                  {post.subtitle}
-                </span>
-              </>
-            )}
-            <div className="h-px w-6 bg-[var(--color-rule)]" />
-            <span className="font-mono text-[11px] tracking-widest text-[var(--color-subtle)]">
-              {post.formattedDate}
-            </span>
-            {post.readTime && (
-              <>
-                <div className="h-px w-6 bg-[var(--color-rule)]" />
-                <span className="font-mono text-[11px] tracking-widest text-[var(--color-subtle)]">
-                  {post.readTime} min read
-                </span>
-              </>
-            )}
+            <SectionBanner
+              folio={SiteConfig.paper.articleFolio}
+              label={post.category}
+              note={post.subtitle}
+              bottomRule="single"
+            />
           </motion.div>
 
           {/* Headline */}
@@ -160,10 +150,30 @@ export function PostDetail() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1, ease: [0.22, 1, 0.36, 1] }}
-            className="font-display text-[clamp(2rem,5vw,3.5rem)] leading-[1.08] text-[var(--color-ink)] mb-8"
+            className="font-display text-balance text-[clamp(2rem,5vw,3.5rem)] leading-[1.08] text-[var(--color-ink)] mb-4"
           >
             {post.title}
           </motion.h1>
+
+          {/* Byline + dateline */}
+          <motion.p
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5, delay: 0.13 }}
+            className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] mb-8 pb-6 border-b border-[var(--color-ink)]"
+          >
+            <span className="text-[var(--color-ink)]">{SiteConfig.location}</span>
+            <span className="mx-2">—</span>
+            By <span className="text-[var(--color-ink)]">{SiteConfig.name}</span>
+            <span className="mx-2">·</span>
+            {post.formattedDate}
+            {post.readTime && (
+              <>
+                <span className="mx-2">·</span>
+                {post.formattedReadTime}
+              </>
+            )}
+          </motion.p>
 
           {/* Hero image */}
           {post.image && (
@@ -171,7 +181,7 @@ export function PostDetail() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}
-              className="relative overflow-hidden rounded-lg aspect-[16/9] bg-[var(--color-rule)] mb-12"
+              className="relative overflow-hidden aspect-[16/9] bg-[var(--color-rule)] mb-12"
             >
               <img
                 src={post.image}
@@ -192,9 +202,15 @@ export function PostDetail() {
             className="post-body"
           >
             {body ? (
-              <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                {body}
-              </ReactMarkdown>
+              <>
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {body}
+                </ReactMarkdown>
+                {/* End-of-article tombstone — decorative, hidden from readers/scrapers */}
+                <p aria-hidden="true" className="mt-8 text-center font-display text-[18px] text-[var(--color-crimson)]" style={{ textAlign: 'center' }}>
+                  {SiteConfig.paper.fleuron}
+                </p>
+              </>
             ) : (
               /* Fallback: excerpt as pull quote when no markdown file */
               <p className="font-body text-[17px] leading-[1.85] text-[var(--color-ink)] border-l-2 border-[var(--color-crimson)] pl-6">
@@ -229,7 +245,7 @@ export function PostDetail() {
                 rel="noopener noreferrer"
                 className="inline-flex items-center gap-3 font-mono text-[13px] tracking-wide text-[var(--color-crimson)] hover:gap-4 transition-all duration-200"
               >
-                View the full project <FiExternalLink size={13} />
+                {SiteConfig.paper.article.externalCta} <FiExternalLink size={13} />
               </a>
             </motion.div>
           )}
@@ -243,8 +259,8 @@ export function PostDetail() {
               aria-label="Related writing"
               className="mt-16 pt-8 border-t border-[var(--color-rule)]"
             >
-              <h2 className="font-mono text-[11px] tracking-widest uppercase text-[var(--color-muted)] mb-6">
-                Related writing
+              <h2 className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)] mb-6">
+                {SiteConfig.paper.article.relatedHeading}
               </h2>
               <ul className="space-y-4">
                 {related.map((r) => (
@@ -253,7 +269,7 @@ export function PostDetail() {
                       to={getPostPath(r.id)}
                       className="group block"
                     >
-                      <span className="font-mono text-[10px] tracking-widest uppercase text-[var(--color-crimson)]">
+                      <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
                         {r.category}
                       </span>
                       <span className="block font-display text-[20px] leading-snug text-[var(--color-ink)] group-hover:text-[var(--color-crimson)] transition-colors duration-200">

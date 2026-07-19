@@ -3,9 +3,12 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { FiChevronDown } from 'react-icons/fi'
 import { experiences } from '@/data/experiences'
 import { Experience as ExperienceModel } from '@/models/Experience'
+import { SiteConfig } from '@/models/SiteConfig'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { Tag } from '@/components/ui/Tag'
-import { SectionLabel } from '@/components/ui/SectionLabel'
+import { SectionBanner } from '@/components/ui/SectionBanner'
+
+const experienceSection = SiteConfig.paper.sections.find((s) => s.id === 'experience')!
 
 /* ─── Experience ─────────────────────────────────────────────────────────── */
 /* Vertical accordion timeline. Each entry expands on click.                 */
@@ -29,7 +32,7 @@ function TimelineItem({ experience, index, isOpen, onToggle, registerHeaderRef }
         aria-expanded={isOpen}
       >
         {/* Year/period */}
-        <div className="col-span-12 md:col-span-2 font-mono text-[11px] tracking-widest text-[var(--color-subtle)] pt-1">
+        <div className="col-span-12 md:col-span-2 font-mono text-[10px] tracking-[0.22em] text-[var(--color-subtle)] pt-1">
           {experience.period}
         </div>
 
@@ -44,8 +47,8 @@ function TimelineItem({ experience, index, isOpen, onToggle, registerHeaderRef }
               {experience.role}
             </span>
             {experience.isCurrent && (
-              <span className="font-mono text-[10px] px-2 py-0.5 bg-[var(--color-crimson)] text-white rounded-full tracking-widest uppercase">
-                Now
+              <span className="font-mono text-[10px] px-2 py-0.5 bg-[var(--color-crimson)] text-white tracking-[0.22em] uppercase">
+                {SiteConfig.paper.experienceBadge}
               </span>
             )}
           </div>
@@ -214,16 +217,23 @@ export function Experience() {
     <section
       id="experience"
       ref={sectionRef}
-      className="px-6 md:px-12 py-24 bg-[var(--color-surface)]"
+      className="px-6 md:px-12 py-16 md:py-24 bg-[var(--color-surface)]"
     >
       <div className="max-w-7xl mx-auto">
         <FadeIn>
-          <SectionLabel text="Experience" index="02" />
-          <h2 className="font-display text-[clamp(2rem,5vw,3.5rem)] text-[var(--color-ink)] mb-4 leading-tight">
-            Where I've built.
+          <div className="mb-8">
+            <SectionBanner
+              folio={experienceSection.folio}
+              label={experienceSection.label}
+              note={experienceSection.note}
+              bottomRule="single"
+            />
+          </div>
+          <h2 className="font-display text-balance text-[clamp(2rem,5vw,3.5rem)] text-[var(--color-ink)] mb-4 leading-tight">
+            {experienceSection.headline}
           </h2>
-          <p className="font-body text-[15px] text-[var(--color-muted)] mb-16 max-w-xl">
-            Experience across finance, retail tech, and product engineering, with a focus on reliability, clear communication, and mentoring.
+          <p className="font-serif text-[15px] text-[var(--color-muted)] mb-10 md:mb-16 max-w-xl">
+            {experienceSection.standfirst}
           </p>
         </FadeIn>
 

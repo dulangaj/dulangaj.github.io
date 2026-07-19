@@ -1,13 +1,17 @@
-import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi'
 import { SiteConfig } from '@/models/SiteConfig'
+import { SectionBanner } from '@/components/ui/SectionBanner'
 
-/* ─── Footer ─────────────────────────────────────────────────────────────── */
+/* ─── Footer / Colophon ──────────────────────────────────────────────────── */
+/* The closing plate of the paper: publisher's note on the left, "By Cable"   */
+/* directory in the middle, Letters to the Editor on the right. Bracketed by  */
+/* a printed triple rule top and bottom.                                      */
 
-const SocialIcon = {
-  GitHub:   FiGithub,
-  LinkedIn: FiLinkedin,
-  Email:    FiMail,
-} as const
+const paper = SiteConfig.paper
+const backPage = paper.sections.find((s) => s.id === 'contact')!
+
+function findSocial(platform: string) {
+  return SiteConfig.socials.find((s) => s.platform === platform)
+}
 
 export function Footer() {
   const year = new Date().getFullYear()
@@ -15,48 +19,101 @@ export function Footer() {
   return (
     <footer
       id="contact"
-      className="border-t border-[var(--color-rule)] mt-32"
+      className="mt-16 px-6 md:px-12"
       style={{ backgroundColor: 'var(--color-paper)' }}
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-8">
-        {/* Left: identity */}
-        <div>
-          <p className="font-display text-xl text-[var(--color-ink)] mb-1">
-            {SiteConfig.name}
-          </p>
-          <p className="font-mono text-[12px] text-[var(--color-subtle)] tracking-wide">
-            {SiteConfig.location} &nbsp;
-          </p>
-          <a
-            href={SiteConfig.mailtoLink}
-            className="mt-3 inline-block font-mono text-[12px] text-[var(--color-crimson)] hover:underline tracking-wide"
-          >
-            {SiteConfig.email}
-          </a>
+      <div className="max-w-7xl mx-auto">
+        {/* Section banner — shared masthead template, single closing rule */}
+        <div className="mb-8">
+          <SectionBanner
+            folio={backPage.folio}
+            label={backPage.bannerLabel ?? backPage.label}
+            note={backPage.note}
+            bottomRule="single"
+          />
         </div>
 
-        {/* Right: socials + copyright */}
-        <div className="flex flex-col items-start md:items-end gap-4">
-          <div className="flex items-center gap-5">
-            {SiteConfig.socials.map((social) => {
-              const Icon = SocialIcon[social.platform as keyof typeof SocialIcon]
-              return (
-                <a
-                  key={social.platform}
-                  href={social.url}
-                  target={social.platform !== 'Email' ? '_blank' : undefined}
-                  rel="noopener noreferrer"
-                  aria-label={social.ariaLabel}
-                  className="text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
-                >
-                  {Icon && <Icon size={18} />}
-                </a>
-              )
-            })}
+        {/* Three columns */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12">
+
+          {/* ── Publisher's note ─────────────────────────────────── */}
+          <div>
+            <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)] mb-3">
+              {paper.publisher.heading}
+            </p>
+            <p className="font-display text-[1.4rem] text-[var(--color-ink)] mb-1 leading-tight">
+              {SiteConfig.name}
+            </p>
+            <p className="font-display italic text-[14px] text-[var(--color-muted)] mb-4">
+              {SiteConfig.title}, {SiteConfig.location}.
+            </p>
+            <p className="font-body text-[13px] leading-relaxed text-[var(--color-muted)] mb-4">
+              {paper.publisher.note}
+            </p>
+            <p className="font-body text-[13px] leading-relaxed text-[var(--color-muted)]">
+              {paper.colophon}
+            </p>
           </div>
-          <p className="font-mono text-[11px] text-[var(--color-subtle)] tracking-wide">
-            © {year} {SiteConfig.name}
-          </p>
+
+          {/* ── Channels: cable / wire / post ────────────────────── */}
+          <div>
+            <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)] mb-3">
+              {paper.channels.heading}
+            </p>
+            <ul className="flex flex-col gap-3">
+              {paper.channels.routes.map((channel) => {
+                const social = findSocial(channel.platform)
+                if (!social) return null
+                return (
+                  <li key={channel.platform} className="flex items-baseline gap-3">
+                    <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-ink)] w-[84px] shrink-0 whitespace-nowrap">
+                      {channel.label}
+                    </span>
+                    <span className="font-display text-[13px] text-[var(--color-rule)]">·</span>
+                    <a
+                      href={social.url}
+                      target={channel.platform === 'Email' ? undefined : '_blank'}
+                      rel="noopener noreferrer"
+                      aria-label={social.ariaLabel}
+                      className="font-display italic text-[14px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors"
+                    >
+                      {channel.platform}
+                    </a>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
+
+          {/* ── Letters to the Editor ────────────────────────────── */}
+          <div>
+            <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)] mb-3">
+              {paper.letters.heading}
+            </p>
+            <p className="font-serif italic text-[14px] leading-[1.7] text-[var(--color-muted)] mb-4">
+              {paper.letters.note}
+            </p>
+            <a
+              href={SiteConfig.mailtoLink}
+              className="inline-block font-display italic text-[15px] text-[var(--color-crimson)] hover:text-[var(--color-crimson-hover)] underline underline-offset-4 decoration-[var(--color-crimson)]"
+            >
+              {SiteConfig.email}
+            </a>
+          </div>
+        </div>
+
+        {/* Bottom plate — printer's mark / circulation / copyright */}
+        <div className="border-t border-[var(--color-ink)] pt-3">
+          <div className="border-t-2 border-[var(--color-ink)] mt-[3px]" />
+          <div className="pt-3 pb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
+            <span>
+              © {year} {SiteConfig.name} &nbsp;·&nbsp; All rights reserved
+            </span>
+            <span className="font-display italic normal-case tracking-normal text-[13px] text-[var(--color-muted)]">
+              {SiteConfig.location}
+            </span>
+            <span>{paper.imprint}</span>
+          </div>
         </div>
       </div>
     </footer>

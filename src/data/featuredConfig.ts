@@ -21,6 +21,6 @@ export const featuredConfig: FeaturedPostConfig[] = [
   },
   {
     id:      '2020-12-31-vbrands',
-    excerpt: 'At a Hong Kong multi-brand retailer, I modernized e-commerce operations with automation, integrations, and staff enablement.',
+    excerpt: 'At a Hong Kong multi-brand retailer, modernizing e-commerce operations with automation, integrations, and staff enablement.',
   },
 ]
