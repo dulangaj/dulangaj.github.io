@@ -49,6 +49,12 @@ export const generatedPhotoPostLinks: Record<string, GeneratedPhotoPostLink[]> =
       "title": "Building Software for Equity Risk at Morgan Stanley"
     }
   ],
+  "dulanga-jayawardena-kids4kids-2024.jpeg": [
+    {
+      "postId": "2025-05-01-morgan-stanley-equity-risk",
+      "title": "Building Software for Equity Risk at Morgan Stanley"
+    }
+  ],
   "dulanga-jayawardena-leaves-2023.jpeg": [
     {
       "postId": "2020-05-31-social-network-opinion-dynamics",

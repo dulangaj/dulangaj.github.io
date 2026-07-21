@@ -34,7 +34,7 @@ export function Footer() {
         </div>
 
         {/* Three columns */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-6">
 
           {/* ── Publisher's note ─────────────────────────────────── */}
           <div>
@@ -47,11 +47,8 @@ export function Footer() {
             <p className="font-display italic text-[14px] text-[var(--color-muted)] mb-4">
               {SiteConfig.title}, {SiteConfig.location}.
             </p>
-            <p className="font-body text-[13px] leading-relaxed text-[var(--color-muted)] mb-4">
-              {paper.publisher.note}
-            </p>
             <p className="font-body text-[13px] leading-relaxed text-[var(--color-muted)]">
-              {paper.colophon}
+              {paper.publisher.note}
             </p>
           </div>
 
@@ -102,17 +99,23 @@ export function Footer() {
           </div>
         </div>
 
+        {/* Colophon — the printer's closing note, centered at the foot of the
+            page under its ornament, set in the text face it credits. Kept out
+            of the columns so the three keep an even depth. */}
+        <div className="pb-6 text-center">
+          <p aria-hidden="true" className="font-display text-[13px] text-[var(--color-crimson)] mb-2">
+            {paper.fleuron}
+          </p>
+          <p className="font-serif italic text-[14px] leading-[1.7] text-[var(--color-muted)] max-w-xl mx-auto">
+            {paper.colophon}
+          </p>
+        </div>
+
         {/* Bottom plate — printer's mark / circulation / copyright */}
         <div className="border-t border-[var(--color-ink)] pt-3">
           <div className="border-t-2 border-[var(--color-ink)] mt-[3px]" />
-          <div className="pt-3 pb-10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
-            <span>
-              © {year} {SiteConfig.name} &nbsp;·&nbsp; All rights reserved
-            </span>
-            <span className="font-display italic normal-case tracking-normal text-[13px] text-[var(--color-muted)]">
-              {SiteConfig.location}
-            </span>
-            <span>{paper.imprint}</span>
+          <div className="pt-3 pb-6 text-center font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
+            © {year} {SiteConfig.name} &nbsp;·&nbsp; All rights reserved
           </div>
         </div>
       </div>

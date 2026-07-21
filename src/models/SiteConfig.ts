@@ -39,7 +39,6 @@ export interface PaperConfig {
   publisher: { heading: string; note: string }
   channels: { heading: string; routes: { label: string; platform: string }[] }
   letters: { heading: string; note: string }
-  imprint: string
   article: {
     relatedHeading: string
     externalCta: string
@@ -267,6 +266,5 @@ export const SiteConfig = new SiteConfigClass({
         cta:  'Turn to Section',
       },
     },
-    imprint: 'Built with React & Tailwind',
   },
 })
