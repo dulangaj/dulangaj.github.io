@@ -84,6 +84,25 @@ function ZoomControls() {
   return null
 }
 
+/** While the photo card is open, hand the arrow keys to the card (cluster
+ *  paging) by disabling Leaflet's built-in keyboard pan — otherwise a focused
+ *  map would both pan AND page on the same keypress. Re-enabled on close. */
+function MapKeyboardControl({ paused }: { paused: boolean }) {
+  const map = useMap()
+
+  useEffect(() => {
+    if (paused) {
+      map.keyboard.disable()
+    } else {
+      map.keyboard.enable()
+    }
+
+    return () => { map.keyboard.enable() }
+  }, [paused, map])
+
+  return null
+}
+
 function ResponsiveMinZoom() {
   const map = useMap()
 
@@ -682,6 +701,9 @@ export function MapPage() {
     return [visibleSelected]
   }, [selectedClusterPhotoIds, visiblePhotoMap, visibleSelected])
   const canNavigateCluster = activeClusterPhotos.length > 1
+  // Identity of the cluster itself (not the current photo) — used to fade the
+  // counter only when you jump to a *different* group, not on within-cluster paging.
+  const clusterKey = activeClusterPhotos.map((photo) => photo.id).join(',')
   const activeClusterIndex = visibleSelected
     ? activeClusterPhotos.findIndex((photo) => photo.id === visibleSelected.id)
     : -1
@@ -709,11 +731,17 @@ export function MapPage() {
   useEffect(() => {
     if (!selected) return
 
-    previousFocusRef.current = document.activeElement instanceof HTMLElement
-      ? document.activeElement
-      : null
+    // On desktop the card is a non-modal inspector sitting beside a live map:
+    // don't steal focus on open (the user's focus stays on the map), and don't
+    // trap Tab inside the panel. On mobile it's a true modal bottom sheet, so
+    // we capture focus, restore it on close, and cycle Tab within the sheet.
+    if (!isDesktop) {
+      previousFocusRef.current = document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null
 
-    closeButtonRef.current?.focus()
+      closeButtonRef.current?.focus()
+    }
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') {
@@ -734,7 +762,7 @@ export function MapPage() {
         return
       }
 
-      if (event.key !== 'Tab') return
+      if (event.key !== 'Tab' || isDesktop) return
 
       const panel = panelRef.current
       if (!panel) return
@@ -766,9 +794,9 @@ export function MapPage() {
     window.addEventListener('keydown', handleKeyDown)
     return () => {
       window.removeEventListener('keydown', handleKeyDown)
-      previousFocusRef.current?.focus()
+      if (!isDesktop) previousFocusRef.current?.focus()
     }
-  }, [activeClusterPhotos, handleClose, navigatePhoto, selected])
+  }, [activeClusterPhotos, handleClose, isDesktop, navigatePhoto, selected])
 
 
   return (
@@ -863,6 +891,7 @@ export function MapPage() {
         <EnsureFreshMapLayout onReady={() => setIsMapLayoutReady(true)} />
         <ZoomControls />
         <ResponsiveMinZoom />
+        <MapKeyboardControl paused={Boolean(visibleSelected)} />
         <MapViewportSync onViewportChange={setViewport} />
         {isMapLayoutReady && (
           <PhotoMarkerClusters
@@ -907,7 +936,7 @@ export function MapPage() {
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="absolute inset-0 z-[1001] bg-black/25 lg:bg-transparent"
+              className="absolute inset-0 z-[1001] bg-black/25 lg:bg-transparent lg:pointer-events-none"
               onClick={handleClose}
               aria-hidden="true"
             />
@@ -935,7 +964,7 @@ export function MapPage() {
               }}
               onClick={(e) => e.stopPropagation()}
               role="dialog"
-              aria-modal="true"
+              aria-modal={!isDesktop}
               aria-labelledby={`map-photo-title-${visibleSelected.id}`}
               ref={panelRef}
             >
@@ -971,12 +1000,16 @@ export function MapPage() {
                 )}
 
                 {isDesktop && canNavigateCluster && activeClusterIndex !== -1 && (
-                  <div
+                  <motion.div
+                    key={clusterKey}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.12 }}
                     className="font-mono text-[10px] tracking-[0.14em] uppercase"
                     style={{ color: 'var(--color-subtle)' }}
                   >
                     {activeClusterIndex + 1} / {activeClusterPhotos.length}
-                  </div>
+                  </motion.div>
                 )}
 
                 <button
@@ -1075,16 +1108,11 @@ export function MapPage() {
                         src={visibleSelected.thumbnail}
                         alt=""
                         aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 w-full h-full object-cover scale-110 blur-xl opacity-60"
+                        className="pointer-events-none absolute inset-0 w-full h-full object-cover scale-110 blur-xl transition-opacity duration-300"
+                        style={{ opacity: imageLoaded ? 0.6 : 1 }}
                         draggable={false}
                       />
                       <div className="pointer-events-none absolute inset-0 bg-black/10" />
-                      {!imageLoaded && (
-                        <div
-                          className="pointer-events-none absolute inset-0 animate-pulse"
-                          style={{ background: 'color-mix(in srgb, var(--color-rule) 78%, transparent)' }}
-                        />
-                      )}
                       <div
                         className="relative z-[1] flex max-w-full max-h-full items-center justify-center transition-opacity duration-300"
                         style={{ opacity: imageLoaded ? 1 : 0 }}
@@ -1160,8 +1188,15 @@ export function MapPage() {
                   )}
                 </div>
 
-                {/* Info — <figcaption> pairs this caption text with the image above for image SEO */}
-                <figcaption className="px-5 pt-4 pb-6">
+                {/* Info — <figcaption> pairs this caption text with the image above for image SEO.
+                    Keyed on the photo id so the metadata gently crossfades on swap rather than hard-cutting. */}
+                <motion.figcaption
+                  key={visibleSelected.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.12 }}
+                  className="px-5 pt-4 pb-6"
+                >
                   {/* Category + location */}
                   <div className="flex items-center gap-3 mb-3 flex-wrap">
                     {visibleSelected.category && (
@@ -1265,7 +1300,7 @@ export function MapPage() {
                       {mapPaper.photoCreditLabel}: {visibleSelected.photoCredit}
                     </p>
                   )}
-                </figcaption>
+                </motion.figcaption>
               </figure>
 
               {/* Keyboard shortcut hints — desktop only */}
