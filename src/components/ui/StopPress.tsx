@@ -7,9 +7,10 @@ import { SiteConfig } from '@/models/SiteConfig'
 /* The slim newspaper bulletin strip that runs across the top of the page.    */
 /* Bulletins tick past like wire copy. Motion is driven by advancing the      */
 /* viewport's scrollLeft (not a CSS transform), so the strip is also a real   */
-/* scroll area: the reader can flick ahead or back at will, and hovering      */
-/* pauses the wire. Under prefers-reduced-motion the script never starts and  */
-/* the strip collapses to a single static, hand-scrollable run (globals.css). */
+/* scroll area: the reader can flick ahead or back at will. A hovering mouse  */
+/* or a finger held on the strip pauses the wire. Under prefers-reduced-      */
+/* motion the script never starts and the strip collapses to a single static, */
+/* hand-scrollable run (globals.css).                                         */
 /* Items start from the build-time fallback and are quietly replaced by the   */
 /* live wire feeds (useLiveBulletins).                                        */
 
@@ -59,15 +60,33 @@ export function StopPress() {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 
     let raf = 0
-    let paused = false
     let last = performance.now()
     let pos = 0
     let lastSet = -1
 
-    const onEnter = () => { paused = true }
-    const onLeave = () => { paused = false }
+    /* Two independent reasons to hold the wire: a mouse resting on the strip,
+       and a finger pressing it. They are tracked apart because touch is the
+       unreliable one — a touch that turns into a page scroll is taken away by
+       the browser as `pointercancel`, and the matching `pointerleave` may
+       never arrive. Hover is therefore only ever set by a mouse (the strip
+       sits at the top of the page, so on a phone the first downward swipe
+       drags a finger straight across it), and the release of a press is
+       listened for on the window so a finger lifted off the strip still
+       counts. */
+    let hovered = false
+    let pressed = false
+    const isPaused = () => hovered || pressed
+
+    const onEnter = (e: PointerEvent) => { if (e.pointerType === 'mouse') hovered = true }
+    const onLeave = (e: PointerEvent) => { if (e.pointerType === 'mouse') hovered = false }
+    const onDown = () => { pressed = true }
+    const onRelease = () => { pressed = false }
+
     viewport.addEventListener('pointerenter', onEnter)
     viewport.addEventListener('pointerleave', onLeave)
+    viewport.addEventListener('pointerdown', onDown)
+    window.addEventListener('pointerup', onRelease)
+    window.addEventListener('pointercancel', onRelease)
 
     const tick = (now: number) => {
       raf = requestAnimationFrame(tick)
@@ -81,7 +100,7 @@ export function StopPress() {
         pos = runWidth
       } else {
         pos += viewport.scrollLeft - lastSet
-        if (!paused) pos += (runWidth / stopPress.loopSeconds) * dt
+        if (!isPaused()) pos += (runWidth / stopPress.loopSeconds) * dt
       }
       if (pos >= runWidth * 1.5) pos -= runWidth
       else if (pos < runWidth * 0.5) pos += runWidth
@@ -94,6 +113,9 @@ export function StopPress() {
       cancelAnimationFrame(raf)
       viewport.removeEventListener('pointerenter', onEnter)
       viewport.removeEventListener('pointerleave', onLeave)
+      viewport.removeEventListener('pointerdown', onDown)
+      window.removeEventListener('pointerup', onRelease)
+      window.removeEventListener('pointercancel', onRelease)
     }
   }, [])
 

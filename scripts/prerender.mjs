@@ -257,7 +257,7 @@ function homeStructuredData() {
     description:
       'Sri Lankan software engineer working on risk technology and analytics for financial market, based in Hong Kong. Photographer and travel writer in side interests.',
     jobTitle: 'Software Engineer',
-    email: 'mailto:dulangajay@gmail.com',
+    email: 'mailto:hello@dulangaj.com',
     nationality: { '@type': 'Country', name: 'Sri Lanka' },
     knowsAbout: [
       'Technology',

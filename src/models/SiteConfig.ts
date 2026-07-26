@@ -156,11 +156,11 @@ export const SiteConfig = new SiteConfigClass({
   ],
   bio:      'On the distributed-systems beat since 2015.',
   location: 'Hong Kong',
-  email:    'dulangajay@gmail.com',
+  email:    'hello@dulangaj.com',
   socials: [
     { platform: 'LinkedIn', url: 'https://linkedin.com/in/dulangaj', ariaLabel: 'LinkedIn profile' },
     { platform: 'GitHub',   url: 'https://github.com/dulangaj',      ariaLabel: 'GitHub profile'   },
-    { platform: 'Email',    url: 'mailto:dulangajay@gmail.com',       ariaLabel: 'Send email'       },
+    { platform: 'Email',    url: 'mailto:hello@dulangaj.com',       ariaLabel: 'Send email'       },
   ],
   paper: {
     name:        'The Jayawardena Herald',
