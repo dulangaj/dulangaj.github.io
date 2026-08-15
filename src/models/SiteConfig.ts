@@ -55,6 +55,7 @@ export interface PaperConfig {
     indexHeading: string
     foldNote: string
     foldCta: string
+    portraitAlt: string
   }
   cta: {
     leadStory: string
@@ -228,6 +229,7 @@ export const SiteConfig = new SiteConfigClass({
       indexHeading: 'Inside this Issue',
       foldNote:     'Below the fold',
       foldCta:      'Continued on Front Page',
+      portraitAlt:  'Portrait of Dulanga Jayawardena, a software engineer based in Hong Kong',
     },
     cta: {
       leadStory: 'Continued inside',
