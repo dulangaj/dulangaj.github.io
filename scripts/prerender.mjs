@@ -13,6 +13,9 @@ const MAP_DESCRIPTION = 'Interactive world photo map tracing Dulanga Jayawardena
 const WRITING_TITLE = `Writing Archive | ${SITE_NAME}`
 const WRITING_DESCRIPTION = 'Index of articles, project notes, and engineering write-ups by Dulanga Jayawardena.'
 const DEFAULT_OG_IMAGE = `${SITE_URL}/assets/social/og-home.png`
+const PORTRAIT_IMAGE = `${SITE_URL}/assets/img/profile.jpeg`
+const PORTRAIT_TITLE = SITE_NAME
+const PORTRAIT_CAPTION = `Portrait of ${SITE_NAME}, a software engineer working on risk technology and analytics for financial markets in Hong Kong.`
 
 const ROOT_DIR = process.cwd()
 const DIST_DIR = path.join(ROOT_DIR, 'dist')
@@ -137,7 +140,11 @@ function buildSitemap(posts, photoLocations) {
   // confirmed both are ignored, and maintaining honest values is a chore.
   // <lastmod> is the only freshness signal that matters.
   const entries = [
-    { loc: `${SITE_URL}/`, lastmod: homeMtime },
+    {
+      loc: `${SITE_URL}/`,
+      lastmod: homeMtime,
+      images: [{ loc: PORTRAIT_IMAGE, title: PORTRAIT_TITLE, caption: PORTRAIT_CAPTION }],
+    },
     {
       loc: `${SITE_URL}/map/`,
       lastmod: latestPhoto,

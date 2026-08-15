@@ -140,8 +140,8 @@ export function Hero() {
               >
                 <img
                   src="/assets/img/profile.jpeg"
-                  alt={SiteConfig.name}
-                  className="w-full h-full object-cover"
+                  alt={SiteConfig.paper.hero.portraitAlt}
+                  className="w-full h-full object-cover object-[50%_25%]"
                   loading="eager"
                   decoding="async"
                   fetchPriority="high"

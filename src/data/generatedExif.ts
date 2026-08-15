@@ -204,8 +204,8 @@ export const rawExifData: Record<string, ExifEntry> = {
     "description": "Almost died going off-trail in Yosemite"
   },
   "profile.jpeg": {
-    "date": "2022-12-16",
-    "make": "Apple",
-    "model": "iPhone 13 Pro"
+    "date": "2025-12-25",
+    "make": "Canon",
+    "model": "Canon EOS 6D Mark II"
   }
 }
