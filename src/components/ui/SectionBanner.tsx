@@ -1,6 +1,4 @@
-import { motion } from 'framer-motion'
 import { SiteConfig } from '@/models/SiteConfig'
-import { Rule } from '@/components/ui/Rule'
 
 /* ─── SectionBanner ──────────────────────────────────────────────────────── */
 /* The full-width section masthead used at the top of every "page" of the     */
@@ -24,24 +22,16 @@ export function SectionBanner({ folio, label, note, bottomRule = 'double', label
       : 'border-b border-[var(--color-ink)]'
 
   return (
-    <div>
-      <Rule weight="thick" />
-      <Rule className="mt-[3px]" />
+    <div className="border-t-2 border-[var(--color-ink)]">
+      <div className="border-t border-[var(--color-ink)] mt-[3px]" />
       <div className={`flex items-baseline justify-between pt-3 pb-3 ${bottomClass}`}>
         <div className="flex items-baseline gap-3">
           <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
             Page {folio}
           </span>
-          <motion.span
-            aria-hidden="true"
-            className="text-[var(--color-crimson)] font-display text-[14px] leading-none inline-block"
-            initial={{ rotate: -180, scale: 0 }}
-            whileInView={{ rotate: 0, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.5, duration: 0.6, ease: [0.34, 1.56, 0.64, 1] }}
-          >
+          <span aria-hidden="true" className="text-[var(--color-crimson)] font-display text-[14px] leading-none">
             {SiteConfig.paper.fleuron}
-          </motion.span>
+          </span>
           <LabelTag className="font-display text-[1.1rem] tracking-wide text-[var(--color-ink)] m-0 font-normal">
             {label}
           </LabelTag>

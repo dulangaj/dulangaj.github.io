@@ -4,9 +4,6 @@ import { BrowserRouter } from 'react-router-dom'
 import 'react-leaflet-cluster/dist/assets/MarkerCluster.css'
 import './styles/globals.css'
 import App from './App'
-import { SiteConfig } from '@/models/SiteConfig'
-
-document.documentElement.dataset.motion = SiteConfig.paper.motion
 
 const container = document.getElementById('root')!
 

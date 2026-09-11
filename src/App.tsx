@@ -8,7 +8,6 @@ import { Hero }       from '@/components/sections/Hero'
 import { StopPress }  from '@/components/ui/StopPress'
 import { ReadingRule } from '@/components/ui/ReadingRule'
 import { Spotlight }  from '@/components/ui/Spotlight'
-import { SiteConfig } from '@/models/SiteConfig'
 import { Featured }   from '@/components/sections/Featured'
 import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
@@ -84,7 +83,8 @@ function HomePage() {
   return (
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
-      {SiteConfig.paper.motion === 'newsroom' && <><ReadingRule /><Spotlight /></>}
+      <ReadingRule />
+      <Spotlight />
       <Header />
       <main id="main-content">
         {homeSections.masthead && <Masthead />}

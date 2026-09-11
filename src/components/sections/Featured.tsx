@@ -40,7 +40,7 @@ function LeadStory({ post }: { post: Post }) {
           </div>
 
           {/* Headline */}
-          <h2 className="headline-ink font-display text-balance text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+          <h2 className="font-display text-balance text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
             {post.title}
           </h2>
 
@@ -115,7 +115,7 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
           </div>
         </div>
 
-        <h3 className="headline-ink font-display text-balance text-[1.25rem] leading-snug text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+        <h3 className="font-display text-balance text-[1.25rem] leading-snug text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
           {post.title}
         </h3>
 

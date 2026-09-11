@@ -1,5 +1,4 @@
 import { useSyncExternalStore, type MouseEvent } from 'react'
-import { SiteConfig } from '@/models/SiteConfig'
 
 type ThemePreference = 'light' | 'dark'
 
@@ -130,9 +129,9 @@ export function useTheme() {
         ? (snapshot.isDark ? 'light' : 'dark')
         : (snapshot.preference === 'dark' ? 'light' : 'dark')
 
-    // Newsroom scheme: the new edition washes over the page from the toggle.
+    // The new edition washes over the page from the toggle.
     const root = document.documentElement
-    if (SiteConfig.paper.motion === 'newsroom' && 'startViewTransition' in document && event) {
+    if ('startViewTransition' in document && event) {
       root.style.setProperty('--wash-x', `${event.clientX}px`)
       root.style.setProperty('--wash-y', `${event.clientY}px`)
       document.startViewTransition(() => applyPreference(nextPreference))
