@@ -1,10 +1,14 @@
 import { Component, lazy, Suspense, useEffect, type ErrorInfo, type ReactNode } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
+import { MotionConfig } from 'framer-motion'
 import { Header }     from '@/components/layout/Header'
 import { Footer }     from '@/components/layout/Footer'
 import { Masthead }   from '@/components/layout/Masthead'
 import { Hero }       from '@/components/sections/Hero'
 import { StopPress }  from '@/components/ui/StopPress'
+import { ReadingRule } from '@/components/ui/ReadingRule'
+import { Spotlight }  from '@/components/ui/Spotlight'
+import { SiteConfig } from '@/models/SiteConfig'
 import { Featured }   from '@/components/sections/Featured'
 import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
@@ -80,6 +84,7 @@ function HomePage() {
   return (
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
+      {SiteConfig.paper.motion === 'newsroom' && <><ReadingRule /><Spotlight /></>}
       <Header />
       <main id="main-content">
         {homeSections.masthead && <Masthead />}
@@ -172,6 +177,7 @@ export default function App() {
 
   return (
     <RouteErrorBoundary resetKey={resetKey}>
+     <MotionConfig reducedMotion="user">
       <Suspense fallback={
         <main className="min-h-screen bg-[var(--color-paper)] flex items-center justify-center">
           <div className="flex flex-col items-center gap-3">
@@ -189,6 +195,7 @@ export default function App() {
           <Route path="/:slug" element={<PostDetail />} />
         </Routes>
       </Suspense>
+     </MotionConfig>
     </RouteErrorBoundary>
   )
 }

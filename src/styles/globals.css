@@ -470,3 +470,69 @@ button:focus-visible,
 @media (prefers-reduced-motion: reduce) {
   .stop-press-run[aria-hidden='true'] { display: none; }
 }
+
+/* ─── Motion schemes ─────────────────────────────────────────────────────── */
+/* Chosen by SiteConfig.paper.motion, stamped on <html data-motion>.          */
+
+/* Press: living newsprint — the grain jitters like a running press */
+:root[data-motion="press"] body::before { animation: grain 0.6s steps(6) infinite; }
+@keyframes grain {
+  0%   { background-position: 0 0; }
+  25%  { background-position: -60px 40px; }
+  50%  { background-position: 90px -30px; }
+  75%  { background-position: -20px 110px; }
+  100% { background-position: 50px 70px; }
+}
+
+/* Press: story images drift slowly, ken-burns style */
+:root[data-motion="press"] .story-image { animation: drift 18s ease-in-out infinite alternate; }
+@keyframes drift {
+  from { transform: scale(1)    translate(0, 0); }
+  to   { transform: scale(1.08) translate(-1.5%, 1%); }
+}
+
+/* Press: headlines take an ink rule that draws in under them on hover */
+:root[data-motion="press"] .headline-ink {
+  padding-bottom: 0.15em;
+  background: linear-gradient(currentColor, currentColor) no-repeat 0 100% / 0% 2px;
+  transition: background-size 0.6s cubic-bezier(0.22, 1, 0.36, 1), color 0.3s ease;
+}
+:root[data-motion="press"] .group:hover .headline-ink { background-size: 100% 2px; }
+
+/* Newsroom: column inches read */
+.reading-rule {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: var(--color-crimson);
+  transform-origin: left;
+  z-index: 60;
+}
+
+/* Newsroom: desk lamp trailing the pointer */
+.spotlight {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 9998;
+  opacity: 0.08;
+  mix-blend-mode: multiply;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .spotlight { mix-blend-mode: screen; opacity: 0.14; }
+}
+:root[data-theme="dark"] .spotlight { mix-blend-mode: screen; opacity: 0.14; }
+@media (hover: none) { .spotlight { display: none; } }
+
+/* Newsroom: teletype caret blinks while the dateline arrives, then clears */
+.teletype-caret { color: var(--color-crimson); animation: caret 0.7s steps(1) 6 forwards; }
+@keyframes caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+/* Newsroom: the next edition washes over the page from the toggle */
+::view-transition-old(root),
+::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+::view-transition-new(root) {
+  clip-path: circle(0 at var(--wash-x, 50%) var(--wash-y, 0));
+  animation: ink-wash 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+@keyframes ink-wash { to { clip-path: circle(160vmax at var(--wash-x, 50%) var(--wash-y, 0)); } }

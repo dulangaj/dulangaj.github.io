@@ -24,8 +24,15 @@ export interface PaperEdition {
   abbr: string // toggle form, e.g. 'Morn.'
 }
 
+export type MotionScheme = 'press' | 'newsroom'
+
 export interface PaperConfig {
   name: string
+  /* 'press'    — letterpress: nameplate stamps in, rules draw, grain shifts,
+                  headlines underline, story images drift (ken burns).
+     'newsroom' — live desk: teletype dateline, reading rule, cursor spotlight,
+                  tilting images, ink-wash edition switch.                   */
+  motion: MotionScheme
   motto: string
   established: number
   bureau: string
@@ -166,6 +173,7 @@ export const SiteConfig = new SiteConfigClass({
   ],
   paper: {
     name:        'The Jayawardena Herald',
+    motion:      'press',
     motto:       '“All the work that’s fit to ship.”',
     established: 2015,
     bureau:      'Hong Kong Bureau',

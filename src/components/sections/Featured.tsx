@@ -6,6 +6,7 @@ import { SiteConfig } from '@/models/SiteConfig'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { getPostPath } from '@/utils/postUrls'
+import { useTilt } from '@/hooks/useTilt'
 
 const frontPage = SiteConfig.paper.sections.find((s) => s.id === 'featured')!
 
@@ -14,6 +15,7 @@ const frontPage = SiteConfig.paper.sections.find((s) => s.id === 'featured')!
 /* Teases only — the Writing section below is "inside the paper."              */
 
 function LeadStory({ post }: { post: Post }) {
+  const tilt = useTilt(5)
   return (
     <FadeIn>
       <a
@@ -38,7 +40,7 @@ function LeadStory({ post }: { post: Post }) {
           </div>
 
           {/* Headline */}
-          <h2 className="font-display text-balance text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+          <h2 className="headline-ink font-display text-balance text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
             {post.title}
           </h2>
 
@@ -60,7 +62,7 @@ function LeadStory({ post }: { post: Post }) {
 
         {/* Image — right 2/5, full bleed */}
         {post.image && (
-          <div className="md:col-span-2 relative overflow-hidden aspect-[4/3] md:aspect-auto md:min-h-[320px] bg-[var(--color-rule)]">
+          <motion.div className="md:col-span-2 relative overflow-hidden aspect-[4/3] md:aspect-auto md:min-h-[320px] bg-[var(--color-rule)]" {...tilt}>
             <motion.img
               src={post.image}
               alt={post.title}
@@ -71,7 +73,7 @@ function LeadStory({ post }: { post: Post }) {
               transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
             />
             <div className="absolute inset-0 bg-[var(--color-crimson)] opacity-0 group-hover:opacity-5 transition-opacity duration-500" />
-          </div>
+          </motion.div>
         )}
       </a>
     </FadeIn>
@@ -113,7 +115,7 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
           </div>
         </div>
 
-        <h3 className="font-display text-balance text-[1.25rem] leading-snug text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+        <h3 className="headline-ink font-display text-balance text-[1.25rem] leading-snug text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
           {post.title}
         </h3>
 
