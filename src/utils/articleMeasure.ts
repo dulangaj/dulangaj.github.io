@@ -34,3 +34,9 @@ export function ledeOffset(markdown: string): number | null {
   }
   return null
 }
+
+/* Source offset of the first blockquote — printed as the pull quote. */
+export function pullQuoteOffset(markdown: string): number | null {
+  const match = maskFences(markdown).match(/^\s{0,3}>/m)
+  return match?.index === undefined ? null : match.index + match[0].length - 1
+}

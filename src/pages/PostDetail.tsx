@@ -12,11 +12,11 @@ import { Tag } from '@/components/ui/Tag'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { SiteConfig } from '@/models/SiteConfig'
 import { getPostCanonicalUrl, getPostPath, getPostSlug } from '@/utils/postUrls'
-import { extractHeadings, ledeOffset, slugify } from '@/utils/articleMeasure'
+import { extractHeadings, ledeOffset, pullQuoteOffset, slugify } from '@/utils/articleMeasure'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
 /* Full article page rendered from posts/*.md markdown files, set as an       */
-/* inside page: wire dateline, section index.                                 */
+/* inside page: wire dateline, section index, pull quote.                     */
 
 const flattenText = (node: ReactNode): string =>
   Array.isArray(node) ? node.map(flattenText).join('')
@@ -115,6 +115,7 @@ export function PostDetail() {
     : []
 
   const ledeAt = body ? ledeOffset(body) : null
+  const pullQuoteAt = body ? pullQuoteOffset(body) : null
   const datelineDate = new Date(post.date).toLocaleDateString(paper.dateLocale, { day: 'numeric', month: 'long' })
 
   const components: Components = {
@@ -134,6 +135,12 @@ export function PostDetail() {
     },
     h2({ node: _node, children, ...props }) {
       return <h2 id={slugify(flattenText(children))} {...props}>{children}</h2>
+    },
+    blockquote({ node, className, children, ...props }) {
+      const isPullQuote = node?.position?.start.offset === pullQuoteAt
+      return (
+        <blockquote className={isPullQuote ? 'pull-quote' : className} {...props}>{children}</blockquote>
+      )
     },
   }
 

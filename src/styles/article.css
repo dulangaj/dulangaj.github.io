@@ -32,3 +32,29 @@
   color: var(--color-ink);
 }
 .post-body .dateline-dash { letter-spacing: normal; color: var(--color-crimson); }
+
+/* ─── Pull quote ─────────────────────────────────────────────────────────── */
+/* The first blockquote is set as the display pull quote: crimson hairlines
+   above and below, floated into the measure at md+ so copy wraps around it. */
+.post-body blockquote.pull-quote {
+  border: none;
+  border-top: 2px solid var(--color-crimson);
+  border-bottom: 2px solid var(--color-crimson);
+  padding: 0.9rem 0;
+  margin: 0.5rem 0 1.25rem;
+  font-family: var(--font-display);
+  font-style: italic;
+  font-size: 1.4rem;
+  line-height: 1.35;
+  color: var(--color-ink);
+  text-align: left;
+}
+.post-body blockquote.pull-quote p { font: inherit; color: inherit; text-align: left; margin: 0; hyphens: none; }
+
+@media (min-width: 768px) {
+  .post-body blockquote.pull-quote {
+    float: right;
+    width: 40%;
+    margin: 0.4rem 0 1rem 2rem;
+  }
+}
