@@ -1,6 +1,7 @@
 @import "tailwindcss";
 @import "./article.css";
 @import "./press.css";
+@import "./print.css";
 
 /* ─── Design Tokens: Light Mode (default) ────────────────────────────────── */
 /* These are the single source of truth for colors. Edit here to change       */

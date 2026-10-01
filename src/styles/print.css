@@ -1,0 +1,60 @@
+/* ─── Print Edition ──────────────────────────────────────────────────────── */
+/* Black ink on white stock: screen chrome comes off, the article body sets   */
+/* in two columns with a rule between them, and external links print their    */
+/* destination so a paper copy stays useful.                                  */
+
+@media print {
+  @page {
+    margin: 18mm 16mm;
+  }
+
+  /* !important so the Evening Edition palette doesn't print in dark ink. */
+  :root {
+    --color-paper:         #fff !important;
+    --color-surface:       #fff !important;
+    --color-ink:           #000 !important;
+    --color-muted:         #000 !important;
+    --color-subtle:        #000 !important;
+    --color-rule:          #000 !important;
+    --color-crimson:       #000 !important;
+    --color-crimson-hover: #000 !important;
+  }
+
+  body {
+    background: #fff;
+    color: #000;
+  }
+
+  body::before,
+  .site-header,
+  .reading-rule,
+  .spotlight,
+  .absolute.rounded-full,
+  aside:has(.stop-press-track),
+  button {
+    display: none !important;
+  }
+
+  .post-body {
+    column-count: 2;
+    column-gap: 10mm;
+    column-rule: 1px solid #000;
+  }
+
+  .post-body a[href^="http"]::after {
+    content: " (" attr(href) ")";
+    font-size: 11px;
+    word-break: break-all;
+  }
+
+  .post-body img,
+  .post-body pre,
+  .post-body blockquote,
+  .post-body table {
+    break-inside: avoid;
+  }
+
+  a {
+    text-decoration: none;
+  }
+}
