@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react'
+import { motion } from 'framer-motion'
 import { SiteConfig } from '@/models/SiteConfig'
 import { useTheme } from '@/hooks/useTheme'
+import { Nameplate, Teletype } from '@/components/ui/Nameplate'
 
 /* ─── Masthead ───────────────────────────────────────────────────────────── */
 /* The newspaper nameplate. A printed banner that sits below the navigation,  */
@@ -71,9 +73,7 @@ export function Masthead() {
             <span className="text-left whitespace-nowrap">
               Vol. {vol} &nbsp;·&nbsp; No. {no}
             </span>
-            <span className="text-center hidden md:block text-[var(--color-ink)]">
-              {dateline}
-            </span>
+            <Teletype text={dateline} className="text-center hidden md:block text-[var(--color-ink)]" />
             {/* The edition ear doubles as the light/dark toggle while the
                 utility header is hidden at the top of the page. */}
             <button
@@ -93,15 +93,15 @@ export function Masthead() {
 
         {/* Nameplate */}
         <div className="text-center pt-6 md:pt-8 pb-4 md:pb-5">
-          <p
-            aria-label="Paper nameplate"
-            className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)]"
+          <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)]" />
+          <motion.p
+            className="mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 1.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
           >
-            {paper.name}
-          </p>
-          <p className="mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]">
             {paper.motto}
-          </p>
+          </motion.p>
         </div>
 
         {/* Bottom metadata strip — established / bureau / price, bracketed by a triple rule */}

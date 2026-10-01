@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom'
 import { FiGithub, FiLinkedin, FiMail, FiArrowDownRight, FiArrowUpRight } from 'react-icons/fi'
 import { SiteConfig } from '@/models/SiteConfig'
 import { photoLocations } from '@/data/photoLocations'
+import { useTilt } from '@/hooks/useTilt'
 
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
 /* Full-viewport landing section with staggered editorial text reveal.       */
@@ -59,6 +60,7 @@ const lineVariants = {
 const lineTransition = { duration: 0.7, ease: EASE }
 
 export function Hero() {
+  const tilt = useTilt(12)
   return (
     <section
       id="top"
@@ -126,6 +128,7 @@ export function Hero() {
               className="relative w-20 h-20 md:w-24 md:h-24"
               variants={lineVariants}
               transition={lineTransition}
+              {...tilt}
             >
               {/* Crimson accent ring — offset slightly for depth */}
               <div className="absolute -inset-[3px] rounded-full border border-[var(--color-crimson)] opacity-60" />
