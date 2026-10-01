@@ -1,0 +1,11 @@
+/* ─── Press effects ──────────────────────────────────────────────────────── */
+/* Image treatment and the printed fold. Colours come from the theme tokens   */
+/* so both editions hold up.                                                  */
+
+/* Story images: grayscale at rest, colour on hover. Scoped to hover-capable  */
+/* pointers so touch keeps full colour.                                       */
+@media (hover: hover) and (pointer: fine) {
+  .story-image { filter: grayscale(1); transition: filter 0.5s ease; }
+  .group:hover .story-image,
+  .group:focus-visible .story-image { filter: grayscale(0); }
+}
