@@ -698,8 +698,8 @@ export function MapPage() {
   const activeClusterIndex = visibleSelected
     ? activeClusterPhotos.findIndex((photo) => photo.id === visibleSelected.id)
     : -1
-  const photoViewerHeight = isDesktop ? 'min(58vh, 560px)' : 'min(56vh, 520px)'
-  const photoViewerMinHeight = isDesktop ? '320px' : '300px'
+  const photoViewerHeight = isDesktop ? 'min(58vh, 560px)' : 'min(46vh, 420px)'
+  const photoViewerMinHeight = isDesktop ? '320px' : '240px'
 
   useEffect(() => {
     const nextParams = new URLSearchParams()
@@ -808,7 +808,7 @@ export function MapPage() {
         <div className="flex items-center gap-4 w-full">
           <button
             onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer bg-transparent border-none"
+            className="flex items-center gap-1.5 min-h-11 min-w-11 -ml-3 pl-3 md:min-h-0 md:min-w-0 md:ml-0 md:pl-0 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer bg-transparent border-none"
             aria-label="Back to home"
           >
             <FiArrowLeft size={13} />
@@ -1006,7 +1006,7 @@ export function MapPage() {
                 <button
                   ref={closeButtonRef}
                   onClick={handleClose}
-                  className="absolute right-3 top-3 w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
+                  className="absolute right-2 top-2 w-11 h-11 md:right-3 md:top-3 md:w-8 md:h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
                   style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                   aria-label="Close"
                   aria-keyshortcuts="Escape"

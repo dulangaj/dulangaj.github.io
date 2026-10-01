@@ -72,7 +72,7 @@ export function Footer() {
                       target={channel.platform === 'Email' ? undefined : '_blank'}
                       rel="noopener noreferrer"
                       aria-label={social.ariaLabel}
-                      className="font-display italic text-[14px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors"
+                      className="inline-block py-3 -my-3 pr-4 font-display italic text-[14px] text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors"
                     >
                       {channel.platform}
                     </a>
@@ -92,7 +92,7 @@ export function Footer() {
             </p>
             <a
               href={SiteConfig.mailtoLink}
-              className="inline-block font-display italic text-[15px] text-[var(--color-crimson)] hover:text-[var(--color-crimson-hover)] underline underline-offset-4 decoration-[var(--color-crimson)]"
+              className="inline-block py-3 -my-3 font-display italic text-[15px] text-[var(--color-crimson)] hover:text-[var(--color-crimson-hover)] underline underline-offset-4 decoration-[var(--color-crimson)]"
             >
               {SiteConfig.email}
             </a>

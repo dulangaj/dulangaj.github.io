@@ -61,7 +61,7 @@ export function Header() {
         {/* Wordmark */}
         <a
           href="/"
-          className="font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors duration-200"
+          className="inline-flex items-center min-h-11 min-w-11 font-display text-[15px] font-semibold tracking-tight text-[var(--color-ink)] hover:text-[var(--color-crimson)] transition-colors duration-200"
           onClick={(event) => {
             event.preventDefault()
             returnToTop()

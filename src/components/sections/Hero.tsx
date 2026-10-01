@@ -175,7 +175,7 @@ export function Hero() {
             </motion.p>
 
             {/* Social links */}
-            <motion.div className="flex items-center gap-5" variants={lineVariants} transition={lineTransition}>
+            <motion.div className="flex items-center gap-6" variants={lineVariants} transition={lineTransition}>
               {SiteConfig.socials.map((social) => {
                 const Icon = SocialIcon[social.platform as keyof typeof SocialIcon]
                 return (
@@ -185,7 +185,7 @@ export function Hero() {
                     target={social.platform !== 'Email' ? '_blank' : undefined}
                     rel="noopener noreferrer"
                     aria-label={social.ariaLabel}
-                    className="text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
+                    className="p-3 -m-3 text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
                   >
                     {Icon && <Icon size={18} />}
                   </a>

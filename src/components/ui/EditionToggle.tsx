@@ -19,7 +19,7 @@ export function EditionToggle() {
       aria-label={aria}
       title={aria}
       className="
-        group inline-flex items-center gap-1 px-2 py-1
+        group inline-flex items-center gap-1 px-2 min-h-11 md:min-h-0 md:py-1
         font-mono text-[10px] tracking-[0.22em] uppercase
         hover:text-[var(--color-crimson)]
         bg-transparent border-none cursor-pointer
