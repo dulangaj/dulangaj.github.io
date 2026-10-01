@@ -12,15 +12,15 @@ export interface FeaturedPostConfig {
 export const featuredConfig: FeaturedPostConfig[] = [
   {
     id:      '2025-05-01-morgan-stanley-equity-risk',
-    excerpt: "Inside Morgan Stanley's Equity Risk Technology team: building reliable platforms used by traders and risk managers across global desks.",
+    excerpt: "How Morgan Stanley's Equity Risk Technology team builds the platforms its traders and risk managers use on desks worldwide.",
   },
   {
     id:      '2020-05-31-social-network-opinion-dynamics',
-    excerpt: 'How opinions spread in networks: comparing DeGroot and Bounded Confidence models, then proposing a dynamic self-appraisal mechanism.',
+    excerpt: 'How opinions spread through a network. The paper compares the DeGroot and Bounded Confidence models, then proposes a dynamic self-appraisal mechanism.',
     image:   '/assets/img/dulanga-jayawardena-heatmap-2017.png',
   },
   {
     id:      '2020-12-31-vbrands',
-    excerpt: 'At a Hong Kong multi-brand retailer, modernizing e-commerce operations with automation, integrations, and staff enablement.',
+    excerpt: 'Automating e-commerce operations and training staff at a multi-brand retailer in Hong Kong.',
   },
 ]
