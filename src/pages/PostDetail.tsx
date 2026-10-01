@@ -109,6 +109,8 @@ export function PostDetail() {
   const paper = SiteConfig.paper
   const article = paper.article
 
+  const measure = post.readTime ? `${post.readTime} ${article.measure.minutes}` : post.formattedReadTime
+
   const sections = body ? extractHeadings(body) : []
   const jumpLines = sections.length >= article.index.minHeadings
     ? sections.map((label) => ({ label, id: slugify(label) }))
@@ -210,10 +212,10 @@ export function PostDetail() {
             By <span className="text-[var(--color-ink)]">{SiteConfig.name}</span>
             <span className="mx-2">·</span>
             {post.formattedDate}
-            {post.readTime && (
+            {measure && (
               <>
-                <span className="mx-2">·</span>
-                {post.formattedReadTime}
+                <span className="mx-2">{article.measure.separator}</span>
+                {measure}
               </>
             )}
           </motion.p>
