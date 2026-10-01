@@ -152,8 +152,8 @@ export const SiteConfig = new SiteConfigClass({
   employer: 'Bullish',
   tagline:  'Software engineer building risk and trading systems in finance.',
   lede: [
-    'Before Bullish he was at Morgan Stanley, where he built risk systems for front-office trading teams.',
-    'His work has spanned Sri Lanka, Hong Kong, and the United States, mostly in Java and Python: distributed systems, automation, and the reliability work that keeps them running.',
+    'Before Bullish he was at Morgan Stanley, where he built risk systems traders and risk managers relied on.',
+    'He has worked in Sri Lanka, Hong Kong, and the United States, mostly in Java and Python, on distributed systems and the automation that keeps them running.',
     'He also mentors junior engineers and writes about the systems he builds.',
   ],
   bio:      'On the distributed-systems beat since 2015.',
@@ -181,12 +181,12 @@ export const SiteConfig = new SiteConfigClass({
       {
         id: 'experience', folio: 'A2', label: 'Experience', note: 'The record',
         headline:   'Where the work was done.',
-        standfirst: 'Experience across finance, retail tech, and product engineering, with a focus on reliability, clear communication, and mentoring.',
+        standfirst: 'Risk systems at Morgan Stanley, e-commerce at VBrands, and Android apps in Sri Lanka before either.',
       },
       {
         id: 'writing', folio: 'A3', label: 'Writing', note: 'The inside pages',
         headline:   'Notes from the field.',
-        standfirst: 'Build notes, research breakdowns, and reflections on engineering, teamwork, and learning in public.',
+        standfirst: 'Project write-ups and research notes, filed as the work gets done.',
       },
       {
         id: 'contact', folio: 'Z', label: 'Letters',
@@ -222,8 +222,8 @@ export const SiteConfig = new SiteConfigClass({
     },
     archive: {
       note:       'The archive',
-      headline:   'Articles, project notes, and field notes.',
-      standfirst: 'A complete index of long-form writing on the site. One permanent URL per article.',
+      headline:   'Everything filed to date.',
+      standfirst: 'Every long-form article on the site, newest first, each at a permanent URL.',
     },
     hero: {
       kicker:       'Front Page Profile',
