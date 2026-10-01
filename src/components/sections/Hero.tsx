@@ -25,7 +25,7 @@ const indexEntries = [
   { key: 'map', label: mapPaper.label, folio: mapPaper.folio, anchor: null, route: '/map/' },
 ].sort((a, b) => a.folio.localeCompare(b.folio))
 
-const indexLinkClass = 'group flex w-full items-baseline gap-2 p-0 text-left'
+const indexLinkClass = 'group flex w-full items-baseline gap-2 px-0 py-2.5 text-left'
 
 function IndexLine({ label, folio }: { label: string; folio: string }) {
   return (
@@ -202,7 +202,7 @@ export function Hero() {
               <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-ink)] border-t-2 border-[var(--color-ink)] pt-2 mb-3">
                 {SiteConfig.paper.hero.indexHeading}
               </p>
-              <ul className="flex flex-col gap-1.5 list-none p-0 m-0">
+              <ul className="flex flex-col list-none p-0 m-0">
                 {indexEntries.map((entry) => (
                   <li key={entry.key}>
                     {entry.route ? (
@@ -251,7 +251,7 @@ export function Hero() {
 
           {/* ── Jump line — newspaper "continued on page" cue ──────── */}
           <motion.div
-            className="md:col-span-12 flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-[var(--color-ink)]"
+            className="fold-crease md:col-span-12 flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-[var(--color-ink)]"
             variants={lineVariants}
             transition={lineTransition}
           >

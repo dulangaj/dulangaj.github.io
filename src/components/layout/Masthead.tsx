@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SiteConfig } from '@/models/SiteConfig'
+import { posts } from '@/data/posts'
 import { useTheme } from '@/hooks/useTheme'
 import { Nameplate, Teletype } from '@/components/ui/Nameplate'
 
@@ -45,6 +46,15 @@ function volumeAndIssue(d: Date): { vol: string; no: string } {
   return { vol, no: String(dayOfYear).padStart(3, '0') }
 }
 
+/* An issue earns its EXTRA stamp while the newest story is still fresh. */
+const latestPostDate = posts[0]?.date
+
+function isExtraEdition(now: Date): boolean {
+  if (!latestPostDate) return false
+  const age = now.getTime() - Date.parse(latestPostDate)
+  return age >= 0 && age <= paper.masthead.extraWithinDays * 86_400_000
+}
+
 export function Masthead() {
   const [now, setNow] = useState(() => new Date())
   const { isDark, toggle } = useTheme()
@@ -56,6 +66,7 @@ export function Masthead() {
 
   const { vol, no } = volumeAndIssue(now)
   const edition = isDark ? paper.editions.dark.name : paper.editions.light.name
+  const isExtra = isExtraEdition(now)
   const editionAria = `Switch to ${isDark ? paper.editions.light.name : paper.editions.dark.name}`
   const dateline = formatLongDate(now)
 
@@ -68,32 +79,43 @@ export function Masthead() {
         {/* Top metadata strip — vol/date/edition, with a thin double rule on top */}
         <div className="border-t-4 border-double border-[var(--color-ink)] pt-3">
           {/* Letterspaced mono must never break mid-phrase: flex row on mobile
-              (dateline hidden), three-column grid once the dateline appears */}
-          <div className="flex items-baseline justify-between gap-3 md:grid md:grid-cols-3 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
+              (dateline hidden), three-column grid once the dateline fits (lg) */}
+          <div className="flex items-baseline justify-between gap-3 lg:grid lg:grid-cols-3 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
             <span className="text-left whitespace-nowrap">
               Vol. {vol} &nbsp;·&nbsp; No. {no}
             </span>
-            <Teletype text={dateline} className="text-center hidden md:block text-[var(--color-ink)]" />
+            <Teletype text={dateline} className="text-center hidden lg:block text-[var(--color-ink)]" />
             {/* The edition ear doubles as the light/dark toggle while the
                 utility header is hidden at the top of the page. */}
             <button
               onClick={toggle}
               aria-label={editionAria}
               title={editionAria}
-              className="text-right whitespace-nowrap font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)] hover:text-[var(--color-crimson)] transition-colors duration-150 bg-transparent border-none p-0 cursor-pointer"
+              className="text-right whitespace-nowrap font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)] hover:text-[var(--color-crimson)] transition-colors duration-150 bg-transparent border-none px-0 py-4 -my-4 cursor-pointer"
             >
               {edition}
             </button>
           </div>
           {/* Mobile dateline */}
-          <div className="md:hidden text-center pt-2 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink)]">
+          <div className="lg:hidden text-center pt-2 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink)]">
             {dateline}
           </div>
         </div>
 
-        {/* Nameplate */}
-        <div className="text-center pt-6 md:pt-8 pb-4 md:pb-5">
-          <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)]" />
+        {/* Nameplate; the EXTRA stamp rides the top corner */}
+        <div className="relative text-center pt-6 md:pt-8 pb-4 md:pb-5">
+          {isExtra && (
+            <motion.span
+              className="hidden lg:inline-block absolute top-2 right-0 border-2 border-[var(--color-crimson)] px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.3em] indent-[0.3em] text-[var(--color-crimson)]"
+              initial={{ scale: 1.6, opacity: 0, rotate: -18 }}
+              animate={{ scale: 1, opacity: 1, rotate: -8 }}
+              transition={{ delay: 1.2, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {paper.masthead.extraLabel}
+            </motion.span>
+          )}
+          {/* Deliberately set smaller at lg+ rather than filling the measure */}
+          <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)] lg:text-[clamp(2rem,6vw,5rem)]" />
           <motion.p
             className="mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
             initial={{ opacity: 0, y: 8 }}

@@ -1,0 +1,32 @@
+/* ─── Press effects ──────────────────────────────────────────────────────── */
+/* Image treatment and the printed fold. Colours come from the theme tokens   */
+/* so both editions hold up.                                                  */
+
+/* Story images: grayscale at rest, colour on hover. Scoped to hover-capable  */
+/* pointers so touch keeps full colour.                                       */
+@media (hover: hover) and (pointer: fine) {
+  .story-image { filter: grayscale(1); transition: filter 0.5s ease; }
+  .group:hover .story-image,
+  .group:focus-visible .story-image { filter: grayscale(0); }
+}
+
+/* The fold: a crease across the full sheet where the jump line sits. */
+.fold-crease { position: relative; }
+.fold-crease::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 100vw;
+  height: 22px;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  background: linear-gradient(
+    to bottom,
+    transparent 0%,
+    color-mix(in srgb, var(--color-ink) 5%, transparent) 45%,
+    color-mix(in srgb, var(--color-ink) 10%, transparent) 50%,
+    color-mix(in srgb, var(--color-ink) 5%, transparent) 55%,
+    transparent 100%
+  );
+}

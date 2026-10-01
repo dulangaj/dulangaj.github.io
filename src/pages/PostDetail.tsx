@@ -1,7 +1,7 @@
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { FiArrowLeft, FiExternalLink } from 'react-icons/fi'
 import { posts } from '@/data/posts'
@@ -12,9 +12,15 @@ import { Tag } from '@/components/ui/Tag'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { SiteConfig } from '@/models/SiteConfig'
 import { getPostCanonicalUrl, getPostPath, getPostSlug } from '@/utils/postUrls'
+import { extractHeadings, ledeOffset, pullQuoteOffset, slugify } from '@/utils/articleMeasure'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
-/* Full article page rendered from posts/*.md markdown files.                 */
+/* Full article page rendered from posts/*.md markdown files, set as an       */
+/* inside page: wire dateline, section index, pull quote.                     */
+
+const flattenText = (node: ReactNode): string =>
+  Array.isArray(node) ? node.map(flattenText).join('')
+    : typeof node === 'string' || typeof node === 'number' ? String(node) : ''
 
 export function PostDetail() {
   const { slug } = useParams<{ slug: string }>()
@@ -100,6 +106,45 @@ export function PostDetail() {
   }
 
   const body = post.file ? getPostContent(post.file) : null
+  const paper = SiteConfig.paper
+  const article = paper.article
+
+  const measure = post.readTime ? `${post.readTime} ${article.measure.minutes}` : post.formattedReadTime
+
+  const sections = body ? extractHeadings(body) : []
+  const jumpLines = sections.length >= article.index.minHeadings
+    ? sections.map((label) => ({ label, id: slugify(label) }))
+    : []
+
+  const ledeAt = body ? ledeOffset(body) : null
+  const pullQuoteAt = body ? pullQuoteOffset(body) : null
+  const datelineDate = new Date(post.date).toLocaleDateString(paper.dateLocale, { day: 'numeric', month: 'long' })
+
+  const components: Components = {
+    p({ node, children, ...props }) {
+      const isLede = node?.position?.start.offset === ledeAt
+      return (
+        <p {...props}>
+          {isLede && (
+            <>
+              <span className="dateline">{SiteConfig.location}, {datelineDate}</span>
+              <span className="dateline-dash"> {article.dateline.dash} </span>
+            </>
+          )}
+          {children}
+        </p>
+      )
+    },
+    h2({ node: _node, children, ...props }) {
+      return <h2 id={slugify(flattenText(children))} {...props}>{children}</h2>
+    },
+    blockquote({ node, className, children, ...props }) {
+      const isPullQuote = node?.position?.start.offset === pullQuoteAt
+      return (
+        <blockquote className={isPullQuote ? 'pull-quote' : className} {...props}>{children}</blockquote>
+      )
+    },
+  }
 
   const tagSet = new Set(post.tags)
   const related = [
@@ -167,13 +212,44 @@ export function PostDetail() {
             By <span className="text-[var(--color-ink)]">{SiteConfig.name}</span>
             <span className="mx-2">·</span>
             {post.formattedDate}
-            {post.readTime && (
+            {measure && (
               <>
-                <span className="mx-2">·</span>
-                {post.formattedReadTime}
+                <span className="mx-2">{article.measure.separator}</span>
+                {measure}
               </>
             )}
           </motion.p>
+
+          {/* Section index */}
+          {jumpLines.length > 0 && (
+            <motion.nav
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.16 }}
+              aria-label={article.index.heading}
+              className="mb-12 border-t border-b border-[var(--color-rule)] py-4"
+            >
+              <p className="m-0 mb-3 font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)]">
+                {article.index.heading}
+              </p>
+              <ul className="m-0 list-none p-0 space-y-1.5">
+                {jumpLines.map((line) => (
+                  <li key={line.id}>
+                    <a
+                      href={`#${line.id}`}
+                      onClick={(event) => {
+                        event.preventDefault()
+                        document.querySelector(`#${line.id}`)?.scrollIntoView({ behavior: 'smooth' })
+                      }}
+                      className="font-serif text-[13px] text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-150"
+                    >
+                      {line.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
+          )}
 
           {/* Hero image */}
           {post.image && (
@@ -203,7 +279,7 @@ export function PostDetail() {
           >
             {body ? (
               <>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
                   {body}
                 </ReactMarkdown>
                 {/* End-of-article tombstone — decorative, hidden from readers/scrapers */}

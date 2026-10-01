@@ -39,16 +39,26 @@ export interface PaperConfig {
   publisher: { heading: string; note: string }
   channels: { heading: string; routes: { label: string; platform: string }[] }
   letters: { heading: string; note: string }
+  backPage: {
+    wentToPress: { label: string; run: string }
+  }
   article: {
     relatedHeading: string
     externalCta: string
     defaultBackLabel: string
     notFound: { kicker: string; headline: string }
+    dateline: { dash: string }
+    measure: { separator: string; minutes: string }
+    index: { heading: string; minHeadings: number }
   }
   archive: {
     note: string
     headline: string
     standfirst: string
+  }
+  masthead: {
+    extraLabel: string    // stamp printed beside the nameplate on a fresh issue
+    extraWithinDays: number // how recent the newest post must be to earn it
   }
   hero: {
     kicker: string
@@ -209,6 +219,9 @@ export const SiteConfig = new SiteConfigClass({
         { label: 'By Post',  platform: 'Email'    },
       ],
     },
+    backPage: {
+      wentToPress: { label: 'Went to press', run: 'Run' },
+    },
     letters: {
       heading: 'Letters to the Editor',
       note:
@@ -219,11 +232,18 @@ export const SiteConfig = new SiteConfigClass({
       externalCta:      'View the full project',
       defaultBackLabel: 'Front Page',
       notFound: { kicker: '404', headline: 'Post not found.' },
+      dateline: { dash: '—' },
+      measure: { separator: '·', minutes: 'min' },
+      index: { heading: 'In this article', minHeadings: 3 },
     },
     archive: {
       note:       'The archive',
       headline:   'Everything filed to date.',
       standfirst: 'Every long-form article on the site, newest first, each at a permanent URL.',
+    },
+    masthead: {
+      extraLabel:      'Extra',
+      extraWithinDays: 14,
     },
     hero: {
       kicker:       'Front Page Profile',
