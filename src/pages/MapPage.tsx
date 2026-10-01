@@ -30,18 +30,9 @@ const mapPaper = SiteConfig.paper.map
 
 /* ─── Tile layers ────────────────────────────────────────────────────────── */
 
-const TILES = {
-  light: {
-    url: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  },
-  dark: {
-    url: 'https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png',
-    attribution:
-      '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
-  },
-}
+const cartoKey = import.meta.env.VITE_CARTO_KEY
+const withKey = (url: string) => (cartoKey ? `${url}?key=${cartoKey}` : url)
+const TILES = { light: withKey(mapPaper.tiles.light), dark: withKey(mapPaper.tiles.dark) }
 
 const SPIDER_LEG_STYLES = {
   light: {
@@ -58,12 +49,12 @@ const SPIDER_LEG_STYLES = {
 
 function ThemeAwareTiles() {
   const { isDark } = useTheme()
-  const tile = isDark ? TILES.dark : TILES.light
+  const url = isDark ? TILES.dark : TILES.light
   return (
     <TileLayer
-      key={tile.url}
-      url={tile.url}
-      attribution={tile.attribution}
+      key={url}
+      url={url}
+      attribution={mapPaper.tiles.attribution}
       minZoom={2}
       maxZoom={5}
       maxNativeZoom={5}
