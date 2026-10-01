@@ -1,10 +1,11 @@
-/* ─── Post body prose ────────────────────────────────────────────────────── */
-/* Article prose is set in the text serif, justified with hyphenation —      */
-/* the newspaper column treatment. UI chrome elsewhere stays in Inter.       */
+/* ─── Inside pages: article prose ────────────────────────────────────────── */
+/* Article prose is set in the text serif, justified with hyphenation from   */
+/* md up (phone columns are too narrow to justify cleanly).                  */
 .post-body { font-family: var(--font-serif); color: var(--color-ink); }
 .post-body h2 { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; color: var(--color-ink); margin: 2.5rem 0 1rem; }
 .post-body h3 { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.3; color: var(--color-ink); margin: 2rem 0 0.75rem; }
-.post-body p  { font-size: 17px; line-height: 1.8; color: var(--color-ink); margin: 0 0 1.25rem; text-align: justify; hyphens: auto; }
+.post-body p  { font-size: 17px; line-height: 1.8; color: var(--color-ink); margin: 0 0 1.25rem; hyphens: auto; }
+@media (min-width: 768px) { .post-body p { text-align: justify; } }
 .post-body ul, .post-body ol { padding-left: 1.5rem; margin: 0 0 1.25rem; }
 .post-body li { font-size: 15px; line-height: 1.7; color: var(--color-muted); margin-bottom: 0.4rem; }
 .post-body li strong { color: var(--color-ink); }
@@ -21,3 +22,13 @@
 .post-body table { width: 100%; border-collapse: collapse; margin: 1.5rem 0; font-size: 14px; }
 .post-body th { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-subtle); border-bottom: 2px solid var(--color-rule); padding: 0.5rem 0.75rem; text-align: left; }
 .post-body td { border-bottom: 1px solid var(--color-rule); padding: 0.6rem 0.75rem; color: var(--color-muted); }
+
+/* ─── Dateline ───────────────────────────────────────────────────────────── */
+/* Wire-service opener run into the first paragraph: place, date, em dash.   */
+.post-body .dateline {
+  font-variant-caps: all-small-caps;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+  color: var(--color-ink);
+}
+.post-body .dateline-dash { letter-spacing: normal; color: var(--color-crimson); }

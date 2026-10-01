@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import ReactMarkdown from 'react-markdown'
+import ReactMarkdown, { type Components } from 'react-markdown'
 import remarkGfm from 'remark-gfm'
 import { FiArrowLeft, FiExternalLink } from 'react-icons/fi'
 import { posts } from '@/data/posts'
@@ -12,9 +12,11 @@ import { Tag } from '@/components/ui/Tag'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { SiteConfig } from '@/models/SiteConfig'
 import { getPostCanonicalUrl, getPostPath, getPostSlug } from '@/utils/postUrls'
+import { ledeOffset } from '@/utils/articleMeasure'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
-/* Full article page rendered from posts/*.md markdown files.                 */
+/* Full article page rendered from posts/*.md markdown files, set as an       */
+/* inside page: wire dateline.                                                */
 
 export function PostDetail() {
   const { slug } = useParams<{ slug: string }>()
@@ -100,6 +102,28 @@ export function PostDetail() {
   }
 
   const body = post.file ? getPostContent(post.file) : null
+  const paper = SiteConfig.paper
+  const article = paper.article
+
+  const ledeAt = body ? ledeOffset(body) : null
+  const datelineDate = new Date(post.date).toLocaleDateString(paper.dateLocale, { day: 'numeric', month: 'long' })
+
+  const components: Components = {
+    p({ node, children, ...props }) {
+      const isLede = node?.position?.start.offset === ledeAt
+      return (
+        <p {...props}>
+          {isLede && (
+            <>
+              <span className="dateline">{SiteConfig.location}, {datelineDate}</span>
+              <span className="dateline-dash"> {article.dateline.dash} </span>
+            </>
+          )}
+          {children}
+        </p>
+      )
+    },
+  }
 
   const tagSet = new Set(post.tags)
   const related = [
@@ -203,7 +227,7 @@ export function PostDetail() {
           >
             {body ? (
               <>
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                <ReactMarkdown remarkPlugins={[remarkGfm]} components={components}>
                   {body}
                 </ReactMarkdown>
                 {/* End-of-article tombstone — decorative, hidden from readers/scrapers */}

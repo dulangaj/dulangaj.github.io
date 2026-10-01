@@ -44,6 +44,7 @@ export interface PaperConfig {
     externalCta: string
     defaultBackLabel: string
     notFound: { kicker: string; headline: string }
+    dateline: { dash: string }
   }
   archive: {
     note: string
@@ -219,6 +220,7 @@ export const SiteConfig = new SiteConfigClass({
       externalCta:      'View the full project',
       defaultBackLabel: 'Front Page',
       notFound: { kicker: '404', headline: 'Post not found.' },
+      dateline: { dash: '—' },
     },
     archive: {
       note:       'The archive',
