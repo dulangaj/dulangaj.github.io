@@ -91,7 +91,7 @@ export function Masthead() {
               onClick={toggle}
               aria-label={editionAria}
               title={editionAria}
-              className="text-right whitespace-nowrap font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)] hover:text-[var(--color-crimson)] transition-colors duration-150 bg-transparent border-none p-0 cursor-pointer"
+              className="text-right whitespace-nowrap font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)] hover:text-[var(--color-crimson)] transition-colors duration-150 bg-transparent border-none px-0 py-4 -my-4 cursor-pointer"
             >
               {edition}
             </button>
