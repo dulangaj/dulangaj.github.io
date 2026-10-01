@@ -90,6 +90,7 @@ export interface PaperConfig {
     related: { one: string; many: string }
     photoCreditLabel: string
     refer: { body: string; cta: string }
+    tiles: { light: string; dark: string; attribution: string }
   }
 }
 
@@ -266,6 +267,12 @@ export const SiteConfig = new SiteConfigClass({
       refer: {
         body: 'Photographs and field notes from the road, plotted where they happened.',
         cta:  'Turn to Section',
+      },
+      tiles: {
+        light: 'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',
+        dark:  'https://{s}.basemaps.cartocdn.com/rastertiles/dark_all/{z}/{x}/{y}{r}.png',
+        attribution:
+          '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
       },
     },
   },
