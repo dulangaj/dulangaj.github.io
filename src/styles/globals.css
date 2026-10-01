@@ -9,10 +9,10 @@
   --color-surface:       #ffffff;   /* Card / elevated surface */
   --color-ink:           #1a1a1a;   /* Primary text            */
   --color-muted:         #6b6b6b;   /* Secondary text          */
-  --color-subtle:        #a8a8a4;   /* Tertiary / placeholder  */
+  --color-subtle:        #71716d;   /* Tertiary (AA 4.5:1)     */
   --color-rule:          #e5e5e0;   /* Borders & dividers      */
-  --color-crimson:       #dc2626;   /* Accent / brand          */
-  --color-crimson-hover: #b91c1c;   /* Accent hover            */
+  --color-crimson:       #65081F;   /* Accent / brand (burgundy) */
+  --color-crimson-hover: #4a0517;   /* Accent hover            */
 
   --font-display:    'Playfair Display', Georgia, serif;
   --font-body:       'Inter', system-ui, sans-serif;
@@ -32,10 +32,10 @@
     --color-surface:       #242220;   /* Slightly lighter dark warm  */
     --color-ink:           #ede9e3;   /* Warm off-white text         */
     --color-muted:         #9b938a;   /* Warm medium gray            */
-    --color-subtle:        #5e5750;   /* Warm dark gray              */
+    --color-subtle:        #8a827a;   /* Warm gray (AA 4.5:1)        */
     --color-rule:          #2e2a26;   /* Dark warm border            */
-    --color-crimson:       #e05252;   /* Muted-vibrant red for dark  */
-    --color-crimson-hover: #ef6e6e;   /* Lighter red hover           */
+    --color-crimson:       #d67a8e;   /* Light burgundy for dark     */
+    --color-crimson-hover: #e0909f;   /* Lighter hover               */
   }
 }
 
@@ -45,10 +45,10 @@
   --color-surface:       #242220;
   --color-ink:           #ede9e3;
   --color-muted:         #9b938a;
-  --color-subtle:        #5e5750;
+  --color-subtle:        #8a827a;
   --color-rule:          #2e2a26;
-  --color-crimson:       #e05252;
-  --color-crimson-hover: #ef6e6e;
+  --color-crimson:       #d67a8e;
+  --color-crimson-hover: #e0909f;
 }
 
 /* ─── Color scheme hint (browser chrome: scrollbars, inputs, etc.) ────────── */
@@ -354,13 +354,13 @@ button:focus-visible,
 }
 .map-photo-pin:hover {
   transform: scale(1.12);
-  box-shadow: 0 4px 18px rgba(220,38,38,0.4), 0 0 0 2px rgba(255,255,255,0.25);
+  box-shadow: 0 4px 18px color-mix(in srgb, var(--color-crimson) 40%, transparent), 0 0 0 2px rgba(255,255,255,0.25);
   border-color: var(--color-crimson-hover);
   z-index: 1000 !important;
 }
 .map-photo-pin--selected {
   border-color: var(--color-crimson-hover);
-  box-shadow: 0 0 0 4px rgba(220,38,38,0.25), 0 4px 16px rgba(0,0,0,0.4);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--color-crimson) 25%, transparent), 0 4px 16px rgba(0,0,0,0.4);
   transform: scale(1.12);
 }
 
@@ -427,7 +427,7 @@ button:focus-visible,
   justify-content: center;
   cursor: pointer;
   transition: opacity 0.16s ease, transform 0.16s ease;
-  box-shadow: 0 2px 10px rgba(220,38,38,0.5);
+  box-shadow: 0 2px 10px color-mix(in srgb, var(--color-crimson) 50%, transparent);
 }
 .map-cluster-pin--fallback span {
   font-family: var(--font-body);
