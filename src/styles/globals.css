@@ -188,37 +188,34 @@ button:focus-visible,
 .tag-brackets::after  { content: ' ]'; color: var(--color-subtle); }
 
 /* ─── Drop caps ──────────────────────────────────────────────────────────── */
-/* One shared two-line drop cap base; each context only sets the size and    */
-/* padding needed for its own body leading so the cap's foot lands on the    */
-/* second baseline instead of hanging between lines.                         */
+/* Two-line cap. `initial-letter` sinks it to the second baseline from font  */
+/* metrics (Chromium unprefixed, Safari only as -webkit-). Firefox floats.   */
 .hero-lede::first-letter,
 .post-body p:first-of-type::first-letter,
 .lead-standfirst::first-letter {
   font-family: var(--font-display);
   font-weight: 700;
-  float: left;
-  line-height: 0.83;
   color: var(--color-crimson);
   font-feature-settings: "lnum";
+  float: left;
+  font-size: 3.35em;
+  line-height: 0.7;
+  margin: 0.08em 0.06em 0 0;
 }
+.post-body p:first-of-type::first-letter { font-size: 3.55em; }
+.lead-standfirst::first-letter { color: var(--color-ink); }
 
-/* Hero lede: 17–18px / 1.65 body */
-.hero-lede::first-letter {
-  font-size: 3.1rem;
-  padding: 0.28rem 0.5rem 0 0;
-}
-
-/* Article body: 17px / 1.8 body — taller two-line span than the hero */
-.post-body p:first-of-type::first-letter {
-  font-size: 3.4rem;
-  padding: 0.3rem 0.55rem 0 0;
-}
-
-/* Featured standfirst kicker cap — smaller, ink-colored */
-.lead-standfirst::first-letter {
-  font-size: 2.6rem;
-  padding: 0.24rem 0.45rem 0 0;
-  color: var(--color-ink);
+@supports (initial-letter: 2) or (-webkit-initial-letter: 2) {
+  .hero-lede::first-letter,
+  .post-body p:first-of-type::first-letter,
+  .lead-standfirst::first-letter {
+    float: none;
+    font-size: inherit;
+    line-height: inherit;
+    margin: 0 0.25rem 0 0;
+    -webkit-initial-letter: 2;
+    initial-letter: 2;
+  }
 }
 
 /* ─── Scrollbar ──────────────────────────────────────────────────────────── */
