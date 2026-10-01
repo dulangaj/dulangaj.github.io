@@ -13,6 +13,21 @@ function findSocial(platform: string) {
   return SiteConfig.socials.find((s) => s.platform === platform)
 }
 
+function printedDate(iso: string, options: Intl.DateTimeFormatOptions) {
+  return new Date(iso).toLocaleDateString(paper.dateLocale, options)
+}
+
+const wentToPress = `${paper.backPage.wentToPress.label} ${printedDate(__BUILD_TIME__, {
+  weekday: 'long',
+  day:     'numeric',
+  month:   'long',
+  year:    'numeric',
+  hour:    '2-digit',
+  minute:  '2-digit',
+  hour12:  false,
+  timeZone: 'UTC',
+})} UTC · ${paper.backPage.wentToPress.run} ${__BUILD_SHA__}`
+
 export function Footer() {
   const year = new Date().getFullYear()
 
@@ -108,6 +123,9 @@ export function Footer() {
           </p>
           <p className="font-serif italic text-[14px] leading-[1.7] text-[var(--color-muted)] max-w-xl mx-auto">
             {paper.colophon}
+          </p>
+          <p className="mt-3 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
+            {wentToPress}
           </p>
         </div>
 

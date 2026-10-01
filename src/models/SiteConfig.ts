@@ -39,6 +39,9 @@ export interface PaperConfig {
   publisher: { heading: string; note: string }
   channels: { heading: string; routes: { label: string; platform: string }[] }
   letters: { heading: string; note: string }
+  backPage: {
+    wentToPress: { label: string; run: string }
+  }
   article: {
     relatedHeading: string
     externalCta: string
@@ -215,6 +218,9 @@ export const SiteConfig = new SiteConfigClass({
         { label: 'By Wire',  platform: 'GitHub'   },
         { label: 'By Post',  platform: 'Email'    },
       ],
+    },
+    backPage: {
+      wentToPress: { label: 'Went to press', run: 'Run' },
     },
     letters: {
       heading: 'Letters to the Editor',
