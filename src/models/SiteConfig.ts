@@ -53,6 +53,10 @@ export interface PaperConfig {
     headline: string
     standfirst: string
   }
+  masthead: {
+    extraLabel: string    // stamp printed beside the nameplate on a fresh issue
+    extraWithinDays: number // how recent the newest post must be to earn it
+  }
   hero: {
     kicker: string
     indexHeading: string
@@ -230,6 +234,10 @@ export const SiteConfig = new SiteConfigClass({
       note:       'The archive',
       headline:   'Everything filed to date.',
       standfirst: 'Every long-form article on the site, newest first, each at a permanent URL.',
+    },
+    masthead: {
+      extraLabel:      'Extra',
+      extraWithinDays: 14,
     },
     hero: {
       kicker:       'Front Page Profile',

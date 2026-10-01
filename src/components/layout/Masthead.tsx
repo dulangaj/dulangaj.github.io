@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SiteConfig } from '@/models/SiteConfig'
+import { posts } from '@/data/posts'
 import { useTheme } from '@/hooks/useTheme'
 import { Nameplate, Teletype } from '@/components/ui/Nameplate'
 
@@ -45,6 +46,15 @@ function volumeAndIssue(d: Date): { vol: string; no: string } {
   return { vol, no: String(dayOfYear).padStart(3, '0') }
 }
 
+/* An issue earns its EXTRA stamp while the newest story is still fresh. */
+const latestPostDate = posts[0]?.date
+
+function isExtraEdition(now: Date): boolean {
+  if (!latestPostDate) return false
+  const age = now.getTime() - Date.parse(latestPostDate)
+  return age >= 0 && age <= paper.masthead.extraWithinDays * 86_400_000
+}
+
 export function Masthead() {
   const [now, setNow] = useState(() => new Date())
   const { isDark, toggle } = useTheme()
@@ -56,6 +66,7 @@ export function Masthead() {
 
   const { vol, no } = volumeAndIssue(now)
   const edition = isDark ? paper.editions.dark.name : paper.editions.light.name
+  const isExtra = isExtraEdition(now)
   const editionAria = `Switch to ${isDark ? paper.editions.light.name : paper.editions.dark.name}`
   const dateline = formatLongDate(now)
 
@@ -91,8 +102,18 @@ export function Masthead() {
           </div>
         </div>
 
-        {/* Nameplate */}
-        <div className="text-center pt-6 md:pt-8 pb-4 md:pb-5">
+        {/* Nameplate; the EXTRA stamp rides the top corner */}
+        <div className="relative text-center pt-6 md:pt-8 pb-4 md:pb-5">
+          {isExtra && (
+            <motion.span
+              className="hidden lg:inline-block absolute top-2 right-0 border-2 border-[var(--color-crimson)] px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.3em] indent-[0.3em] text-[var(--color-crimson)]"
+              initial={{ scale: 1.6, opacity: 0, rotate: -18 }}
+              animate={{ scale: 1, opacity: 1, rotate: -8 }}
+              transition={{ delay: 1.2, duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+            >
+              {paper.masthead.extraLabel}
+            </motion.span>
+          )}
           <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)]" />
           <motion.p
             className="mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
