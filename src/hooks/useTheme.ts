@@ -129,9 +129,10 @@ export function useTheme() {
         ? (snapshot.isDark ? 'light' : 'dark')
         : (snapshot.preference === 'dark' ? 'light' : 'dark')
 
-    // The new edition washes over the page from the toggle.
+    // The new edition washes over the page from the toggle (mouse, full motion).
     const root = document.documentElement
-    if ('startViewTransition' in document && event) {
+    const wash = window.matchMedia('(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)').matches
+    if ('startViewTransition' in document && event && wash) {
       root.style.setProperty('--wash-x', `${event.clientX}px`)
       root.style.setProperty('--wash-y', `${event.clientY}px`)
       document.startViewTransition(() => applyPreference(nextPreference))

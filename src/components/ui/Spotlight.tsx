@@ -1,11 +1,16 @@
 import { useEffect } from 'react'
 import { motion, useMotionTemplate, useMotionValue, useSpring } from 'framer-motion'
+import { useFinePointer } from '@/hooks/useFinePointer'
 
 /* ─── Spotlight ──────────────────────────────────────────────────────────── */
 /* Newsroom scheme: a soft crimson desk lamp that trails the pointer. Pure    */
-/* decoration — hidden on touch devices via CSS.                              */
+/* decoration — mouse only.                                                   */
 
 export function Spotlight() {
+  return useFinePointer() ? <Lamp /> : null
+}
+
+function Lamp() {
   const x = useSpring(useMotionValue(-1000), { stiffness: 120, damping: 22 })
   const y = useSpring(useMotionValue(-1000), { stiffness: 120, damping: 22 })
 

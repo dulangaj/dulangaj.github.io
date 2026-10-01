@@ -95,7 +95,7 @@ export function Masthead() {
         <div className="text-center pt-6 md:pt-8 pb-4 md:pb-5">
           <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)]" />
           <motion.p
-            className="mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
+            className="masthead-motto mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
