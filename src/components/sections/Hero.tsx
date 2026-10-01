@@ -251,7 +251,7 @@ export function Hero() {
 
           {/* ── Jump line — newspaper "continued on page" cue ──────── */}
           <motion.div
-            className="md:col-span-12 flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-[var(--color-ink)]"
+            className="fold-crease md:col-span-12 flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-[var(--color-ink)]"
             variants={lineVariants}
             transition={lineTransition}
           >
