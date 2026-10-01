@@ -50,7 +50,7 @@ function LeadStory({ post }: { post: Post }) {
           </p>
 
           {/* Standfirst — drop cap on the first letter */}
-          <p className="lead-standfirst min-w-0 font-serif text-[15px] leading-relaxed text-[var(--color-muted)] mb-8 max-w-prose line-clamp-2">
+          <p className="lead-standfirst min-w-0 font-serif text-[15px] leading-relaxed text-[var(--color-muted)] mb-8 max-w-prose max-h-[2lh] overflow-hidden">
             {post.excerpt}
           </p>
 
