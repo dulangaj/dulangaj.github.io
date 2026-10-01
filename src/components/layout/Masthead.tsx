@@ -79,12 +79,12 @@ export function Masthead() {
         {/* Top metadata strip — vol/date/edition, with a thin double rule on top */}
         <div className="border-t-4 border-double border-[var(--color-ink)] pt-3">
           {/* Letterspaced mono must never break mid-phrase: flex row on mobile
-              (dateline hidden), three-column grid once the dateline appears */}
-          <div className="flex items-baseline justify-between gap-3 md:grid md:grid-cols-3 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
+              (dateline hidden), three-column grid once the dateline fits (lg) */}
+          <div className="flex items-baseline justify-between gap-3 lg:grid lg:grid-cols-3 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
             <span className="text-left whitespace-nowrap">
               Vol. {vol} &nbsp;·&nbsp; No. {no}
             </span>
-            <Teletype text={dateline} className="text-center hidden md:block text-[var(--color-ink)]" />
+            <Teletype text={dateline} className="text-center hidden lg:block text-[var(--color-ink)]" />
             {/* The edition ear doubles as the light/dark toggle while the
                 utility header is hidden at the top of the page. */}
             <button
@@ -97,7 +97,7 @@ export function Masthead() {
             </button>
           </div>
           {/* Mobile dateline */}
-          <div className="md:hidden text-center pt-2 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink)]">
+          <div className="lg:hidden text-center pt-2 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink)]">
             {dateline}
           </div>
         </div>
@@ -114,7 +114,8 @@ export function Masthead() {
               {paper.masthead.extraLabel}
             </motion.span>
           )}
-          <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)]" />
+          {/* Deliberately set smaller at lg+ rather than filling the measure */}
+          <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)] lg:text-[clamp(2rem,6vw,5rem)]" />
           <motion.p
             className="mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
             initial={{ opacity: 0, y: 8 }}
