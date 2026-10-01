@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, type ReactNode } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ReactMarkdown, { type Components } from 'react-markdown'
@@ -12,11 +12,15 @@ import { Tag } from '@/components/ui/Tag'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { SiteConfig } from '@/models/SiteConfig'
 import { getPostCanonicalUrl, getPostPath, getPostSlug } from '@/utils/postUrls'
-import { ledeOffset } from '@/utils/articleMeasure'
+import { extractHeadings, ledeOffset, slugify } from '@/utils/articleMeasure'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
 /* Full article page rendered from posts/*.md markdown files, set as an       */
-/* inside page: wire dateline.                                                */
+/* inside page: wire dateline, section index.                                 */
+
+const flattenText = (node: ReactNode): string =>
+  Array.isArray(node) ? node.map(flattenText).join('')
+    : typeof node === 'string' || typeof node === 'number' ? String(node) : ''
 
 export function PostDetail() {
   const { slug } = useParams<{ slug: string }>()
@@ -105,6 +109,11 @@ export function PostDetail() {
   const paper = SiteConfig.paper
   const article = paper.article
 
+  const sections = body ? extractHeadings(body) : []
+  const jumpLines = sections.length >= article.index.minHeadings
+    ? sections.map((label) => ({ label, id: slugify(label) }))
+    : []
+
   const ledeAt = body ? ledeOffset(body) : null
   const datelineDate = new Date(post.date).toLocaleDateString(paper.dateLocale, { day: 'numeric', month: 'long' })
 
@@ -122,6 +131,9 @@ export function PostDetail() {
           {children}
         </p>
       )
+    },
+    h2({ node: _node, children, ...props }) {
+      return <h2 id={slugify(flattenText(children))} {...props}>{children}</h2>
     },
   }
 
@@ -198,6 +210,37 @@ export function PostDetail() {
               </>
             )}
           </motion.p>
+
+          {/* Section index */}
+          {jumpLines.length > 0 && (
+            <motion.nav
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.16 }}
+              aria-label={article.index.heading}
+              className="mb-12 border-t border-b border-[var(--color-rule)] py-4"
+            >
+              <p className="m-0 mb-3 font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)]">
+                {article.index.heading}
+              </p>
+              <ul className="m-0 list-none p-0 space-y-1.5">
+                {jumpLines.map((line) => (
+                  <li key={line.id}>
+                    <a
+                      href={`#${line.id}`}
+                      onClick={(event) => {
+                        event.preventDefault()
+                        document.querySelector(`#${line.id}`)?.scrollIntoView({ behavior: 'smooth' })
+                      }}
+                      className="font-serif text-[13px] text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-150"
+                    >
+                      {line.label}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </motion.nav>
+          )}
 
           {/* Hero image */}
           {post.image && (

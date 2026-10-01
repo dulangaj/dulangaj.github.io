@@ -6,6 +6,18 @@ function maskFences(markdown: string): string {
   return markdown.replace(/```[\s\S]*?```/g, (fence) => fence.replace(/[^\n]/g, ' '))
 }
 
+export function slugify(text: string): string {
+  return text
+    .toLowerCase()
+    .replace(/[^\p{L}\p{N}]+/gu, '-')
+    .replace(/^-+|-+$/g, '')
+}
+
+export function extractHeadings(markdown: string): string[] {
+  return [...maskFences(markdown).matchAll(/^\s{0,3}##\s+(.+?)\s*#*\s*$/gm)]
+    .map((match) => match[1].replace(/[*_`]/g, ''))
+}
+
 /* Source offset of the block that becomes the article's first <p> — the one
    that carries the dateline and the drop cap. Null when there is none. */
 export function ledeOffset(markdown: string): number | null {

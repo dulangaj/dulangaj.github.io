@@ -45,6 +45,7 @@ export interface PaperConfig {
     defaultBackLabel: string
     notFound: { kicker: string; headline: string }
     dateline: { dash: string }
+    index: { heading: string; minHeadings: number }
   }
   archive: {
     note: string
@@ -221,6 +222,7 @@ export const SiteConfig = new SiteConfigClass({
       defaultBackLabel: 'Front Page',
       notFound: { kicker: '404', headline: 'Post not found.' },
       dateline: { dash: '—' },
+      index: { heading: 'In this article', minHeadings: 3 },
     },
     archive: {
       note:       'The archive',

@@ -2,7 +2,7 @@
 /* Article prose is set in the text serif, justified with hyphenation from   */
 /* md up (phone columns are too narrow to justify cleanly).                  */
 .post-body { font-family: var(--font-serif); color: var(--color-ink); }
-.post-body h2 { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; color: var(--color-ink); margin: 2.5rem 0 1rem; }
+.post-body h2 { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; color: var(--color-ink); margin: 2.5rem 0 1rem; scroll-margin-top: 6rem; }
 .post-body h3 { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.3; color: var(--color-ink); margin: 2rem 0 0.75rem; }
 .post-body p  { font-size: 17px; line-height: 1.8; color: var(--color-ink); margin: 0 0 1.25rem; hyphens: auto; }
 @media (min-width: 768px) { .post-body p { text-align: justify; } }
