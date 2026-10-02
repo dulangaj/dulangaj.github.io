@@ -61,6 +61,16 @@ html { color-scheme: light; }
 }
 html[data-theme="dark"] { color-scheme: dark; }
 
+/* Edition labels render both ways; these selectors pick one before hydration */
+.edition-light, .edition-dark { display: contents; }
+.edition-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .edition-light { display: none; }
+  :root:not([data-theme="light"]) .edition-dark { display: contents; }
+}
+:root[data-theme="dark"] .edition-light { display: none; }
+:root[data-theme="dark"] .edition-dark { display: contents; }
+
 /* ─── Base Reset & Globals ───────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
