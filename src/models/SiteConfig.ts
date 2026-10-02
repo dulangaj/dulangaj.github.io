@@ -77,6 +77,7 @@ export interface PaperConfig {
     separator: string
     ariaLabel: string
     pauseLabel: string
+    scrollLabel: string
     loopSeconds: number
     /* Wire feeds — every feed is one file in the gist at feedBase, fetched
        once after load. Each file serves { updated: <ISO-8601>, items:
@@ -273,6 +274,7 @@ export const SiteConfig = new SiteConfigClass({
       separator:   '†',
       ariaLabel:   'Late bulletins',
       pauseLabel:  'Pause',
+      scrollLabel: 'Bulletins, scroll with arrow keys',
       loopSeconds: 40,
       /* SHA-less /raw base always serves each file's latest revision. */
       feedBase: 'https://gist.githubusercontent.com/dulangaj/d5da4363ee11ec57a3fb3f775379dbb7/raw',

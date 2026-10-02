@@ -8,6 +8,8 @@ import { exifPlugin } from './vite-plugin-exif'
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [exifPlugin(), react(), tailwindcss()],
   base: '/',
+  /* UTC day of the build: the date the prerendered masthead is printed with */
+  define: { __BUILD_DAY__: JSON.stringify(new Date().toISOString().slice(0, 10)) },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useSyncExternalStore } from 'react'
 import { motion } from 'framer-motion'
 import { SiteConfig } from '@/models/SiteConfig'
 import { posts } from '@/data/posts'
@@ -55,8 +55,15 @@ function isExtraEdition(now: Date): boolean {
   return age >= 0 && age <= paper.masthead.extraWithinDays * 86_400_000
 }
 
+/* Prerender and hydration print the build day; today's date swaps in after */
+const [buildYear, buildMonth, buildDay] = __BUILD_DAY__.split('-').map(Number)
+const buildDate = new Date(buildYear, buildMonth - 1, buildDay)
+const subscribeNoop = () => () => {}
+
 export function Masthead() {
-  const [now, setNow] = useState(() => new Date())
+  const hydrated = useSyncExternalStore(subscribeNoop, () => true, () => false)
+  const [today, setNow] = useState(() => new Date())
+  const now = hydrated ? today : buildDate
   const { isDark, toggle } = useTheme()
 
   useEffect(() => {
