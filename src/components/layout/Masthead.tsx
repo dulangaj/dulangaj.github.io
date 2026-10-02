@@ -117,7 +117,7 @@ export function Masthead() {
           {/* Deliberately set smaller at lg+ rather than filling the measure */}
           <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)] lg:text-[clamp(2rem,6vw,5rem)]" />
           <motion.p
-            className="mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
+            className="masthead-motto mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}

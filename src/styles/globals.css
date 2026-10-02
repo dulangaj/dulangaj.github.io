@@ -460,11 +460,22 @@ button:focus-visible,
   :root:not([data-theme="light"]) .spotlight { mix-blend-mode: screen; opacity: 0.14; }
 }
 :root[data-theme="dark"] .spotlight { mix-blend-mode: screen; opacity: 0.14; }
-@media (hover: none) { .spotlight { display: none; } }
 
 /* Teletype caret blinks while the dateline arrives, then clears */
 .teletype-caret { color: var(--color-crimson); animation: caret 0.7s steps(1) 6 forwards; }
 @keyframes caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
+
+/* Load-in motion is mouse only. CSS rather than JS, so the prerendered       */
+/* markup matches and phones paint the final type before hydration.           */
+@media not all and (hover: hover) and (pointer: fine) {
+  .nameplate-word, .masthead-motto { transform: none !important; opacity: 1 !important; }
+  .teletype-char { opacity: 1 !important; }
+  .teletype-caret { display: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .spotlight { display: none; }
+  .teletype-caret { animation: none; opacity: 0; }
+}
 
 /* The next edition washes over the page from the toggle */
 ::view-transition-old(root),
