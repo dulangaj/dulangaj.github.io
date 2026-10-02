@@ -440,9 +440,12 @@ button:focus-visible,
 /* Motion lives in StopPress.tsx: the viewport's scrollLeft is advanced each  */
 /* frame so the reader can also scroll the wire by hand. Under reduced        */
 /* motion the script never starts; the duplicate runs collapse and the        */
-/* single run stays hand-scrollable.                                          */
+/* single run stays hand-scrollable, inset past the left edge fade, and the  */
+/* Pause button has nothing to pause.                                         */
 @media (prefers-reduced-motion: reduce) {
   .stop-press-run[aria-hidden='true'] { display: none; }
+  .stop-press-run { padding-left: 2rem; }
+  .stop-press-toggle { display: none; }
 }
 
 /* ─── Newsroom motion ────────────────────────────────────────────────────── */

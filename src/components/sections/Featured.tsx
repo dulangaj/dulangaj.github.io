@@ -40,9 +40,9 @@ function LeadStory({ post }: { post: Post }) {
           </div>
 
           {/* Headline */}
-          <h2 className="font-display text-balance text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+          <h3 className="font-display text-balance text-[clamp(2.4rem,5vw,4rem)] leading-[1.05] text-[var(--color-ink)] mb-3 group-hover:text-[var(--color-crimson)] transition-colors duration-300">
             {post.title}
-          </h2>
+          </h3>
 
           {/* Byline */}
           <p className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] mb-6">
@@ -65,7 +65,7 @@ function LeadStory({ post }: { post: Post }) {
           <motion.div className="md:col-span-2 relative overflow-hidden aspect-[4/3] md:aspect-auto md:min-h-[320px] bg-[var(--color-rule)]" {...tilt}>
             <motion.img
               src={post.image}
-              alt={post.title}
+              alt=""
               className="story-image absolute inset-0 w-full h-full object-cover"
               loading="lazy"
               decoding="async"
@@ -93,7 +93,7 @@ function SecondaryStory({ post, index }: { post: Post; index: number }) {
       >
         {/* Folio numeral + metadata strip — mirrors LeadStory rhythm */}
         <div className="flex items-baseline gap-4 mb-5">
-          <span className="font-mono text-[2.5rem] tracking-tight leading-none text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-300">
+          <span aria-hidden="true" className="font-mono text-[2.5rem] tracking-tight leading-none text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-300">
             {folio}
           </span>
           <div className="flex flex-wrap items-center gap-2 min-w-0">
@@ -150,7 +150,7 @@ export function Featured() {
 
         {/* Section masthead — double-rule, folio left, byline right */}
         <FadeIn>
-          <SectionBanner folio={frontPage.folio} label={frontPage.label} note={frontPage.note} />
+          <SectionBanner folio={frontPage.folio} label={frontPage.label} note={frontPage.note} labelAs="h2" />
         </FadeIn>
 
         {/* Lead story */}
