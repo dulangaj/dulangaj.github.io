@@ -103,9 +103,24 @@ async function createThumbnail(inputFile: string, outputFile: string, tool: Imag
   await fs.copyFile(inputFile, outputFile)
 }
 
+/* Only images rendered with srcset: post cover images, featured overrides, and the avatar */
+async function srcSetImages(root: string) {
+  const postsDir = path.join(root, 'posts')
+  const posts = await Promise.all(
+    (await fs.readdir(postsDir)).filter((f) => f.endsWith('.md')).map((f) => fs.readFile(path.join(postsDir, f), 'utf8')),
+  )
+  const featured = await fs.readFile(path.join(root, 'src', 'data', 'featuredConfig.ts'), 'utf8')
+  return new Set([
+    AVATAR.file,
+    ...posts.map((raw) => parseFrontmatterValue(raw, 'image') ?? ''),
+    ...Array.from(featured.matchAll(/\/assets\/img\/([^'"]+)/g), ([, file]) => file),
+  ])
+}
+
 async function ensureVariants(root: string, files: string[]) {
+  const used = await srcSetImages(root)
   const jobs = files
-    .filter((file) => /\.(jpe?g|png)$/i.test(file))
+    .filter((file) => used.has(file) && /\.(jpe?g|png)$/i.test(file))
     .flatMap((file) => (file === AVATAR.file ? [AVATAR.width] : IMAGE_WIDTHS).map((width) => ({ file, width })))
 
   await fs.mkdir(path.join(root, 'public', 'assets', 'img', 'w'), { recursive: true })
