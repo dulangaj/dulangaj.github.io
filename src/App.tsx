@@ -7,7 +7,6 @@ import { Masthead }   from '@/components/layout/Masthead'
 import { Hero }       from '@/components/sections/Hero'
 import { StopPress }  from '@/components/ui/StopPress'
 import { ReadingRule } from '@/components/ui/ReadingRule'
-import { Spotlight }  from '@/components/ui/Spotlight'
 import { Featured }   from '@/components/sections/Featured'
 import { Writing }    from '@/components/sections/Writing'
 import { homeSections } from '@/data/homeSections'
@@ -84,7 +83,6 @@ function HomePage() {
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
       <ReadingRule />
-      <Spotlight />
       <Header />
       <main id="main-content">
         {homeSections.masthead && <Masthead />}

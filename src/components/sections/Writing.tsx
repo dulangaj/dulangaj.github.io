@@ -38,7 +38,7 @@ function PostCard({ post, wide = false, delay = 0 }: PostCardProps) {
               <motion.img
                 src={post.image}
                 alt=""
-                className="story-image w-full h-full object-cover"
+                className="w-full h-full object-cover"
                 loading="lazy"
                 decoding="async"
                 whileHover={{ scale: 1.03 }}
@@ -98,7 +98,7 @@ function PostCard({ post, wide = false, delay = 0 }: PostCardProps) {
             <motion.img
               src={post.image}
               alt=""
-              className="story-image w-full h-full object-cover"
+              className="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
               whileHover={{ scale: 1.04 }}

@@ -461,20 +461,6 @@ button:focus-visible,
   z-index: 60;
 }
 
-/* Desk lamp trailing the pointer */
-.spotlight {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.08;
-  mix-blend-mode: multiply;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .spotlight { mix-blend-mode: screen; opacity: 0.14; }
-}
-:root[data-theme="dark"] .spotlight { mix-blend-mode: screen; opacity: 0.14; }
-
 /* Teletype caret blinks while the dateline arrives, then clears */
 .teletype-caret { color: var(--color-crimson); animation: caret 0.7s steps(1) 6 forwards; }
 @keyframes caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
@@ -487,7 +473,6 @@ button:focus-visible,
   .teletype-caret { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .spotlight { display: none; }
   .teletype-caret { animation: none; opacity: 0; }
 }
 
