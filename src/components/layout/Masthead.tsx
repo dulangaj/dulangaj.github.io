@@ -1,8 +1,8 @@
-import { useEffect, useState, useSyncExternalStore } from 'react'
 import { motion } from 'framer-motion'
 import { SiteConfig } from '@/models/SiteConfig'
 import { posts } from '@/data/posts'
 import { useTheme } from '@/hooks/useTheme'
+import { useToday } from '@/hooks/useToday'
 import { Nameplate, Teletype } from '@/components/ui/Nameplate'
 
 /* ─── Masthead ───────────────────────────────────────────────────────────── */
@@ -55,21 +55,9 @@ function isExtraEdition(now: Date): boolean {
   return age >= 0 && age <= paper.masthead.extraWithinDays * 86_400_000
 }
 
-/* Prerender and hydration print the build day; today's date swaps in after */
-const [buildYear, buildMonth, buildDay] = __BUILD_DAY__.split('-').map(Number)
-const buildDate = new Date(buildYear, buildMonth - 1, buildDay)
-const subscribeNoop = () => () => {}
-
 export function Masthead() {
-  const hydrated = useSyncExternalStore(subscribeNoop, () => true, () => false)
-  const [today, setNow] = useState(() => new Date())
-  const now = hydrated ? today : buildDate
+  const now = useToday()
   const { isDark, toggle } = useTheme()
-
-  useEffect(() => {
-    const tick = window.setInterval(() => setNow(new Date()), 60_000)
-    return () => window.clearInterval(tick)
-  }, [])
 
   const { vol, no } = volumeAndIssue(now)
   const edition = isDark ? paper.editions.dark.name : paper.editions.light.name
