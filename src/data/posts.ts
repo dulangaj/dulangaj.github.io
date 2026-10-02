@@ -32,3 +32,10 @@ export const featuredPosts: Post[] = featuredConfig
     })
   })
   .filter(Boolean) as Post[]
+
+/* ─── Archive Posts ──────────────────────────────────────────────────────── */
+/* Everything not on the Front Page, for the home Writing section.            */
+
+const featuredIds = new Set(featuredConfig.map((cfg) => cfg.id))
+
+export const archivePosts = posts.filter((p) => !featuredIds.has(p.id))

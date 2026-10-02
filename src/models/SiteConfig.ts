@@ -88,7 +88,6 @@ export interface PaperConfig {
     feedBase: string
     feeds: { file: string; maxAgeHours: number }[]
   }
-  experienceBadge: string
   map: {
     folio: string
     label: string
@@ -189,12 +188,7 @@ export const SiteConfig = new SiteConfigClass({
     sections: [
       { id: 'featured',   folio: 'A1', label: 'Front Page', note: 'The lead story' },
       {
-        id: 'experience', folio: 'A2', label: 'Experience', note: 'The record',
-        headline:   'Where the work was done.',
-        standfirst: 'Risk systems at Morgan Stanley, e-commerce at VBrands, and Android apps in Sri Lanka before either.',
-      },
-      {
-        id: 'writing', folio: 'A3', label: 'Writing', note: 'The inside pages',
+        id: 'writing', folio: 'A2', label: 'Writing', note: 'The inside pages',
         headline:   'Notes from the field.',
         standfirst: 'Project write-ups and research notes, filed as the work gets done.',
       },
@@ -273,7 +267,6 @@ export const SiteConfig = new SiteConfigClass({
         { file: 'working-on.json', maxAgeHours: 720 },
       ],
     },
-    experienceBadge: 'Now',
     map: {
       folio:       'C',
       label:       'Datelines',
