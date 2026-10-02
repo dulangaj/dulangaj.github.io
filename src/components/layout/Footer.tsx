@@ -1,5 +1,6 @@
 import { SiteConfig } from '@/models/SiteConfig'
 import { SectionBanner } from '@/components/ui/SectionBanner'
+import { useToday } from '@/hooks/useToday'
 
 /* ─── Footer ─────────────────────────────────────────────────────────────── */
 /* The closing plate of the paper: publisher's note on the left, "By Cable"   */
@@ -14,7 +15,7 @@ function findSocial(platform: string) {
 }
 
 export function Footer() {
-  const year = new Date().getFullYear()
+  const year = useToday().getFullYear()
 
   return (
     <footer
