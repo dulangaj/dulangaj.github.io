@@ -12,6 +12,7 @@ const MAP_TITLE = `Datelines: World Photo Map | ${SITE_NAME}`
 const MAP_DESCRIPTION = 'Interactive world photo map tracing Dulanga Jayawardena’s travels, photography, and related writing.'
 const WRITING_TITLE = `Writing Archive | ${SITE_NAME}`
 const WRITING_DESCRIPTION = 'Index of articles, project notes, and engineering write-ups by Dulanga Jayawardena.'
+const NOT_FOUND_TITLE = `Page not found | ${SITE_NAME}`
 const DEFAULT_OG_IMAGE = `${SITE_URL}/assets/social/og-home.png`
 const PORTRAIT_IMAGE = `${SITE_URL}/assets/img/profile.jpeg`
 const PORTRAIT_TITLE = SITE_NAME
@@ -187,9 +188,9 @@ ${entries.map((entry) => {
 }
 
 /** Build a hidden-but-crawlable list of <figure> blocks for every map photo.
- *  Sighted users don't see this (sr-only), but Googlebot reads the alts,
- *  figcaptions, and full-size <img> URLs in the static HTML — solving the
- *  problem that Leaflet markers and the modal only render at runtime. */
+ *  Sighted users don't see this (sr-only), but Googlebot reads the
+ *  figcaptions in the static HTML; image URLs come from the ImageObject
+ *  JSON-LD and the image sitemap, so no <img> is fetched here. */
 function buildPhotoIndexHtml(photoLocations) {
   const items = photoLocations.map((photo) => {
     const credit = photo.photoCredit
@@ -199,9 +200,9 @@ function buildPhotoIndexHtml(photoLocations) {
       ? `<p>${escapeHtml(photo.description)}</p>`
       : ''
     return `<figure>
-  <img src="${escapeAttribute(photo.image)}" srcset="${escapeAttribute(photo.thumbnail)} 160w, ${escapeAttribute(photo.image)} 1600w" sizes="(max-width: 640px) 100vw, 720px" alt="${escapeAttribute(photo.alt)}" loading="lazy" decoding="async" width="1600" height="1200" />
   <figcaption>
     <h3>${escapeHtml(photo.title)}</h3>
+    <p>${escapeHtml(photo.alt)}</p>
     <p>${escapeHtml(photo.location)} · ${escapeHtml(photo.date)}</p>
     ${description}
     ${credit}
@@ -379,6 +380,19 @@ async function main() {
   })
   writingHtml = injectSsrIntoRoot(writingHtml, writingRender.html)
   await writeFile(path.join('writing', 'index.html'), writingHtml)
+
+  // 404: GitHub Pages serves dist/404.html for any unknown path. The client
+  // renders the same catch-all page for every unmatched URL, so it hydrates.
+  const notFoundRender = render('/404.html')
+  let notFoundHtml = applyMetadata(shell, {
+    title: NOT_FOUND_TITLE,
+    description: HOME_DESCRIPTION,
+    canonicalPath: '/',
+  })
+    .replace(/\s*<link rel="canonical" href="[^"]*" \/>/, '')
+    .replace('<meta name="robots" content="index,follow" />', '<meta name="robots" content="noindex" />')
+  notFoundHtml = injectSsrIntoRoot(notFoundHtml, notFoundRender.html)
+  await writeFile('404.html', notFoundHtml)
 
   // Map page: metadata-only shell, no SSR (Leaflet is client-only).
   // We do, however, inject a hidden-but-crawlable photo index into the body

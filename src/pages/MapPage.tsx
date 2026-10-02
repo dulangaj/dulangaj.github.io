@@ -15,12 +15,13 @@ import { memo, useState, useCallback, useEffect, useMemo, useRef, type PointerEv
 import { MapContainer, TileLayer, Marker, useMap, useMapEvents } from 'react-leaflet'
 import MarkerClusterGroup from 'react-leaflet-cluster'
 import { motion, AnimatePresence, useDragControls, type PanInfo } from 'framer-motion'
-import { useLocation, useNavigate, useSearchParams } from 'react-router-dom'
+import { Link, useLocation, useSearchParams } from 'react-router-dom'
 import L from 'leaflet'
 import 'leaflet/dist/leaflet.css'
-import { FiArrowLeft, FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
+import { FiMapPin, FiCalendar, FiBookOpen, FiX, FiCamera, FiArrowUpRight, FiChevronLeft, FiChevronRight } from 'react-icons/fi'
 import { useTheme } from '@/hooks/useTheme'
 import { EditionToggle } from '@/components/ui/EditionToggle'
+import { SiteNav } from '@/components/layout/SiteNav'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { SiteConfig } from '@/models/SiteConfig'
 import { photoLocations, type PhotoLocation } from '@/data/photoLocations'
@@ -588,7 +589,6 @@ const PhotoMarkerClusters = memo(function PhotoMarkerClusters({
 
 export function MapPage() {
   const location = useLocation()
-  const navigate = useNavigate()
   const [searchParams, setSearchParams] = useSearchParams()
   const filterParam = searchParams.get('filter')
   const initialFilter: FilterId = isFilterId(filterParam) ? filterParam : 'all'
@@ -613,14 +613,10 @@ export function MapPage() {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null)
   const previousFocusRef = useRef<HTMLElement | null>(null)
   const sheetDragControls = useDragControls()
-  const backLinkParams = useMemo(() => {
-    const params = new URLSearchParams({
-      backTo: `${location.pathname}${location.search}`,
-      backLabel: mapPaper.backToMap,
-    })
-
-    return params.toString()
-  }, [location.pathname, location.search])
+  const backState = useMemo(() => ({
+    backTo: `${location.pathname}${location.search}`,
+    backLabel: mapPaper.backToMap,
+  }), [location.pathname, location.search])
   const [isDesktop, setIsDesktop] = useState(() =>
     typeof window !== 'undefined' && window.matchMedia('(min-width: 1024px)').matches,
   )
@@ -796,545 +792,538 @@ export function MapPage() {
       style={{ background: 'var(--color-paper)' }}
     >
       {/* ── Header overlay ──────────────────────────────────────────────── */}
-      <div
-        className="absolute top-0 left-0 right-0 z-[1000] flex flex-col px-4 py-3 sm:px-6"
+      <header
+        className="absolute top-0 left-0 right-0 z-[1000] flex flex-col px-4 py-2 sm:px-6 sm:py-3"
         style={{
           background:      'color-mix(in srgb, var(--color-paper) 88%, transparent)',
           backdropFilter:  'blur(14px)',
           WebkitBackdropFilter: 'blur(14px)',
         }}
       >
-        {/* Top row: back + title + theme toggle */}
-        <div className="flex items-center gap-4 w-full">
-          <button
-            onClick={() => navigate('/')}
-            className="flex items-center gap-1.5 min-h-11 min-w-11 -ml-3 pl-3 md:min-h-0 md:min-w-0 md:ml-0 md:pl-0 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors cursor-pointer bg-transparent border-none"
-            aria-label="Back to home"
-          >
-            <FiArrowLeft size={13} />
-            <span className="hidden sm:inline">{mapPaper.back}</span>
-          </button>
-
-          <div className="flex-1 min-w-0" />
-
+        {/* Top row: section nav + theme toggle */}
+        <div className="flex items-center justify-between gap-4 w-full -ml-1.5">
+          <SiteNav />
           <EditionToggle />
         </div>
 
-        {/* Section banner — shared masthead template */}
-        <div className="mt-2">
+        {/* Section banner — shared masthead template, filters set at its right */}
+        <div className="mt-1 sm:mt-2">
           <SectionBanner
             folio={mapPaper.folio}
             label={mapPaper.label}
             note={`${filteredPhotos.length} ${mapPaper.counterNoun}`}
             bottomRule="single"
             labelAs="h1"
-          />
-        </div>
-
-        <div className="flex items-center gap-4 mt-2">
-          {FILTER_OPTIONS.map((filter) => {
-            const active = activeFilter === filter.id
-            return (
-              <button
-                key={filter.id}
-                onClick={() => {
-                  const nextFilter = filter.id
-                  setActiveFilter(nextFilter)
-                  if (selected) {
-                    const willRemainVisible = photoLocations.some((photo) => {
-                      if (photo.id !== selected.id) return false
-                      if (nextFilter === 'all') return true
-                      return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
-                    })
-
-                    if (!willRemainVisible) {
-                      handleClose()
-                    }
-                  }
-                }}
-                className="font-mono text-[11px] tracking-[0.22em] uppercase transition-colors duration-200 cursor-pointer bg-transparent border-none pb-1"
-                style={{
-                  color: active ? 'var(--color-crimson)' : 'var(--color-subtle)',
-                  borderBottom: active ? '1.5px solid var(--color-crimson)' : '1.5px solid transparent',
-                }}
-              >
-                {filter.label}
-              </button>
-            )
-          })}
-        </div>
-      </div>
-
-      {/* ── Map ─────────────────────────────────────────────────────────── */}
-      <MapContainer
-        center={[viewport.lat, viewport.lng]}
-        zoom={viewport.zoom}
-        minZoom={MIN_ZOOM}
-        maxZoom={MAX_ZOOM}
-        maxBounds={WORLD_BOUNDS}
-        maxBoundsViscosity={1}
-        zoomControl={false}
-        scrollWheelZoom={true}
-        style={{ width: '100%', height: '100%' }}
-        className="map-container"
-      >
-        <ThemeAwareTiles />
-        <EnsureFreshMapLayout onReady={() => setIsMapLayoutReady(true)} />
-        <ZoomControls />
-        <ResponsiveMinZoom />
-        <MapKeyboardControl paused={Boolean(visibleSelected)} />
-        <MapViewportSync onViewportChange={setViewport} />
-        {isMapLayoutReady && (
-          <PhotoMarkerClusters
-            photos={filteredPhotos}
-            onMarkerClick={handleMarkerClick}
-          />
-        )}
-      </MapContainer>
-
-      {/* ── Loading overlay ──────────────────────────────────────────────── */}
-      <AnimatePresence>
-        {!isMapLayoutReady && (
-          <motion.div
-            key="map-loader"
-            initial={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none"
-            style={{ background: 'var(--color-paper)' }}
-          >
-            <div className="flex flex-col items-center gap-3">
-              <div className="h-px w-10 bg-[var(--color-crimson)] animate-pulse" />
-              <span
-                className="font-mono text-[10px] tracking-[0.22em] uppercase"
-                style={{ color: 'var(--color-subtle)' }}
-              >
-                {mapPaper.loading}
-              </span>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* ── Bottom sheet ────────────────────────────────────────────────── */}
-      <AnimatePresence>
-        {visibleSelected && (
-          <>
-            {/* Scrim — tap to close */}
-            <motion.div
-              key="scrim"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="absolute inset-0 z-[1001] bg-black/25 lg:bg-transparent lg:pointer-events-none"
-              onClick={handleClose}
-              aria-hidden="true"
-            />
-
-            {/* Sheet */}
-            <motion.div
-              key="sheet"
-              initial={{ y: '100%' }}
-              animate={{ y: 0, opacity: 1 }}
-              exit={{ y: '100%', opacity: 0 }}
-              transition={{ type: 'spring', damping: 28, stiffness: 260, mass: 0.8 }}
-              drag={isDesktop ? false : 'y'}
-              dragControls={sheetDragControls}
-              dragListener={false}
-              dragConstraints={{ top: 0 }}
-              dragElastic={0.2}
-              onDragEnd={handleDragEnd}
-              className="absolute bottom-0 left-0 right-0 z-[1002] max-h-[85vh] flex flex-col rounded-t-2xl overflow-hidden shadow-2xl lg:top-24 lg:right-6 lg:left-auto lg:w-[min(440px,38vw)] lg:max-h-[calc(100vh-7rem)] lg:rounded-2xl"
-              style={{
-                background: 'var(--color-surface)',
-                borderTop: '1px solid var(--color-rule)',
-                borderLeft: '1px solid var(--color-rule)',
-                borderRight: '1px solid var(--color-rule)',
-                borderBottom: '1px solid var(--color-rule)',
-              }}
-              onClick={(e) => e.stopPropagation()}
-              role="dialog"
-              aria-modal={!isDesktop}
-              aria-labelledby={`map-photo-title-${visibleSelected.id}`}
-              ref={panelRef}
-            >
-              <div
-                className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)] cursor-grab active:cursor-grabbing"
-                style={{ touchAction: 'none' }}
-                onPointerDown={(e) => { if (!isDesktop) sheetDragControls.start(e) }}
-              >
-                <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
-
-                {/* Photo navigation */}
-                {isDesktop && canNavigateCluster && (
-                  <div className="absolute left-3 top-3 flex items-center gap-1 z-10">
-                    <button
-                      onClick={() => navigatePhoto('prev', activeClusterPhotos, visibleSelected)}
-                      className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
-                      style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
-                      aria-label="Previous photo"
-                      aria-keyshortcuts="ArrowLeft"
-                    >
-                      <FiChevronLeft size={15} />
-                    </button>
-                    <button
-                      onClick={() => navigatePhoto('next', activeClusterPhotos, visibleSelected)}
-                      className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
-                      style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
-                      aria-label="Next photo"
-                      aria-keyshortcuts="ArrowRight"
-                    >
-                      <FiChevronRight size={15} />
-                    </button>
-                  </div>
-                )}
-
-                {isDesktop && canNavigateCluster && activeClusterIndex !== -1 && (
-                  <motion.div
-                    key={clusterKey}
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ duration: 0.12 }}
-                    className="font-mono text-[10px] tracking-[0.14em] uppercase"
-                    style={{ color: 'var(--color-subtle)' }}
-                  >
-                    {activeClusterIndex + 1} / {activeClusterPhotos.length}
-                  </motion.div>
-                )}
-
+            aside={FILTER_OPTIONS.map((filter) => {
+              const active = activeFilter === filter.id
+              return (
                 <button
-                  ref={closeButtonRef}
-                  onClick={handleClose}
-                  className="absolute right-2 top-2 w-11 h-11 md:right-3 md:top-3 md:w-8 md:h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
-                  style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
-                  aria-label="Close"
-                  aria-keyshortcuts="Escape"
-                >
-                  <FiX size={15} />
-                </button>
-              </div>
+                  key={filter.id}
+                  aria-pressed={active}
+                  onClick={() => {
+                    const nextFilter = filter.id
+                    setActiveFilter(nextFilter)
+                    if (selected) {
+                      const willRemainVisible = photoLocations.some((photo) => {
+                        if (photo.id !== selected.id) return false
+                        if (nextFilter === 'all') return true
+                        return Boolean(photo.relatedPosts && photo.relatedPosts.length > 0)
+                      })
 
-              {/* Scrollable content — <figure> so img + figcaption are semantically paired (SEO) */}
-              <figure className="overflow-y-auto overscroll-contain m-0">
-                {/* Photo with swipe */}
-                <div
-                  className="relative w-full overflow-hidden"
-                  style={{
-                    height: photoViewerHeight,
-                    minHeight: photoViewerMinHeight,
-                    background: 'var(--color-rule)',
-                    touchAction: canNavigateCluster && !isDesktop ? 'pan-y pinch-zoom' : 'auto',
-                  }}
-                  onPointerDown={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
-                    pointerStartRef.current = { x: e.clientX, y: e.clientY, t: Date.now() }
-                    isDraggingRef.current = false
-                    setDragX(0)
-                  } : undefined}
-                  onPointerMove={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
-                    const start = pointerStartRef.current
-                    if (!start) return
-                    const dx = e.clientX - start.x
-                    const dy = e.clientY - start.y
-                    if (!isDraggingRef.current) {
-                      if (Math.abs(dx) > 5 && Math.abs(dx) > Math.abs(dy) * 0.8) {
-                        isDraggingRef.current = true
-                        ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
-                      } else {
-                        return
+                      if (!willRemainVisible) {
+                        handleClose()
                       }
                     }
-                    e.preventDefault()
-                    setDragX(dx)
-                  } : undefined}
-                  onPointerUp={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
-                    const start = pointerStartRef.current
-                    pointerStartRef.current = null
-                    if (!isDraggingRef.current || !start) {
-                      setDragX(0)
-                      return
-                    }
-                    isDraggingRef.current = false
-                    ;(e.target as HTMLElement).releasePointerCapture?.(e.pointerId)
-                    const dx = e.clientX - start.x
-                    const dt = Math.max(Date.now() - start.t, 1)
-                    const velocity = (dx / dt) * 1000
-                    if (dx <= -PHOTO_SWIPE_THRESHOLD || velocity <= -PHOTO_SWIPE_VELOCITY) {
-                      navigatePhoto('next', activeClusterPhotos, visibleSelected)
-                    } else if (dx >= PHOTO_SWIPE_THRESHOLD || velocity >= PHOTO_SWIPE_VELOCITY) {
-                      navigatePhoto('prev', activeClusterPhotos, visibleSelected)
-                    } else {
-                      setDragX(0)
-                    }
-                  } : undefined}
-                  onPointerCancel={canNavigateCluster && !isDesktop ? () => {
-                    pointerStartRef.current = null
-                    isDraggingRef.current = false
-                    setDragX(0)
-                  } : undefined}
+                  }}
+                  className="inline-flex items-center min-h-11 -my-3.5 font-mono text-[11px] tracking-[0.22em] uppercase transition-colors duration-200 cursor-pointer bg-transparent border-none"
+                  style={{ color: active ? 'var(--color-crimson)' : 'var(--color-subtle)' }}
                 >
-                  <div
-                    className="absolute inset-0"
-                    style={{
-                      transform: dragX !== 0 ? `translateX(${dragX}px)` : undefined,
-                      willChange: dragX !== 0 ? 'transform' : undefined,
-                    }}
+                  <span
+                    className="pb-0.5"
+                    style={{ borderBottom: active ? '1.5px solid var(--color-crimson)' : '1.5px solid transparent' }}
                   >
-                  <AnimatePresence initial={false} mode="popLayout" custom={slideDirection}>
-                    <motion.div
-                      key={visibleSelected.id}
-                      custom={slideDirection}
-                      variants={{
-                        enter: (dir: number) => ({ x: `${dir * 100}%`, opacity: 0.5 }),
-                        center: { x: 0, opacity: 1 },
-                        exit: (dir: number) => ({ x: `${dir * -100}%`, opacity: 0.5 }),
-                      }}
-                      initial="enter"
-                      animate="center"
-                      exit="exit"
-                      transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.8 }}
-                      className="absolute inset-0 flex items-center justify-center p-3 sm:p-4"
-                    >
-                      <img
-                        src={visibleSelected.thumbnail}
-                        alt=""
-                        aria-hidden="true"
-                        className="pointer-events-none absolute inset-0 w-full h-full object-cover scale-110 blur-xl transition-opacity duration-300"
-                        style={{ opacity: imageLoaded ? 0.6 : 1 }}
-                        draggable={false}
-                      />
-                      <div className="pointer-events-none absolute inset-0 bg-black/10" />
-                      <div
-                        className="relative z-[1] flex max-w-full max-h-full items-center justify-center transition-opacity duration-300"
-                        style={{ opacity: imageLoaded ? 1 : 0 }}
-                      >
-                        <img
-                          src={visibleSelected.image}
-                          srcSet={`${visibleSelected.thumbnail} 160w, ${visibleSelected.image} 1600w`}
-                          sizes="(max-width: 640px) 100vw, 720px"
-                          alt={visibleSelected.alt}
-                          className="block max-w-full max-h-full w-auto h-auto rounded-2xl shadow-[0_10px_28px_rgba(0,0,0,0.16)]"
-                          onLoad={() => setImageLoaded(true)}
-                          draggable={false}
-                        />
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                  </div>
+                    {filter.label}
+                  </span>
+                </button>
+              )
+            })}
+          />
+        </div>
+      </header>
 
-                  {/* Prev/Next buttons — mobile only */}
-                  {!isDesktop && canNavigateCluster && (
-                    <>
+      <main id="main-content" className="h-full">
+        {/* ── Map ─────────────────────────────────────────────────────────── */}
+        <MapContainer
+          center={[viewport.lat, viewport.lng]}
+          zoom={viewport.zoom}
+          minZoom={MIN_ZOOM}
+          maxZoom={MAX_ZOOM}
+          maxBounds={WORLD_BOUNDS}
+          maxBoundsViscosity={1}
+          zoomControl={false}
+          scrollWheelZoom={true}
+          style={{ width: '100%', height: '100%' }}
+          className="map-container"
+        >
+          <ThemeAwareTiles />
+          <EnsureFreshMapLayout onReady={() => setIsMapLayoutReady(true)} />
+          <ZoomControls />
+          <ResponsiveMinZoom />
+          <MapKeyboardControl paused={Boolean(visibleSelected)} />
+          <MapViewportSync onViewportChange={setViewport} />
+          {isMapLayoutReady && (
+            <PhotoMarkerClusters
+              photos={filteredPhotos}
+              onMarkerClick={handleMarkerClick}
+            />
+          )}
+        </MapContainer>
+
+        {/* ── Loading overlay ──────────────────────────────────────────────── */}
+        <AnimatePresence>
+          {!isMapLayoutReady && (
+            <motion.div
+              key="map-loader"
+              initial={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute inset-0 z-[999] flex items-center justify-center pointer-events-none"
+              style={{ background: 'var(--color-paper)' }}
+            >
+              <div className="flex flex-col items-center gap-3">
+                <div className="h-px w-10 bg-[var(--color-crimson)] animate-pulse" />
+                <span
+                  className="font-mono text-[10px] tracking-[0.22em] uppercase"
+                  style={{ color: 'var(--color-subtle)' }}
+                >
+                  {mapPaper.loading}
+                </span>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* ── Bottom sheet ────────────────────────────────────────────────── */}
+        <AnimatePresence>
+          {visibleSelected && (
+            <>
+              {/* Scrim — tap to close */}
+              <motion.div
+                key="scrim"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.2 }}
+                className="absolute inset-0 z-[1001] bg-black/25 lg:bg-transparent lg:pointer-events-none"
+                onClick={handleClose}
+                aria-hidden="true"
+              />
+
+              {/* Sheet */}
+              <motion.div
+                key="sheet"
+                initial={{ y: '100%' }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: '100%', opacity: 0 }}
+                transition={{ type: 'spring', damping: 28, stiffness: 260, mass: 0.8 }}
+                drag={isDesktop ? false : 'y'}
+                dragControls={sheetDragControls}
+                dragListener={false}
+                dragConstraints={{ top: 0 }}
+                dragElastic={0.2}
+                onDragEnd={handleDragEnd}
+                className="absolute bottom-0 left-0 right-0 z-[1002] max-h-[85vh] flex flex-col rounded-t-2xl overflow-hidden shadow-2xl lg:top-24 lg:right-6 lg:left-auto lg:w-[min(440px,38vw)] lg:max-h-[calc(100vh-7rem)] lg:rounded-2xl"
+                style={{
+                  background: 'var(--color-surface)',
+                  borderTop: '1px solid var(--color-rule)',
+                  borderLeft: '1px solid var(--color-rule)',
+                  borderRight: '1px solid var(--color-rule)',
+                  borderBottom: '1px solid var(--color-rule)',
+                }}
+                onClick={(e) => e.stopPropagation()}
+                role="dialog"
+                aria-modal={!isDesktop}
+                aria-labelledby={`map-photo-title-${visibleSelected.id}`}
+                ref={panelRef}
+              >
+                <div
+                  className="relative flex items-center justify-center px-4 pt-3 pb-2 flex-shrink-0 border-b border-[var(--color-rule)] cursor-grab active:cursor-grabbing"
+                  style={{ touchAction: 'none' }}
+                  onPointerDown={(e) => { if (!isDesktop) sheetDragControls.start(e) }}
+                >
+                  <div className="w-9 h-1 rounded-full lg:hidden" style={{ background: 'var(--color-rule)' }} />
+
+                  {/* Photo navigation */}
+                  {isDesktop && canNavigateCluster && (
+                    <div className="absolute left-3 top-3 flex items-center gap-1 z-10">
                       <button
                         onClick={() => navigatePhoto('prev', activeClusterPhotos, visibleSelected)}
-                        className="absolute left-2 top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center rounded-full border-none cursor-pointer"
-                        style={{ background: 'rgba(0,0,0,0.45)', color: '#fff', backdropFilter: 'blur(6px)' }}
+                        className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
+                        style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                         aria-label="Previous photo"
+                        aria-keyshortcuts="ArrowLeft"
                       >
-                        <FiChevronLeft size={18} />
+                        <FiChevronLeft size={15} />
                       </button>
                       <button
                         onClick={() => navigatePhoto('next', activeClusterPhotos, visibleSelected)}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center rounded-full border-none cursor-pointer"
-                        style={{ background: 'rgba(0,0,0,0.45)', color: '#fff', backdropFilter: 'blur(6px)' }}
+                        className="w-8 h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200"
+                        style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
                         aria-label="Next photo"
+                        aria-keyshortcuts="ArrowRight"
                       >
-                        <FiChevronRight size={18} />
+                        <FiChevronRight size={15} />
                       </button>
-                    </>
-                  )}
-
-                  {/* Pagination dots — mobile only */}
-                  {!isDesktop && canNavigateCluster && (
-                    <div className="absolute bottom-2 left-0 right-0 z-[2] flex items-center justify-center gap-1.5">
-                      {activeClusterPhotos.length <= 8
-                        ? activeClusterPhotos.map((photo, i) => (
-                          <div
-                            key={photo.id}
-                            className="rounded-full transition-all duration-200"
-                            style={{
-                              width: i === activeClusterIndex ? 7 : 5,
-                              height: i === activeClusterIndex ? 7 : 5,
-                              background: i === activeClusterIndex
-                                ? 'rgba(255,255,255,0.95)'
-                                : 'rgba(255,255,255,0.45)',
-                              boxShadow: '0 0 3px rgba(0,0,0,0.3)',
-                            }}
-                          />
-                        ))
-                        : (
-                          <span
-                            className="font-mono text-[10px] px-2 py-0.5 rounded-full"
-                            style={{
-                              background: 'rgba(0,0,0,0.45)',
-                              color: 'rgba(255,255,255,0.9)',
-                              backdropFilter: 'blur(4px)',
-                            }}
-                          >
-                            {activeClusterIndex + 1} / {activeClusterPhotos.length}
-                          </span>
-                        )
-                      }
                     </div>
                   )}
+
+                  {isDesktop && canNavigateCluster && activeClusterIndex !== -1 && (
+                    <motion.div
+                      key={clusterKey}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.12 }}
+                      className="font-mono text-[10px] tracking-[0.14em] uppercase"
+                      style={{ color: 'var(--color-subtle)' }}
+                    >
+                      {activeClusterIndex + 1} / {activeClusterPhotos.length}
+                    </motion.div>
+                  )}
+
+                  <button
+                    ref={closeButtonRef}
+                    onClick={handleClose}
+                    className="absolute right-2 top-2 w-11 h-11 md:right-3 md:top-3 md:w-8 md:h-8 flex items-center justify-center rounded-full cursor-pointer border-none transition-colors duration-200 z-10"
+                    style={{ background: 'var(--color-paper)', color: 'var(--color-muted)' }}
+                    aria-label="Close"
+                    aria-keyshortcuts="Escape"
+                  >
+                    <FiX size={15} />
+                  </button>
                 </div>
 
-                {/* Info — <figcaption> pairs this caption text with the image above for image SEO.
-                    Keyed on the photo id so the metadata gently crossfades on swap rather than hard-cutting. */}
-                <motion.figcaption
-                  key={visibleSelected.id}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.12 }}
-                  className="px-5 pt-4 pb-6"
-                >
-                  {/* Category + location */}
-                  <div className="flex items-center gap-3 mb-3 flex-wrap">
-                    {visibleSelected.category && (
+                {/* Scrollable content — <figure> so img + figcaption are semantically paired (SEO) */}
+                <figure className="overflow-y-auto overscroll-contain m-0">
+                  {/* Photo with swipe */}
+                  <div
+                    className="relative w-full overflow-hidden"
+                    style={{
+                      height: photoViewerHeight,
+                      minHeight: photoViewerMinHeight,
+                      background: 'var(--color-rule)',
+                      touchAction: canNavigateCluster && !isDesktop ? 'pan-y pinch-zoom' : 'auto',
+                    }}
+                    onPointerDown={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
+                      pointerStartRef.current = { x: e.clientX, y: e.clientY, t: Date.now() }
+                      isDraggingRef.current = false
+                      setDragX(0)
+                    } : undefined}
+                    onPointerMove={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
+                      const start = pointerStartRef.current
+                      if (!start) return
+                      const dx = e.clientX - start.x
+                      const dy = e.clientY - start.y
+                      if (!isDraggingRef.current) {
+                        if (Math.abs(dx) > 5 && Math.abs(dx) > Math.abs(dy) * 0.8) {
+                          isDraggingRef.current = true
+                          ;(e.target as HTMLElement).setPointerCapture?.(e.pointerId)
+                        } else {
+                          return
+                        }
+                      }
+                      e.preventDefault()
+                      setDragX(dx)
+                    } : undefined}
+                    onPointerUp={canNavigateCluster && !isDesktop ? (e: ReactPointerEvent) => {
+                      const start = pointerStartRef.current
+                      pointerStartRef.current = null
+                      if (!isDraggingRef.current || !start) {
+                        setDragX(0)
+                        return
+                      }
+                      isDraggingRef.current = false
+                      ;(e.target as HTMLElement).releasePointerCapture?.(e.pointerId)
+                      const dx = e.clientX - start.x
+                      const dt = Math.max(Date.now() - start.t, 1)
+                      const velocity = (dx / dt) * 1000
+                      if (dx <= -PHOTO_SWIPE_THRESHOLD || velocity <= -PHOTO_SWIPE_VELOCITY) {
+                        navigatePhoto('next', activeClusterPhotos, visibleSelected)
+                      } else if (dx >= PHOTO_SWIPE_THRESHOLD || velocity >= PHOTO_SWIPE_VELOCITY) {
+                        navigatePhoto('prev', activeClusterPhotos, visibleSelected)
+                      } else {
+                        setDragX(0)
+                      }
+                    } : undefined}
+                    onPointerCancel={canNavigateCluster && !isDesktop ? () => {
+                      pointerStartRef.current = null
+                      isDraggingRef.current = false
+                      setDragX(0)
+                    } : undefined}
+                  >
+                    <div
+                      className="absolute inset-0"
+                      style={{
+                        transform: dragX !== 0 ? `translateX(${dragX}px)` : undefined,
+                        willChange: dragX !== 0 ? 'transform' : undefined,
+                      }}
+                    >
+                    <AnimatePresence initial={false} mode="popLayout" custom={slideDirection}>
+                      <motion.div
+                        key={visibleSelected.id}
+                        custom={slideDirection}
+                        variants={{
+                          enter: (dir: number) => ({ x: `${dir * 100}%`, opacity: 0.5 }),
+                          center: { x: 0, opacity: 1 },
+                          exit: (dir: number) => ({ x: `${dir * -100}%`, opacity: 0.5 }),
+                        }}
+                        initial="enter"
+                        animate="center"
+                        exit="exit"
+                        transition={{ type: 'spring', damping: 30, stiffness: 300, mass: 0.8 }}
+                        className="absolute inset-0 flex items-center justify-center p-3 sm:p-4"
+                      >
+                        <img
+                          src={visibleSelected.thumbnail}
+                          alt=""
+                          aria-hidden="true"
+                          className="pointer-events-none absolute inset-0 w-full h-full object-cover scale-110 blur-xl transition-opacity duration-300"
+                          style={{ opacity: imageLoaded ? 0.6 : 1 }}
+                          draggable={false}
+                        />
+                        <div className="pointer-events-none absolute inset-0 bg-black/10" />
+                        <div
+                          className="relative z-[1] flex max-w-full max-h-full items-center justify-center transition-opacity duration-300"
+                          style={{ opacity: imageLoaded ? 1 : 0 }}
+                        >
+                          <img
+                            src={visibleSelected.image}
+                            srcSet={`${visibleSelected.thumbnail} 160w, ${visibleSelected.image} 1600w`}
+                            sizes="(max-width: 640px) 100vw, 720px"
+                            alt={visibleSelected.alt}
+                            className="block max-w-full max-h-full w-auto h-auto rounded-2xl shadow-[0_10px_28px_rgba(0,0,0,0.16)]"
+                            onLoad={() => setImageLoaded(true)}
+                            draggable={false}
+                          />
+                        </div>
+                      </motion.div>
+                    </AnimatePresence>
+                    </div>
+
+                    {/* Prev/Next buttons — mobile only */}
+                    {!isDesktop && canNavigateCluster && (
                       <>
-                        <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
-                          {visibleSelected.category}
-                        </span>
-                        <div className="h-px w-4 bg-[var(--color-rule)]" />
+                        <button
+                          onClick={() => navigatePhoto('prev', activeClusterPhotos, visibleSelected)}
+                          className="absolute left-2 top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center rounded-full border-none cursor-pointer"
+                          style={{ background: 'rgba(0,0,0,0.45)', color: '#fff', backdropFilter: 'blur(6px)' }}
+                          aria-label="Previous photo"
+                        >
+                          <FiChevronLeft size={18} />
+                        </button>
+                        <button
+                          onClick={() => navigatePhoto('next', activeClusterPhotos, visibleSelected)}
+                          className="absolute right-2 top-1/2 -translate-y-1/2 z-[2] w-9 h-9 flex items-center justify-center rounded-full border-none cursor-pointer"
+                          style={{ background: 'rgba(0,0,0,0.45)', color: '#fff', backdropFilter: 'blur(6px)' }}
+                          aria-label="Next photo"
+                        >
+                          <FiChevronRight size={18} />
+                        </button>
                       </>
                     )}
-                    <span
-                      className="flex items-center gap-1 font-mono text-[10px] tracking-[0.22em] uppercase"
-                      style={{ color: 'var(--color-subtle)' }}
-                    >
-                      <FiMapPin size={10} />
-                      {visibleSelected.location}
-                    </span>
+
+                    {/* Pagination dots — mobile only */}
+                    {!isDesktop && canNavigateCluster && (
+                      <div className="absolute bottom-2 left-0 right-0 z-[2] flex items-center justify-center gap-1.5">
+                        {activeClusterPhotos.length <= 8
+                          ? activeClusterPhotos.map((photo, i) => (
+                            <div
+                              key={photo.id}
+                              className="rounded-full transition-all duration-200"
+                              style={{
+                                width: i === activeClusterIndex ? 7 : 5,
+                                height: i === activeClusterIndex ? 7 : 5,
+                                background: i === activeClusterIndex
+                                  ? 'rgba(255,255,255,0.95)'
+                                  : 'rgba(255,255,255,0.45)',
+                                boxShadow: '0 0 3px rgba(0,0,0,0.3)',
+                              }}
+                            />
+                          ))
+                          : (
+                            <span
+                              className="font-mono text-[10px] px-2 py-0.5 rounded-full"
+                              style={{
+                                background: 'rgba(0,0,0,0.45)',
+                                color: 'rgba(255,255,255,0.9)',
+                                backdropFilter: 'blur(4px)',
+                              }}
+                            >
+                              {activeClusterIndex + 1} / {activeClusterPhotos.length}
+                            </span>
+                          )
+                        }
+                      </div>
+                    )}
                   </div>
 
-                  {/* Title */}
-                  <h2
-                    id={`map-photo-title-${visibleSelected.id}`}
-                    className="font-display text-[20px] sm:text-[22px] font-semibold leading-snug mb-1"
-                    style={{ color: 'var(--color-ink)' }}
+                  {/* Info — <figcaption> pairs this caption text with the image above for image SEO.
+                      Keyed on the photo id so the metadata gently crossfades on swap rather than hard-cutting. */}
+                  <motion.figcaption
+                    key={visibleSelected.id}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.12 }}
+                    className="px-5 pt-4 pb-6"
                   >
-                    {visibleSelected.title}
-                  </h2>
-
-                  {/* Subtitle */}
-                  {visibleSelected.subtitle && (
-                    <p
-                      className="font-body text-[13px] mb-3"
-                      style={{ color: 'var(--color-muted)' }}
-                    >
-                      {visibleSelected.subtitle}
-                    </p>
-                  )}
-
-                  {(visibleSelected.date || visibleSelected.cameraModel) && (
-                    <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
-                      {visibleSelected.date && (
-                        <div
-                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.22em] uppercase"
-                          style={{ color: 'var(--color-subtle)' }}
-                        >
-                          <FiCalendar size={10} />
-                          {formatDate(visibleSelected.date)}
-                        </div>
+                    {/* Category + location */}
+                    <div className="flex items-center gap-3 mb-3 flex-wrap">
+                      {visibleSelected.category && (
+                        <>
+                          <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
+                            {visibleSelected.category}
+                          </span>
+                          <div className="h-px w-4 bg-[var(--color-rule)]" />
+                        </>
                       )}
-                      {visibleSelected.cameraModel && (
-                        <div
-                          className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.22em] uppercase"
-                          style={{ color: 'var(--color-subtle)' }}
-                        >
-                          <FiCamera size={10} />
-                          {visibleSelected.cameraModel}
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {visibleSelected.description && (
-                    <p
-                      className="font-body text-[13px] leading-relaxed mb-4"
-                      style={{ color: 'var(--color-muted)' }}
-                    >
-                      {visibleSelected.description}
-                    </p>
-                  )}
-
-                  {/* Related posts */}
-                  {visibleSelected.relatedPosts && visibleSelected.relatedPosts.length > 0 && (
-                    <div className="flex flex-col gap-2 border-t border-[var(--color-rule)] pt-4">
-                      <p
-                        className="font-mono text-[10px] tracking-[0.28em] uppercase mb-1"
+                      <span
+                        className="flex items-center gap-1 font-mono text-[10px] tracking-[0.22em] uppercase"
                         style={{ color: 'var(--color-subtle)' }}
                       >
-                        {visibleSelected.relatedPosts.length === 1 ? mapPaper.related.one : mapPaper.related.many}
-                      </p>
-                      {visibleSelected.relatedPosts.map((post) => (
-                        <a
-                          key={post.postId}
-                          href={`${getPostPath(post.postId)}?${backLinkParams}`}
-                          className="group w-full flex items-center gap-3 py-2 font-display text-[14px] font-medium transition-colors duration-200 text-left"
-                          style={{ color: 'var(--color-ink)' }}
-                        >
-                          <FiBookOpen size={13} className="flex-shrink-0 text-[var(--color-crimson)]" />
-                          <span className="flex-1 group-hover:text-[var(--color-crimson)] transition-colors duration-200">{post.title}</span>
-                          <FiArrowUpRight size={12} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
-                        </a>
-                      ))}
+                        <FiMapPin size={10} />
+                        {visibleSelected.location}
+                      </span>
                     </div>
-                  )}
 
-                  {/* Photo credit — carries the "Dulanga Jayawardena" name signal for image SEO */}
-                  {visibleSelected.photoCredit && (
-                    <p
-                      className="font-mono text-[10px] tracking-[0.22em] uppercase mt-4"
+                    {/* Title */}
+                    <h2
+                      id={`map-photo-title-${visibleSelected.id}`}
+                      className="font-display text-[20px] sm:text-[22px] font-semibold leading-snug mb-1"
+                      style={{ color: 'var(--color-ink)' }}
+                    >
+                      {visibleSelected.title}
+                    </h2>
+
+                    {/* Subtitle */}
+                    {visibleSelected.subtitle && (
+                      <p
+                        className="font-body text-[13px] mb-3"
+                        style={{ color: 'var(--color-muted)' }}
+                      >
+                        {visibleSelected.subtitle}
+                      </p>
+                    )}
+
+                    {(visibleSelected.date || visibleSelected.cameraModel) && (
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-2 mb-4">
+                        {visibleSelected.date && (
+                          <div
+                            className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.22em] uppercase"
+                            style={{ color: 'var(--color-subtle)' }}
+                          >
+                            <FiCalendar size={10} />
+                            {formatDate(visibleSelected.date)}
+                          </div>
+                        )}
+                        {visibleSelected.cameraModel && (
+                          <div
+                            className="flex items-center gap-1.5 font-mono text-[10px] tracking-[0.22em] uppercase"
+                            style={{ color: 'var(--color-subtle)' }}
+                          >
+                            <FiCamera size={10} />
+                            {visibleSelected.cameraModel}
+                          </div>
+                        )}
+                      </div>
+                    )}
+
+                    {visibleSelected.description && (
+                      <p
+                        className="font-body text-[13px] leading-relaxed mb-4"
+                        style={{ color: 'var(--color-muted)' }}
+                      >
+                        {visibleSelected.description}
+                      </p>
+                    )}
+
+                    {/* Related posts */}
+                    {visibleSelected.relatedPosts && visibleSelected.relatedPosts.length > 0 && (
+                      <div className="flex flex-col gap-2 border-t border-[var(--color-rule)] pt-4">
+                        <p
+                          className="font-mono text-[10px] tracking-[0.28em] uppercase mb-1"
+                          style={{ color: 'var(--color-subtle)' }}
+                        >
+                          {visibleSelected.relatedPosts.length === 1 ? mapPaper.related.one : mapPaper.related.many}
+                        </p>
+                        {visibleSelected.relatedPosts.map((post) => (
+                          <Link
+                            key={post.postId}
+                            to={getPostPath(post.postId)}
+                            state={backState}
+                            className="group w-full flex items-center gap-3 py-2 font-display text-[14px] font-medium transition-colors duration-200 text-left"
+                            style={{ color: 'var(--color-ink)' }}
+                          >
+                            <FiBookOpen size={13} className="flex-shrink-0 text-[var(--color-crimson)]" />
+                            <span className="flex-1 group-hover:text-[var(--color-crimson)] transition-colors duration-200">{post.title}</span>
+                            <FiArrowUpRight size={12} className="text-[var(--color-rule)] group-hover:text-[var(--color-crimson)] transition-colors duration-200" />
+                          </Link>
+                        ))}
+                      </div>
+                    )}
+
+                    {/* Photo credit — carries the "Dulanga Jayawardena" name signal for image SEO */}
+                    {visibleSelected.photoCredit && (
+                      <p
+                        className="font-mono text-[10px] tracking-[0.22em] uppercase mt-4"
+                        style={{ color: 'var(--color-subtle)' }}
+                      >
+                        {mapPaper.photoCreditLabel}: {visibleSelected.photoCredit}
+                      </p>
+                    )}
+                  </motion.figcaption>
+                </figure>
+
+                {/* Keyboard shortcut hints — desktop only */}
+                <div
+                  className="hidden lg:flex items-center justify-center gap-4 px-4 py-2 flex-shrink-0 border-t border-[var(--color-rule)]"
+                >
+                  {canNavigateCluster && (
+                    <span
+                      className="flex items-center gap-1.5 font-mono text-[10px]"
                       style={{ color: 'var(--color-subtle)' }}
                     >
-                      {mapPaper.photoCreditLabel}: {visibleSelected.photoCredit}
-                    </p>
+                      <kbd
+                        className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px]"
+                        style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
+                      >
+                        ←
+                      </kbd>
+                      <kbd
+                        className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px]"
+                        style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
+                      >
+                        →
+                      </kbd>
+                      navigate
+                    </span>
                   )}
-                </motion.figcaption>
-              </figure>
-
-              {/* Keyboard shortcut hints — desktop only */}
-              <div
-                className="hidden lg:flex items-center justify-center gap-4 px-4 py-2 flex-shrink-0 border-t border-[var(--color-rule)]"
-              >
-                {canNavigateCluster && (
                   <span
                     className="flex items-center gap-1.5 font-mono text-[10px]"
                     style={{ color: 'var(--color-subtle)' }}
                   >
                     <kbd
-                      className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px]"
+                      className="inline-flex items-center justify-center px-1.5 h-5 rounded text-[10px]"
                       style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
                     >
-                      ←
+                      esc
                     </kbd>
-                    <kbd
-                      className="inline-flex items-center justify-center w-5 h-5 rounded text-[10px]"
-                      style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
-                    >
-                      →
-                    </kbd>
-                    navigate
+                    close
                   </span>
-                )}
-                <span
-                  className="flex items-center gap-1.5 font-mono text-[10px]"
-                  style={{ color: 'var(--color-subtle)' }}
-                >
-                  <kbd
-                    className="inline-flex items-center justify-center px-1.5 h-5 rounded text-[10px]"
-                    style={{ background: 'var(--color-paper)', border: '1px solid var(--color-rule)' }}
-                  >
-                    esc
-                  </kbd>
-                  close
-                </span>
-              </div>
-            </motion.div>
-          </>
-        )}
-      </AnimatePresence>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
+      </main>
     </div>
   )
 }

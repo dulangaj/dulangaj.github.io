@@ -271,9 +271,8 @@ button:focus-visible,
 /* Attribution text */
 .leaflet-control-attribution {
   font-family: var(--font-body) !important;
-  font-size: 9px !important;
   background: color-mix(in srgb, var(--color-surface) 85%, transparent) !important;
-  color: var(--color-subtle) !important;
+  color: var(--color-muted) !important;
   backdrop-filter: blur(8px);
   border-radius: 6px 0 0 0 !important;
 }
@@ -286,8 +285,10 @@ button:focus-visible,
   background: var(--color-surface) !important;
   color: var(--color-ink) !important;
   border-color: var(--color-rule) !important;
-  font-size: 16px !important;
-  line-height: 28px !important;
+  font-size: 18px !important;
+  width: 44px !important;
+  height: 44px !important;
+  line-height: 44px !important;
   transition: background 0.15s ease !important;
 }
 .leaflet-control-zoom a:hover {

@@ -39,6 +39,7 @@ export interface PaperConfig {
   publisher: { heading: string; note: string }
   channels: { heading: string; routes: { label: string; platform: string }[] }
   letters: { heading: string; note: string }
+  nav: { label: string; links: { label: string; to: string }[] }
   backPage: {
     wentToPress: { label: string; run: string }
   }
@@ -46,7 +47,7 @@ export interface PaperConfig {
     relatedHeading: string
     externalCta: string
     defaultBackLabel: string
-    notFound: { kicker: string; headline: string }
+    notFound: { kicker: string; headline: string; email: string }
     dateline: { dash: string }
     measure: { separator: string; minutes: string }
     index: { heading: string; minHeadings: number }
@@ -95,7 +96,6 @@ export interface PaperConfig {
     counterNoun: string
     filters: { all: string; linked: string }
     loading: string
-    back: string
     backToMap: string
     related: { one: string; many: string }
     photoCreditLabel: string
@@ -214,6 +214,14 @@ export const SiteConfig = new SiteConfigClass({
         { label: 'By Post',  platform: 'Email'    },
       ],
     },
+    nav: {
+      label: 'Sections',
+      links: [
+        { label: 'Home',    to: '/' },
+        { label: 'Writing', to: '/writing/' },
+        { label: 'Photos',  to: '/map/' },
+      ],
+    },
     backPage: {
       wentToPress: { label: 'Went to press', run: 'Run' },
     },
@@ -225,8 +233,8 @@ export const SiteConfig = new SiteConfigClass({
     article: {
       relatedHeading:   'Related writing',
       externalCta:      'View the full project',
-      defaultBackLabel: 'Front Page',
-      notFound: { kicker: '404', headline: 'Post not found.' },
+      defaultBackLabel: 'Home',
+      notFound: { kicker: '404', headline: 'Page not found.', email: 'Email' },
       dateline: { dash: '—' },
       measure: { separator: '·', minutes: 'min' },
       index: { heading: 'In this article', minHeadings: 3 },
@@ -275,7 +283,6 @@ export const SiteConfig = new SiteConfigClass({
       counterNoun: 'dispatches',
       filters:     { all: 'All', linked: 'Articles' },
       loading:     'Loading map',
-      back:        'Back',
       backToMap:   'Back to map',
       related:     { one: 'Related Article', many: 'Related Articles' },
       photoCreditLabel: 'Photo',

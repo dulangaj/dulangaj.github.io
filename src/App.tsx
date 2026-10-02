@@ -13,6 +13,7 @@ import { Writing }    from '@/components/sections/Writing'
 import { homeSections } from '@/data/homeSections'
 import { PostDetail } from '@/pages/PostDetail'
 import { WritingPage } from '@/pages/WritingPage'
+import { NotFoundPage } from '@/pages/NotFoundPage'
 
 const MapPage = lazy(async () => {
   const module = await import('@/pages/MapPage')
@@ -191,6 +192,7 @@ export default function App() {
           <Route path="/writing" element={<WritingPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/:slug" element={<PostDetail />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
      </MotionConfig>
