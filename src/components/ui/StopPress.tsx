@@ -148,7 +148,9 @@ export function StopPress() {
 
         <div
           ref={viewportRef}
-          tabIndex={-1}
+          tabIndex={0}
+          role="region"
+          aria-label={stopPress.scrollLabel}
           className="stop-press-viewport relative flex-1 overflow-x-auto no-scrollbar overscroll-x-contain"
         >
           {/* Edge fades — copy slips in and out of the margins, not clipped mid-stroke */}
