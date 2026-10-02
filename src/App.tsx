@@ -9,7 +9,6 @@ import { StopPress }  from '@/components/ui/StopPress'
 import { ReadingRule } from '@/components/ui/ReadingRule'
 import { Spotlight }  from '@/components/ui/Spotlight'
 import { Featured }   from '@/components/sections/Featured'
-import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
 import { homeSections } from '@/data/homeSections'
 import { PostDetail } from '@/pages/PostDetail'
@@ -91,7 +90,6 @@ function HomePage() {
         {homeSections.stopPress && <StopPress />}
         {homeSections.hero && <Hero />}
         {homeSections.featured && <Featured />}
-        {homeSections.experience && <Experience />}
         {homeSections.writing && <Writing />}
       </main>
       <Footer />
