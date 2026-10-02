@@ -4,6 +4,7 @@ import { FiGithub, FiLinkedin, FiMail, FiArrowDownRight, FiArrowUpRight } from '
 import { SiteConfig } from '@/models/SiteConfig'
 import { photoLocations } from '@/data/photoLocations'
 import { useTilt } from '@/hooks/useTilt'
+import { AVATAR, variantUrl } from '@/utils/imageVariants'
 
 /* ─── Hero ───────────────────────────────────────────────────────────────── */
 /* Full-viewport landing section with staggered editorial text reveal.       */
@@ -97,7 +98,7 @@ function Portrait({ className }: { className: string }) {
         "
       >
         <img
-          src="/assets/img/profile.jpeg"
+          src={variantUrl(AVATAR.file, AVATAR.width)}
           alt={SiteConfig.paper.hero.portraitAlt}
           className="w-full h-full object-cover object-[50%_25%]"
           loading="eager"
