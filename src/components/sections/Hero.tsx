@@ -16,7 +16,7 @@ const mapPaper = SiteConfig.paper.map
 const [givenName, ...familyNameParts] = SiteConfig.name.split(' ')
 const familyName = familyNameParts.join(' ')
 
-/* Front-page index in folio order — the Datelines page ('C') files between
+/* Front-page index in folio order — the Photos page ('C') files between
    the inside pages and the back page ('Z') */
 const indexEntries = [
   ...SiteConfig.paper.sections.map((s) => ({
@@ -150,16 +150,10 @@ export function Hero() {
         >
           {/* ── Main heading ─────────────────────────────────────────── */}
           <div className="md:col-span-9 flex flex-col gap-4">
-            {/* Kicker — newspaper-style section + byline */}
-            <motion.div className="hero-line flex flex-wrap items-baseline gap-3" variants={lineVariants} transition={lineTransition}>
-              <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
-                {SiteConfig.paper.sections[0].folio} · {SiteConfig.paper.hero.kicker}
-              </span>
-              <span className="h-px w-6 bg-[var(--color-rule)] hidden md:inline-block" />
-              <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
-                By {SiteConfig.name}
-              </span>
-            </motion.div>
+            {/* Kicker — newspaper-style section mark */}
+            <motion.p className="hero-line font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]" variants={lineVariants} transition={lineTransition}>
+              {SiteConfig.paper.sections[0].folio} · {SiteConfig.paper.hero.kicker}
+            </motion.p>
 
             {/* Name — large display type (page H1) */}
             <motion.h1
@@ -188,6 +182,22 @@ export function Hero() {
             <motion.div className="hero-line md:hidden flex items-center gap-6 py-2" variants={lineVariants} transition={lineTransition}>
               <Portrait className="shrink-0 w-16 h-16" />
               <SocialLinks className="flex-wrap gap-y-6" />
+            </motion.div>
+
+            {/* Career — dated list in place of a résumé */}
+            <motion.div className="hero-line max-w-xl border-t border-[var(--color-rule)]" variants={lineVariants} transition={lineTransition}>
+              <p className="m-0 pt-2 pb-1 font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-subtle)]">
+                {SiteConfig.paper.hero.careerHeading}
+              </p>
+              <dl className="m-0">
+                {SiteConfig.career.map((entry) => (
+                  <div key={entry.org} className="flex items-baseline gap-3 py-1.5 border-b border-[var(--color-rule)]">
+                    <dt className="font-serif text-[15px] text-[var(--color-ink)]">{entry.org}</dt>
+                    <dd className="m-0 flex-1 font-serif italic text-[14px] text-[var(--color-muted)]">{entry.role}</dd>
+                    <dd className="m-0 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] whitespace-nowrap">{entry.years}</dd>
+                  </div>
+                ))}
+              </dl>
             </motion.div>
 
             {/* Lede with drop cap */}
@@ -258,7 +268,7 @@ export function Hero() {
               </ul>
             </motion.nav>
 
-            {/* Datelines refer — boxed front-page promo for the picture section */}
+            {/* Photos refer — boxed front-page promo for the picture section */}
             <motion.div className="hero-line" variants={lineVariants} transition={lineTransition}>
               <Link
                 to="/map/"
@@ -292,7 +302,7 @@ export function Hero() {
             </span>
             <button
               onClick={() => document.querySelector('#featured')?.scrollIntoView({ behavior: 'smooth' })}
-              className="group flex items-center gap-2 font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
+              className="group flex items-center gap-2 min-h-11 -my-[13px] font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
             >
               {SiteConfig.paper.hero.foldCta}
               <FiArrowDownRight

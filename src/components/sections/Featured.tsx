@@ -66,7 +66,7 @@ function LeadStory({ post }: { post: Post }) {
             <motion.img
               src={post.image}
               alt=""
-              className="story-image absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"
               decoding="async"
               whileHover={{ scale: 1.03 }}
@@ -150,7 +150,7 @@ export function Featured() {
 
         {/* Section masthead — double-rule, folio left, byline right */}
         <FadeIn>
-          <SectionBanner folio={frontPage.folio} label={frontPage.label} note={frontPage.note} labelAs="h2" />
+          <SectionBanner folio={frontPage.folio} label={frontPage.bannerLabel ?? frontPage.label} note={frontPage.note} labelAs="h2" />
         </FadeIn>
 
         {/* Lead story */}

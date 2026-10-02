@@ -8,12 +8,12 @@ export interface SocialLink {
 }
 
 /* All newspaper-conceit chrome lives here: nameplate, folios, edition labels,
-   and colophon copy. Components render these values — never hardcode them.   */
+   and back-page copy. Components render these values — never hardcode them.   */
 export interface PaperSection {
   id: string           // DOM id the section anchors to, e.g. 'featured'
   folio: string        // page mark, e.g. 'A1'
-  label: string        // section name as printed, e.g. 'Front Page'
-  bannerLabel?: string // longer form for the section banner, e.g. 'Letters & Colophon'
+  label: string        // name in the front-page index, e.g. 'About'
+  bannerLabel?: string // name on the section banner when it differs, e.g. 'Front Page'
   note?: string        // right-hand banner annotation, e.g. 'The lead story'
   headline?: string    // section headline printed under the banner
   standfirst?: string  // one-line intro under the headline
@@ -35,14 +35,10 @@ export interface PaperConfig {
   editions: { light: PaperEdition; dark: PaperEdition }
   sections: PaperSection[]
   articleFolio: string
-  colophon: string
   publisher: { heading: string; note: string }
   channels: { heading: string; routes: { label: string; platform: string }[] }
   letters: { heading: string; note: string }
   nav: { label: string; links: { label: string; to: string }[] }
-  backPage: {
-    wentToPress: { label: string; run: string }
-  }
   article: {
     relatedHeading: string
     externalCta: string
@@ -68,6 +64,7 @@ export interface PaperConfig {
     foldCta: string
     portraitAlt: string
     emailCta: string
+    careerHeading: string
   }
   cta: {
     leadStory: string
@@ -104,12 +101,19 @@ export interface PaperConfig {
   }
 }
 
+export interface CareerEntry {
+  org: string
+  role: string
+  years: string
+}
+
 export interface SiteConfigProps {
   name: string
   title: string
   employer: string
   tagline: string
   lede: string[]
+  career: CareerEntry[]
   bio: string
   location: string
   email: string
@@ -123,6 +127,7 @@ class SiteConfigClass {
   readonly employer: string
   readonly tagline:  string
   readonly lede:     string[]
+  readonly career:   CareerEntry[]
   readonly bio:      string
   readonly location: string
   readonly email:    string
@@ -135,6 +140,7 @@ class SiteConfigClass {
     this.employer = props.employer
     this.tagline  = props.tagline
     this.lede     = props.lede
+    this.career   = props.career
     this.bio      = props.bio
     this.location = props.location
     this.email    = props.email
@@ -162,9 +168,13 @@ export const SiteConfig = new SiteConfigClass({
   employer: 'Bullish',
   tagline:  'Software engineer building risk and trading systems in finance.',
   lede: [
-    'Before Bullish he was at Morgan Stanley, where he built risk systems traders and risk managers relied on.',
     'He has worked in Sri Lanka, Hong Kong, and the United States, mostly in Java and Python, on distributed systems and the automation that keeps them running.',
     'He also mentors junior engineers and writes about the systems he builds.',
+  ],
+  career: [
+    { org: 'Bullish',        role: 'Software Engineer',       years: 'Present' },
+    { org: 'Morgan Stanley', role: 'Risk Systems Developer',  years: '2021–2025' },
+    { org: 'CUHK',           role: 'BEng, Systems Engineering', years: '2016–2020' },
   ],
   bio:      'On the distributed-systems beat since 2015.',
   location: 'Hong Kong',
@@ -187,27 +197,25 @@ export const SiteConfig = new SiteConfigClass({
       dark:  { name: 'Evening Edition', abbr: 'Eve.'  },
     },
     sections: [
-      { id: 'featured',   folio: 'A1', label: 'Front Page', note: 'The lead story' },
+      { id: 'featured',   folio: 'A1', label: 'About', bannerLabel: 'Front Page', note: 'The lead story' },
       {
         id: 'writing', folio: 'A2', label: 'Writing', note: 'The inside pages',
         headline:   'Notes from the field.',
         standfirst: 'Older projects and school notes.',
       },
       {
-        id: 'contact', folio: 'Z', label: 'Letters',
-        bannerLabel: 'Letters & Colophon', note: 'The back page',
+        id: 'contact', folio: 'Z', label: 'Contact',
+        bannerLabel: 'Letters', note: 'The back page',
       },
     ],
     articleFolio: 'B',
-    colophon:
-      'Set in Playfair Display, Source Serif 4, Inter, and JetBrains Mono. Built with React and Tailwind; hosted on GitHub Pages.',
     publisher: {
       heading: 'The Publisher',
       note:
         'The Jayawardena Herald is the personal site of Dulanga Jayawardena, a software engineer at Bullish in Hong Kong, formerly of Morgan Stanley.',
     },
     channels: {
-      heading: 'Address the Editor',
+      heading: 'Contact',
       routes: [
         { label: 'By Cable', platform: 'LinkedIn' },
         { label: 'By Wire',  platform: 'GitHub'   },
@@ -221,9 +229,6 @@ export const SiteConfig = new SiteConfigClass({
         { label: 'Writing', to: '/writing/' },
         { label: 'Photos',  to: '/map/' },
       ],
-    },
-    backPage: {
-      wentToPress: { label: 'Went to press', run: 'Run' },
     },
     letters: {
       heading: 'Letters to the Editor',
@@ -249,15 +254,16 @@ export const SiteConfig = new SiteConfigClass({
       extraWithinDays: 14,
     },
     hero: {
-      kicker:       'Front Page Profile',
+      kicker:       'Profile',
       indexHeading: 'Inside this Issue',
       foldNote:     'Below the fold',
       foldCta:      'Continued on Front Page',
       portraitAlt:  'Portrait of Dulanga Jayawardena, a software engineer based in Hong Kong',
       emailCta:     'Email me',
+      careerHeading: 'Career',
     },
     cta: {
-      leadStory: 'Continued inside',
+      leadStory: 'Read the story',
       read:      'Read',
       minRead:   'min read',
       allPosts:  'All {count} posts',
@@ -279,7 +285,7 @@ export const SiteConfig = new SiteConfigClass({
     },
     map: {
       folio:       'C',
-      label:       'Datelines',
+      label:       'Photos',
       counterNoun: 'dispatches',
       filters:     { all: 'All', linked: 'Articles' },
       loading:     'Loading map',
