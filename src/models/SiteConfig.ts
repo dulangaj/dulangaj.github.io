@@ -66,18 +66,19 @@ export interface PaperConfig {
     foldNote: string
     foldCta: string
     portraitAlt: string
+    emailCta: string
   }
   cta: {
     leadStory: string
     read: string
     minRead: string // read-time noun printed after the minute count
-    showAll: string
-    showLess: string
+    allPosts: string // '{count}' is replaced with the total post count
   }
   stopPress: {
     label: string
     separator: string
     ariaLabel: string
+    pauseLabel: string
     loopSeconds: number
     /* Wire feeds — every feed is one file in the gist at feedBase, fetched
        once after load. Each file serves { updated: <ISO-8601>, items:
@@ -190,7 +191,7 @@ export const SiteConfig = new SiteConfigClass({
       {
         id: 'writing', folio: 'A2', label: 'Writing', note: 'The inside pages',
         headline:   'Notes from the field.',
-        standfirst: 'Project write-ups and research notes, filed as the work gets done.',
+        standfirst: 'Older projects and school notes.',
       },
       {
         id: 'contact', folio: 'Z', label: 'Letters',
@@ -245,18 +246,19 @@ export const SiteConfig = new SiteConfigClass({
       foldNote:     'Below the fold',
       foldCta:      'Continued on Front Page',
       portraitAlt:  'Portrait of Dulanga Jayawardena, a software engineer based in Hong Kong',
+      emailCta:     'Email me',
     },
     cta: {
       leadStory: 'Continued inside',
       read:      'Read',
       minRead:   'min read',
-      showAll:   'Show all',
-      showLess:  'Show less',
+      allPosts:  'All {count} posts',
     },
     stopPress: {
       label:       'Stop Press',
       separator:   '†',
       ariaLabel:   'Late bulletins',
+      pauseLabel:  'Pause',
       loopSeconds: 40,
       /* SHA-less /raw base always serves each file's latest revision. */
       feedBase: 'https://gist.githubusercontent.com/dulangaj/d5da4363ee11ec57a3fb3f775379dbb7/raw',
