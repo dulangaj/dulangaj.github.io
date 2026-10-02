@@ -42,7 +42,7 @@ function BulletinRun({ items, hidden }: { items: NowItem[]; hidden: boolean }) {
           </span>
           {/* Trailing dagger on every item so the junction between runs
               reads as one continuous wire */}
-          <span aria-hidden="true" className="mx-4 font-serif text-[13px] text-[var(--color-crimson)]">
+          <span aria-hidden="true" className="mx-4 font-mono text-[13px] text-[var(--color-crimson)]">
             {stopPress.separator}
           </span>
         </span>
