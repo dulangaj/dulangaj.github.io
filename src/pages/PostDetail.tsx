@@ -14,6 +14,7 @@ import { NotFoundPage } from '@/pages/NotFoundPage'
 import { SiteConfig } from '@/models/SiteConfig'
 import { getPostCanonicalUrl, getPostPath, getPostSlug } from '@/utils/postUrls'
 import { extractHeadings, ledeOffset, pullQuoteOffset, slugify } from '@/utils/articleMeasure'
+import { srcSetFor } from '@/utils/imageVariants'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
 /* Full article page rendered from posts/*.md markdown files, set as an       */
@@ -241,6 +242,8 @@ export function PostDetail() {
             >
               <img
                 src={post.image}
+                srcSet={srcSetFor(post.image)}
+                sizes="(min-width: 768px) 768px, 100vw"
                 alt={post.title}
                 className="w-full h-full object-cover"
                 loading="eager"

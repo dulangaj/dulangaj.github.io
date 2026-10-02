@@ -14,6 +14,8 @@ import { promises as fs } from 'fs'
 import path from 'path'
 import { spawn } from 'child_process'
 import exifr from 'exifr'
+import sharp from 'sharp'
+import { AVATAR, IMAGE_WIDTHS, variantUrl } from './src/utils/imageVariants'
 
 interface ExifEntry {
   lat?: number
@@ -99,6 +101,28 @@ async function createThumbnail(inputFile: string, outputFile: string, tool: Imag
   }
 
   await fs.copyFile(inputFile, outputFile)
+}
+
+async function ensureVariants(root: string, files: string[]) {
+  const jobs = files
+    .filter((file) => /\.(jpe?g|png)$/i.test(file))
+    .flatMap((file) => (file === AVATAR.file ? [AVATAR.width] : IMAGE_WIDTHS).map((width) => ({ file, width })))
+
+  await fs.mkdir(path.join(root, 'public', 'assets', 'img', 'w'), { recursive: true })
+  await Promise.all(
+    jobs.map(async ({ file, width }) => {
+      const target = path.join(root, 'public', variantUrl(file, width))
+      try {
+        await fs.access(target)
+      } catch {
+        await sharp(path.join(root, 'public', 'assets', 'img', file))
+          .rotate()
+          .resize({ width, withoutEnlargement: true })
+          .webp({ quality: 75 })
+          .toFile(target)
+      }
+    }),
+  )
 }
 
 async function ensureThumbnails(root: string, files: string[]) {
@@ -318,6 +342,7 @@ async function extractAndWrite(root: string) {
   }
 
   await ensureThumbnails(root, files)
+  await ensureVariants(root, files)
 
   const entries: Record<string, ExifEntry> = {}
 

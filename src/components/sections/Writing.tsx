@@ -7,6 +7,7 @@ import { SiteConfig } from '@/models/SiteConfig'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { getPostPath } from '@/utils/postUrls'
+import { srcSetFor } from '@/utils/imageVariants'
 
 /* The front page carries a taste; the full run lives at /writing/ */
 const HOME_POST_LIMIT = 3
@@ -37,6 +38,8 @@ function PostCard({ post, wide = false, delay = 0 }: PostCardProps) {
             <div className="relative overflow-hidden aspect-[16/9] md:aspect-auto md:min-h-[300px] bg-[var(--color-rule)]">
               <motion.img
                 src={post.image}
+                srcSet={srcSetFor(post.image)}
+                sizes="(min-width: 768px) 50vw, 100vw"
                 alt=""
                 className="w-full h-full object-cover"
                 loading="lazy"
@@ -97,6 +100,8 @@ function PostCard({ post, wide = false, delay = 0 }: PostCardProps) {
           <div className="relative overflow-hidden aspect-[16/9] bg-[var(--color-rule)]">
             <motion.img
               src={post.image}
+              srcSet={srcSetFor(post.image)}
+              sizes="(min-width: 768px) 50vw, 100vw"
               alt=""
               className="w-full h-full object-cover"
               loading="lazy"

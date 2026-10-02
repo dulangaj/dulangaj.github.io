@@ -17,9 +17,9 @@
   --color-crimson:       #65081F;   /* Accent / brand (burgundy) */
   --color-crimson-hover: #4a0517;   /* Accent hover            */
 
-  --font-display:    'Playfair Display', Georgia, serif;
-  --font-body:       'Inter', system-ui, sans-serif;
-  --font-serif:      'Source Serif 4', Georgia, serif;
+  --font-display:    'Playfair Display Variable', Georgia, serif;
+  --font-body:       system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif:      'Source Serif 4 Variable', Georgia, serif;
   --font-mono:       'JetBrains Mono', 'Courier New', monospace;
 }
 
@@ -185,7 +185,7 @@ button:focus-visible,
 
 /* ─── Typography Utilities ───────────────────────────────────────────────── */
 /* font-serif is for running copy (ledes, standfirsts, article prose);        */
-/* font-body (Inter) stays on UI chrome: nav, buttons, bios, metadata.        */
+/* font-body (system UI) stays on UI chrome: nav, buttons, bios, metadata.    */
 .font-display  { font-family: var(--font-display); }
 .font-body     { font-family: var(--font-body); }
 .font-serif    { font-family: var(--font-serif); }

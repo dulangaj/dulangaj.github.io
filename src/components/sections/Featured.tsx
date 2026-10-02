@@ -7,6 +7,7 @@ import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { getPostPath } from '@/utils/postUrls'
 import { useTilt } from '@/hooks/useTilt'
+import { srcSetFor } from '@/utils/imageVariants'
 
 const frontPage = SiteConfig.paper.sections.find((s) => s.id === 'featured')!
 
@@ -65,6 +66,8 @@ function LeadStory({ post }: { post: Post }) {
           <motion.div className="md:col-span-2 relative overflow-hidden aspect-[4/3] md:aspect-auto md:min-h-[320px] bg-[var(--color-rule)]" {...tilt}>
             <motion.img
               src={post.image}
+              srcSet={srcSetFor(post.image)}
+              sizes="(min-width: 768px) 40vw, 100vw"
               alt=""
               className="absolute inset-0 w-full h-full object-cover"
               loading="lazy"
