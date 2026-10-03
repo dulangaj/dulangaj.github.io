@@ -65,7 +65,6 @@ export function Masthead() {
   }, [])
 
   const { vol, no } = volumeAndIssue(now)
-  const edition = isDark ? paper.editions.dark.name : paper.editions.light.name
   const isExtra = isExtraEdition(now)
   const editionAria = `Switch to ${isDark ? paper.editions.light.name : paper.editions.dark.name}`
   const dateline = formatLongDate(now)
@@ -93,7 +92,8 @@ export function Masthead() {
               title={editionAria}
               className="text-right whitespace-nowrap font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)] hover:text-[var(--color-crimson)] transition-colors duration-150 bg-transparent border-none px-0 py-4 -my-4 cursor-pointer"
             >
-              {edition}
+              <span className="edition-light">{paper.editions.light.name}</span>
+              <span className="edition-dark">{paper.editions.dark.name}</span>
             </button>
           </div>
           {/* Mobile dateline */}

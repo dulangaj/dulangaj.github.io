@@ -76,7 +76,7 @@ export function Hero() {
           {/* ── Main heading ─────────────────────────────────────────── */}
           <div className="md:col-span-9 flex flex-col gap-4">
             {/* Kicker — newspaper-style section + byline */}
-            <motion.div className="flex flex-wrap items-baseline gap-3" variants={lineVariants} transition={lineTransition}>
+            <motion.div className="hero-line flex flex-wrap items-baseline gap-3" variants={lineVariants} transition={lineTransition}>
               <span className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)]">
                 {SiteConfig.paper.sections[0].folio} · {SiteConfig.paper.hero.kicker}
               </span>
@@ -88,7 +88,7 @@ export function Hero() {
 
             {/* Name — large display type (page H1) */}
             <motion.h1
-              className="font-display text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.0] tracking-tight text-[var(--color-ink)]"
+              className="hero-line font-display text-[clamp(2.5rem,6vw,4.75rem)] leading-[1.0] tracking-tight text-[var(--color-ink)]"
               variants={lineVariants}
               transition={lineTransition}
             >
@@ -99,7 +99,7 @@ export function Hero() {
 
             {/* Byline + Dateline */}
             <motion.p
-              className="font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)]"
+              className="hero-line font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)]"
               variants={lineVariants}
               transition={lineTransition}
             >
@@ -112,7 +112,7 @@ export function Hero() {
             {SiteConfig.lede.map((paragraph, idx) => (
               <motion.p
                 key={idx}
-                className={`${idx === 0 ? 'hero-lede ' : ''}font-serif text-[17px] md:text-[18px] text-[var(--color-muted)] max-w-xl leading-[1.65]`}
+                className={`hero-line ${idx === 0 ? 'hero-lede ' : ''}font-serif text-[17px] md:text-[18px] text-[var(--color-muted)] max-w-xl leading-[1.65]`}
                 variants={lineVariants}
                 transition={lineTransition}
               >
@@ -125,7 +125,7 @@ export function Hero() {
           <div className="md:col-span-3 flex flex-col justify-end gap-6">
             {/* Profile photo */}
             <motion.div
-              className="relative w-20 h-20 md:w-24 md:h-24"
+              className="hero-line relative w-20 h-20 md:w-24 md:h-24"
               variants={lineVariants}
               transition={lineTransition}
               {...tilt}
@@ -167,7 +167,7 @@ export function Hero() {
 
             {/* Bio — set as a cutline under the portrait */}
             <motion.p
-              className="font-serif italic text-[13px] text-[var(--color-muted)] leading-relaxed"
+              className="hero-line font-serif italic text-[13px] text-[var(--color-muted)] leading-relaxed"
               variants={lineVariants}
               transition={lineTransition}
             >
@@ -175,7 +175,7 @@ export function Hero() {
             </motion.p>
 
             {/* Social links */}
-            <motion.div className="flex items-center gap-6" variants={lineVariants} transition={lineTransition}>
+            <motion.div className="hero-line flex items-center gap-6" variants={lineVariants} transition={lineTransition}>
               {SiteConfig.socials.map((social) => {
                 const Icon = SocialIcon[social.platform as keyof typeof SocialIcon]
                 return (
@@ -195,6 +195,7 @@ export function Hero() {
 
             {/* Inside this Issue — classic front-page index */}
             <motion.nav
+              className="hero-line"
               aria-label="Inside this issue"
               variants={lineVariants}
               transition={lineTransition}
@@ -227,7 +228,7 @@ export function Hero() {
             </motion.nav>
 
             {/* Datelines refer — boxed front-page promo for the picture section */}
-            <motion.div variants={lineVariants} transition={lineTransition}>
+            <motion.div className="hero-line" variants={lineVariants} transition={lineTransition}>
               <Link
                 to="/map/"
                 className="group block border border-[var(--color-ink)] px-3 py-3"
@@ -251,7 +252,7 @@ export function Hero() {
 
           {/* ── Jump line — newspaper "continued on page" cue ──────── */}
           <motion.div
-            className="fold-crease md:col-span-12 flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-[var(--color-ink)]"
+            className="hero-line fold-crease md:col-span-12 flex flex-col items-start gap-3 md:flex-row md:items-center md:justify-between pt-8 border-t border-[var(--color-ink)]"
             variants={lineVariants}
             transition={lineTransition}
           >
