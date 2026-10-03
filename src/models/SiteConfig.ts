@@ -173,7 +173,7 @@ export const SiteConfig = new SiteConfigClass({
     'He also mentors junior engineers and writes about the systems he builds.',
   ],
   career: [
-    { org: 'Bullish',        role: 'Software Engineer',       years: 'Present' },
+    { org: 'Bullish',        role: 'Software Engineer',       years: '2025–Present' },
     { org: 'Morgan Stanley', role: 'Risk Systems Developer',  years: '2021–2025' },
     { org: 'CUHK',           role: 'BEng, Systems Engineering', years: '2016–2020' },
   ],
