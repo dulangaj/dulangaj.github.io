@@ -2,6 +2,7 @@
 /* Manual configuration for posts that appear in the Featured section.         */
 /* Provides a curated, condensed excerpt and an optional image override.       */
 /* The id must match the posts/ filename stem (e.g. 2025-05-01-post-name).    */
+/* Posts listed here are left out of the home Writing list.                   */
 
 export interface FeaturedPostConfig {
   id:      string

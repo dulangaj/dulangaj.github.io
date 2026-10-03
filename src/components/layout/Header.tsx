@@ -3,13 +3,13 @@ import { motion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { SiteConfig } from '@/models/SiteConfig'
 import { EditionToggle } from '@/components/ui/EditionToggle'
+import { SiteNav } from '@/components/layout/SiteNav'
 
 /* ─── Header ─────────────────────────────────────────────────────────────── */
-/* Slim fixed utility strip: wordmark left, edition toggle right. Navigation  */
-/* is the front page's job — the "Inside this Issue" index — so this bar only */
-/* carries the reader back to the top. On the homepage it stays hidden while  */
-/* the masthead is in view (nothing sits above a nameplate) and slides in     */
-/* once the reader scrolls; subpages have no masthead, so it is always shown. */
+/* Slim fixed utility strip: wordmark left, section nav and edition toggle    */
+/* right. On the homepage it stays hidden while the masthead is in view       */
+/* (nothing sits above a nameplate) and slides in once the reader scrolls;    */
+/* subpages have no masthead, so it is always shown.                          */
 
 export function Header() {
   const [scrolled, setScrolled] = useState(false)
@@ -71,7 +71,10 @@ export function Header() {
           <span className="text-[var(--color-crimson)]">.</span>
         </a>
 
-        <EditionToggle />
+        <div className="flex items-center gap-3 md:gap-6">
+          <SiteNav />
+          <EditionToggle />
+        </div>
       </div>
 
       {/* Printed triple rule — thick / hairline — appears once the reader scrolls */}

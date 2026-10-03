@@ -1,14 +1,16 @@
-import { useState } from 'react'
-import { motion, AnimatePresence } from 'framer-motion'
-import { FiArrowRight, FiChevronDown } from 'react-icons/fi'
-import { posts } from '@/data/posts'
+import { motion } from 'framer-motion'
+import { Link } from 'react-router-dom'
+import { FiArrowRight } from 'react-icons/fi'
+import { archivePosts, posts } from '@/data/posts'
 import { Post } from '@/models/Post'
 import { SiteConfig } from '@/models/SiteConfig'
 import { FadeIn } from '@/components/ui/FadeIn'
 import { SectionBanner } from '@/components/ui/SectionBanner'
 import { getPostPath } from '@/utils/postUrls'
+import { srcSetFor } from '@/utils/imageVariants'
 
-const VISIBLE_INITIAL = 5
+/* The front page carries a taste; the full run lives at /writing/ */
+const HOME_POST_LIMIT = 3
 
 const writingSection = SiteConfig.paper.sections.find((s) => s.id === 'writing')!
 const cta = SiteConfig.paper.cta
@@ -19,14 +21,14 @@ const cta = SiteConfig.paper.cta
 
 interface PostCardProps {
   post: Post
-  featured?: boolean
+  wide?: boolean
   delay?: number
 }
 
-function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
+function PostCard({ post, wide = false, delay = 0 }: PostCardProps) {
   const href = getPostPath(post.id)
 
-  if (featured) {
+  if (wide) {
     return (
       <a href={href} className="block">
       <FadeIn delay={delay} className="group cursor-pointer">
@@ -36,8 +38,10 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
             <div className="relative overflow-hidden aspect-[16/9] md:aspect-auto md:min-h-[300px] bg-[var(--color-rule)]">
               <motion.img
                 src={post.image}
-                alt={post.title}
-                className="story-image w-full h-full object-cover"
+                srcSet={srcSetFor(post.image)}
+                sizes="(min-width: 768px) 50vw, 100vw"
+                alt=""
+                className="w-full h-full object-cover"
                 loading="lazy"
                 decoding="async"
                 whileHover={{ scale: 1.03 }}
@@ -96,8 +100,10 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
           <div className="relative overflow-hidden aspect-[16/9] bg-[var(--color-rule)]">
             <motion.img
               src={post.image}
-              alt={post.title}
-              className="story-image w-full h-full object-cover"
+              srcSet={srcSetFor(post.image)}
+              sizes="(min-width: 768px) 50vw, 100vw"
+              alt=""
+              className="w-full h-full object-cover"
               loading="lazy"
               decoding="async"
               whileHover={{ scale: 1.04 }}
@@ -143,10 +149,7 @@ function PostCard({ post, featured = false, delay = 0 }: PostCardProps) {
 }
 
 export function Writing() {
-  const [showAll, setShowAll] = useState(false)
-
-  const visible = showAll ? posts : posts.slice(0, VISIBLE_INITIAL)
-  const hasMore = posts.length > VISIBLE_INITIAL
+  const visible = archivePosts.slice(0, HOME_POST_LIMIT)
 
   return (
     <section id="writing" className="px-6 md:px-12 py-16 md:py-24">
@@ -170,45 +173,34 @@ export function Writing() {
 
         {/* Paired rows share a hairline column rule in the gutter at md+ */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-x-0">
-          <AnimatePresence initial={false}>
-            {visible.map((post, i) => {
-              const isFeatured = i % 3 === 0
-              const columnClass =
-                isFeatured ? 'md:col-span-2'
-                  : i % 3 === 1 ? 'h-full md:pr-8'
-                    : 'h-full md:pl-8 md:border-l md:border-[var(--color-rule)]'
-              return (
-                <motion.div
-                  key={post.id}
-                  className={columnClass}
-                  initial={{ opacity: 0, y: 24 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
-                >
-                  <PostCard post={post} featured={isFeatured} delay={0} />
-                </motion.div>
-              )
-            })}
-          </AnimatePresence>
+          {visible.map((post, i) => {
+            const isWide = i % 3 === 0
+            const columnClass =
+              isWide ? 'md:col-span-2'
+                : i % 3 === 1 ? 'h-full md:pr-8'
+                  : 'h-full md:pl-8 md:border-l md:border-[var(--color-rule)]'
+            return (
+              <motion.div
+                key={post.id}
+                className={columnClass}
+                initial={{ opacity: 0, y: 24 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: i * 0.04, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] }}
+              >
+                <PostCard post={post} wide={isWide} delay={0} />
+              </motion.div>
+            )
+          })}
         </div>
 
-        {/* Show more / show less */}
-        {hasMore && (
-          <FadeIn className="mt-10 flex justify-center">
-            <button
-              onClick={() => setShowAll((v) => !v)}
-              className="group inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200 cursor-pointer bg-transparent border-none"
-            >
-              {showAll ? cta.showLess : `${cta.showAll} ${posts.length}`}
-              <motion.span
-                animate={{ rotate: showAll ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
-              >
-                <FiChevronDown size={13} />
-              </motion.span>
-            </button>
-          </FadeIn>
-        )}
+        <FadeIn className="mt-10 flex justify-center">
+          <Link
+            to="/writing/"
+            className="group inline-flex items-center gap-2 min-h-11 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-crimson)] hover:gap-3 transition-all duration-200"
+          >
+            {cta.allPosts.replace('{count}', String(posts.length))} <FiArrowRight size={12} />
+          </Link>
+        </FadeIn>
       </div>
     </section>
   )

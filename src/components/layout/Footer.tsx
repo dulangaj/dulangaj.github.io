@@ -1,7 +1,8 @@
 import { SiteConfig } from '@/models/SiteConfig'
 import { SectionBanner } from '@/components/ui/SectionBanner'
+import { useToday } from '@/hooks/useToday'
 
-/* ─── Footer / Colophon ──────────────────────────────────────────────────── */
+/* ─── Footer ─────────────────────────────────────────────────────────────── */
 /* The closing plate of the paper: publisher's note on the left, "By Cable"   */
 /* directory in the middle, Letters to the Editor on the right. Bracketed by  */
 /* a printed triple rule top and bottom.                                      */
@@ -13,23 +14,8 @@ function findSocial(platform: string) {
   return SiteConfig.socials.find((s) => s.platform === platform)
 }
 
-function printedDate(iso: string, options: Intl.DateTimeFormatOptions) {
-  return new Date(iso).toLocaleDateString(paper.dateLocale, options)
-}
-
-const wentToPress = `${paper.backPage.wentToPress.label} ${printedDate(__BUILD_TIME__, {
-  weekday: 'long',
-  day:     'numeric',
-  month:   'long',
-  year:    'numeric',
-  hour:    '2-digit',
-  minute:  '2-digit',
-  hour12:  false,
-  timeZone: 'UTC',
-})} UTC · ${paper.backPage.wentToPress.run} ${__BUILD_SHA__}`
-
 export function Footer() {
-  const year = new Date().getFullYear()
+  const year = useToday().getFullYear()
 
   return (
     <footer
@@ -112,21 +98,6 @@ export function Footer() {
               {SiteConfig.email}
             </a>
           </div>
-        </div>
-
-        {/* Colophon — the printer's closing note, centered at the foot of the
-            page under its ornament, set in the text face it credits. Kept out
-            of the columns so the three keep an even depth. */}
-        <div className="pb-6 text-center">
-          <p aria-hidden="true" className="font-display text-[13px] text-[var(--color-crimson)] mb-2">
-            {paper.fleuron}
-          </p>
-          <p className="font-serif italic text-[14px] leading-[1.7] text-[var(--color-muted)] max-w-xl mx-auto">
-            {paper.colophon}
-          </p>
-          <p className="mt-3 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
-            {wentToPress}
-          </p>
         </div>
 
         {/* Bottom plate — printer's mark / circulation / copyright */}

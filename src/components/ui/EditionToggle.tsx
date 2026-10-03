@@ -39,7 +39,8 @@ function Abbrs({ isDark }: { isDark: boolean }) {
 
 export function EditionToggle() {
   const { isDark, toggle } = useTheme()
-  const aria = `Switch to ${isDark ? editions.light.name : editions.dark.name}`
+  /* Starts with the visible text so voice-control users can say what they see */
+  const aria = `${editions.light.abbr}/${editions.dark.abbr}, switch to ${isDark ? editions.light.name : editions.dark.name}`
 
   return (
     <button
