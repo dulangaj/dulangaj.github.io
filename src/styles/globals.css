@@ -61,6 +61,16 @@ html { color-scheme: light; }
 }
 html[data-theme="dark"] { color-scheme: dark; }
 
+/* Edition labels render both ways; these selectors pick one before hydration */
+.edition-light, .edition-dark { display: contents; }
+.edition-dark { display: none; }
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .edition-light { display: none; }
+  :root:not([data-theme="light"]) .edition-dark { display: contents; }
+}
+:root[data-theme="dark"] .edition-light { display: none; }
+:root[data-theme="dark"] .edition-dark { display: contents; }
+
 /* ─── Base Reset & Globals ───────────────────────────────────────────────── */
 *, *::before, *::after {
   box-sizing: border-box;
@@ -468,7 +478,7 @@ button:focus-visible,
 /* Load-in motion is mouse only. CSS rather than JS, so the prerendered       */
 /* markup matches and phones paint the final type before hydration.           */
 @media not all and (hover: hover) and (pointer: fine) {
-  .nameplate-word, .masthead-motto { transform: none !important; opacity: 1 !important; }
+  .nameplate-word, .masthead-motto, .hero-line { transform: none !important; opacity: 1 !important; }
   .teletype-char { opacity: 1 !important; }
   .teletype-caret { display: none; }
 }
