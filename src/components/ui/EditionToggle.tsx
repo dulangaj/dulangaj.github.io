@@ -9,23 +9,9 @@ import { SiteConfig } from '@/models/SiteConfig'
 
 const editions = SiteConfig.paper.editions
 
-export function EditionToggle() {
-  const { isDark, toggle } = useTheme()
-  const aria = `Switch to ${isDark ? editions.light.name : editions.dark.name}`
-
+function Abbrs({ isDark }: { isDark: boolean }) {
   return (
-    <button
-      onClick={toggle}
-      aria-label={aria}
-      title={aria}
-      className="
-        group inline-flex items-center gap-1 px-2 min-h-11 md:min-h-0 md:py-1
-        font-mono text-[10px] tracking-[0.22em] uppercase
-        hover:text-[var(--color-crimson)]
-        bg-transparent border-none cursor-pointer
-        transition-colors duration-150
-      "
-    >
+    <>
       <span
         aria-hidden="true"
         className={`transition-colors duration-150 ${
@@ -47,6 +33,30 @@ export function EditionToggle() {
       >
         {editions.dark.abbr}
       </span>
+    </>
+  )
+}
+
+export function EditionToggle() {
+  const { isDark, toggle } = useTheme()
+  const aria = `Switch to ${isDark ? editions.light.name : editions.dark.name}`
+
+  return (
+    <button
+      onClick={toggle}
+      aria-label={aria}
+      title={aria}
+      className="
+        group inline-flex items-center gap-1 px-2 min-h-11 md:min-h-0 md:py-1
+        font-mono text-[10px] tracking-[0.22em] uppercase
+        hover:text-[var(--color-crimson)]
+        bg-transparent border-none cursor-pointer
+        transition-colors duration-150
+      "
+    >
+      {/* Both states render; globals.css shows the one matching the theme */}
+      <span className="edition-light"><Abbrs isDark={false} /></span>
+      <span className="edition-dark"><Abbrs isDark /></span>
     </button>
   )
 }

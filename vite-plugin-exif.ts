@@ -324,7 +324,9 @@ async function extractAndWrite(root: string) {
   await Promise.all(
     files.map(async (file) => {
       try {
-        const data = await exifr.parse(path.join(imgDir, file), {
+        // A path makes exifr open a FileHandle it never closes, which Node 26
+        // turns into a fatal ERR_INVALID_STATE on GC; hand it the bytes instead.
+        const data = await exifr.parse(await fs.readFile(path.join(imgDir, file)), {
           gps: true,
           ifd0: { pick: ['ImageDescription', 'XPTitle', 'Make', 'Model'] },
           exif: { pick: ['DateTimeOriginal', 'CreateDate'] },
