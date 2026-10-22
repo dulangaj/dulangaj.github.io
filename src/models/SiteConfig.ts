@@ -8,12 +8,12 @@ export interface SocialLink {
 }
 
 /* All newspaper-conceit chrome lives here: nameplate, folios, edition labels,
-   and colophon copy. Components render these values — never hardcode them.   */
+   and back-page copy. Components render these values — never hardcode them.   */
 export interface PaperSection {
   id: string           // DOM id the section anchors to, e.g. 'featured'
   folio: string        // page mark, e.g. 'A1'
-  label: string        // section name as printed, e.g. 'Front Page'
-  bannerLabel?: string // longer form for the section banner, e.g. 'Letters & Colophon'
+  label: string        // name in the front-page index, e.g. 'About'
+  bannerLabel?: string // name on the section banner when it differs, e.g. 'Front Page'
   note?: string        // right-hand banner annotation, e.g. 'The lead story'
   headline?: string    // section headline printed under the banner
   standfirst?: string  // one-line intro under the headline
@@ -35,18 +35,15 @@ export interface PaperConfig {
   editions: { light: PaperEdition; dark: PaperEdition }
   sections: PaperSection[]
   articleFolio: string
-  colophon: string
   publisher: { heading: string; note: string }
   channels: { heading: string; routes: { label: string; platform: string }[] }
   letters: { heading: string; note: string }
-  backPage: {
-    wentToPress: { label: string; run: string }
-  }
+  nav: { label: string; links: { label: string; to: string }[] }
   article: {
     relatedHeading: string
     externalCta: string
     defaultBackLabel: string
-    notFound: { kicker: string; headline: string }
+    notFound: { kicker: string; headline: string; email: string }
     dateline: { dash: string }
     measure: { separator: string; minutes: string }
     index: { heading: string; minHeadings: number }
@@ -66,18 +63,21 @@ export interface PaperConfig {
     foldNote: string
     foldCta: string
     portraitAlt: string
+    emailCta: string
+    careerHeading: string
   }
   cta: {
     leadStory: string
     read: string
     minRead: string // read-time noun printed after the minute count
-    showAll: string
-    showLess: string
+    allPosts: string // '{count}' is replaced with the total post count
   }
   stopPress: {
     label: string
     separator: string
     ariaLabel: string
+    pauseLabel: string
+    scrollLabel: string
     loopSeconds: number
     /* Wire feeds — every feed is one file in the gist at feedBase, fetched
        once after load. Each file serves { updated: <ISO-8601>, items:
@@ -88,14 +88,12 @@ export interface PaperConfig {
     feedBase: string
     feeds: { file: string; maxAgeHours: number }[]
   }
-  experienceBadge: string
   map: {
     folio: string
     label: string
     counterNoun: string
     filters: { all: string; linked: string }
     loading: string
-    back: string
     backToMap: string
     related: { one: string; many: string }
     photoCreditLabel: string
@@ -104,12 +102,19 @@ export interface PaperConfig {
   }
 }
 
+export interface CareerEntry {
+  org: string
+  role: string
+  years: string
+}
+
 export interface SiteConfigProps {
   name: string
   title: string
   employer: string
   tagline: string
   lede: string[]
+  career: CareerEntry[]
   bio: string
   location: string
   email: string
@@ -123,6 +128,7 @@ class SiteConfigClass {
   readonly employer: string
   readonly tagline:  string
   readonly lede:     string[]
+  readonly career:   CareerEntry[]
   readonly bio:      string
   readonly location: string
   readonly email:    string
@@ -135,6 +141,7 @@ class SiteConfigClass {
     this.employer = props.employer
     this.tagline  = props.tagline
     this.lede     = props.lede
+    this.career   = props.career
     this.bio      = props.bio
     this.location = props.location
     this.email    = props.email
@@ -162,9 +169,13 @@ export const SiteConfig = new SiteConfigClass({
   employer: 'Bullish',
   tagline:  'Software engineer building risk and trading systems in finance.',
   lede: [
-    'Before Bullish he was at Morgan Stanley, where he built risk systems traders and risk managers relied on.',
     'He has worked in Sri Lanka, Hong Kong, and the United States, mostly in Java and Python, on distributed systems and the automation that keeps them running.',
     'He also mentors junior engineers and writes about the systems he builds.',
+  ],
+  career: [
+    { org: 'Bullish',        role: 'Software Engineer',       years: '2025–Present' },
+    { org: 'Morgan Stanley', role: 'Risk Systems Developer',  years: '2021–2025' },
+    { org: 'CUHK',           role: 'BEng, Systems Engineering', years: '2016–2020' },
   ],
   bio:      'On the distributed-systems beat since 2015.',
   location: 'Hong Kong',
@@ -187,40 +198,38 @@ export const SiteConfig = new SiteConfigClass({
       dark:  { name: 'Evening Edition', abbr: 'Eve.'  },
     },
     sections: [
-      { id: 'featured',   folio: 'A1', label: 'Front Page', note: 'The lead story' },
+      { id: 'featured',   folio: 'A1', label: 'About', bannerLabel: 'Front Page', note: 'The lead story' },
       {
-        id: 'experience', folio: 'A2', label: 'Experience', note: 'The record',
-        headline:   'Where the work was done.',
-        standfirst: 'Risk systems at Morgan Stanley, e-commerce at VBrands, and Android apps in Sri Lanka before either.',
-      },
-      {
-        id: 'writing', folio: 'A3', label: 'Writing', note: 'The inside pages',
+        id: 'writing', folio: 'A2', label: 'Writing', note: 'The inside pages',
         headline:   'Notes from the field.',
-        standfirst: 'Project write-ups and research notes, filed as the work gets done.',
+        standfirst: 'Older projects and school notes.',
       },
       {
-        id: 'contact', folio: 'Z', label: 'Letters',
-        bannerLabel: 'Letters & Colophon', note: 'The back page',
+        id: 'contact', folio: 'Z', label: 'Contact',
+        bannerLabel: 'Letters', note: 'The back page',
       },
     ],
     articleFolio: 'B',
-    colophon:
-      'Set in Playfair Display, Source Serif 4, Inter, and JetBrains Mono. Built with React and Tailwind; hosted on GitHub Pages.',
     publisher: {
       heading: 'The Publisher',
       note:
         'The Jayawardena Herald is the personal site of Dulanga Jayawardena, a software engineer at Bullish in Hong Kong, formerly of Morgan Stanley.',
     },
     channels: {
-      heading: 'Address the Editor',
+      heading: 'Contact',
       routes: [
         { label: 'By Cable', platform: 'LinkedIn' },
         { label: 'By Wire',  platform: 'GitHub'   },
         { label: 'By Post',  platform: 'Email'    },
       ],
     },
-    backPage: {
-      wentToPress: { label: 'Went to press', run: 'Run' },
+    nav: {
+      label: 'Sections',
+      links: [
+        { label: 'Home',    to: '/' },
+        { label: 'Writing', to: '/writing/' },
+        { label: 'Photos',  to: '/map/' },
+      ],
     },
     letters: {
       heading: 'Letters to the Editor',
@@ -230,8 +239,8 @@ export const SiteConfig = new SiteConfigClass({
     article: {
       relatedHeading:   'Related writing',
       externalCta:      'View the full project',
-      defaultBackLabel: 'Front Page',
-      notFound: { kicker: '404', headline: 'Post not found.' },
+      defaultBackLabel: 'Home',
+      notFound: { kicker: '404', headline: 'Page not found.', email: 'Email' },
       dateline: { dash: '—' },
       measure: { separator: '·', minutes: 'min' },
       index: { heading: 'In this article', minHeadings: 3 },
@@ -246,23 +255,26 @@ export const SiteConfig = new SiteConfigClass({
       extraWithinDays: 14,
     },
     hero: {
-      kicker:       'Front Page Profile',
+      kicker:       'Profile',
       indexHeading: 'Inside this Issue',
       foldNote:     'Below the fold',
       foldCta:      'Continued on Front Page',
       portraitAlt:  'Portrait of Dulanga Jayawardena, a software engineer based in Hong Kong',
+      emailCta:     'Email me',
+      careerHeading: 'Career',
     },
     cta: {
-      leadStory: 'Continued inside',
+      leadStory: 'Read the story',
       read:      'Read',
       minRead:   'min read',
-      showAll:   'Show all',
-      showLess:  'Show less',
+      allPosts:  'All {count} posts',
     },
     stopPress: {
       label:       'Stop Press',
       separator:   '†',
       ariaLabel:   'Late bulletins',
+      pauseLabel:  'Pause',
+      scrollLabel: 'Bulletins, scroll with arrow keys',
       loopSeconds: 40,
       /* SHA-less /raw base always serves each file's latest revision. */
       feedBase: 'https://gist.githubusercontent.com/dulangaj/d5da4363ee11ec57a3fb3f775379dbb7/raw',
@@ -273,14 +285,12 @@ export const SiteConfig = new SiteConfigClass({
         { file: 'working-on.json', maxAgeHours: 720 },
       ],
     },
-    experienceBadge: 'Now',
     map: {
       folio:       'C',
-      label:       'Datelines',
+      label:       'Photos',
       counterNoun: 'dispatches',
       filters:     { all: 'All', linked: 'Articles' },
       loading:     'Loading map',
-      back:        'Back',
       backToMap:   'Back to map',
       related:     { one: 'Related Article', many: 'Related Articles' },
       photoCreditLabel: 'Photo',

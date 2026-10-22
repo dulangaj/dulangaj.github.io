@@ -1,4 +1,5 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
+import { FiPause, FiPlay } from 'react-icons/fi'
 import { type NowItem } from '@/data/now'
 import { useLiveBulletins } from '@/hooks/useLiveBulletins'
 import { SiteConfig } from '@/models/SiteConfig'
@@ -8,9 +9,10 @@ import { SiteConfig } from '@/models/SiteConfig'
 /* Bulletins tick past like wire copy. Motion is driven by advancing the      */
 /* viewport's scrollLeft (not a CSS transform), so the strip is also a real   */
 /* scroll area: the reader can flick ahead or back at will. A hovering mouse  */
-/* or a finger held on the strip pauses the wire. Under prefers-reduced-      */
-/* motion the script never starts and the strip collapses to a single static, */
-/* hand-scrollable run (globals.css).                                         */
+/* or a finger held on the strip pauses the wire, and the Pause button holds */
+/* it until pressed again (WCAG 2.2.2). Under prefers-reduced-motion the      */
+/* script never starts and the strip collapses to a single static,            */
+/* hand-scrollable run with no Pause button (globals.css).                    */
 /* Items start from the build-time fallback and are quietly replaced by the   */
 /* live wire feeds (useLiveBulletins).                                        */
 
@@ -22,6 +24,10 @@ const stopPress = SiteConfig.paper.stopPress
    or back without hitting an edge. Only the first run is exposed to
    assistive tech. */
 const REPEAT_RUNS = [false, true, true]
+
+/* Width of the edge fades (w-8). The wire starts this far before a run so the
+   first label clears the left fade instead of reading "…OM". */
+const FADE_PX = 32
 
 function BulletinRun({ items, hidden }: { items: NowItem[]; hidden: boolean }) {
   return (
@@ -36,7 +42,7 @@ function BulletinRun({ items, hidden }: { items: NowItem[]; hidden: boolean }) {
           </span>
           {/* Trailing dagger on every item so the junction between runs
               reads as one continuous wire */}
-          <span aria-hidden="true" className="mx-4 font-serif text-[13px] text-[var(--color-crimson)]">
+          <span aria-hidden="true" className="mx-4 font-mono text-[13px] text-[var(--color-crimson)]">
             {stopPress.separator}
           </span>
         </span>
@@ -48,6 +54,9 @@ function BulletinRun({ items, hidden }: { items: NowItem[]; hidden: boolean }) {
 export function StopPress() {
   const items = useLiveBulletins()
   const viewportRef = useRef<HTMLDivElement>(null)
+  const [stopped, setStopped] = useState(false)
+  const stoppedRef = useRef(stopped)
+  useEffect(() => { stoppedRef.current = stopped }, [stopped])
 
   /* Auto-advance by mutating scrollLeft each frame. The reader's own
      scrolling is folded into the position (diff against the last value we
@@ -75,7 +84,7 @@ export function StopPress() {
        counts. */
     let hovered = false
     let pressed = false
-    const isPaused = () => hovered || pressed
+    const isPaused = () => hovered || pressed || stoppedRef.current
 
     const onEnter = (e: PointerEvent) => { if (e.pointerType === 'mouse') hovered = true }
     const onLeave = (e: PointerEvent) => { if (e.pointerType === 'mouse') hovered = false }
@@ -97,7 +106,7 @@ export function StopPress() {
       if (runWidth <= 0) return
       if (lastSet < 0) {
         /* Start one run in so there is headroom to scroll backwards too */
-        pos = runWidth
+        pos = runWidth - FADE_PX
       } else {
         pos += viewport.scrollLeft - lastSet
         if (!isPaused()) pos += (runWidth / stopPress.loopSeconds) * dt
@@ -126,7 +135,7 @@ export function StopPress() {
       aria-label={stopPress.ariaLabel}
       className="border-y border-[var(--color-ink)] bg-[var(--color-paper)]"
     >
-      <div className="max-w-7xl mx-auto px-6 md:px-12 py-2 flex items-center">
+      <div className="max-w-7xl mx-auto px-6 md:px-12 min-h-11 flex items-center">
         <span
           className="
             shrink-0 mr-5 px-2 py-1
@@ -139,6 +148,9 @@ export function StopPress() {
 
         <div
           ref={viewportRef}
+          tabIndex={0}
+          role="region"
+          aria-label={stopPress.scrollLabel}
           className="stop-press-viewport relative flex-1 overflow-x-auto no-scrollbar overscroll-x-contain"
         >
           {/* Edge fades — copy slips in and out of the margins, not clipped mid-stroke */}
@@ -158,6 +170,16 @@ export function StopPress() {
             ))}
           </div>
         </div>
+
+        <button
+          type="button"
+          onClick={() => setStopped((v) => !v)}
+          aria-pressed={stopped}
+          className="stop-press-toggle shrink-0 ml-3 -mr-2 px-2 min-h-11 inline-flex items-center gap-1.5 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] aria-pressed:text-[var(--color-crimson)] hover:text-[var(--color-crimson)] transition-colors duration-150 bg-transparent border-none cursor-pointer"
+        >
+          {stopped ? <FiPlay size={11} aria-hidden="true" /> : <FiPause size={11} aria-hidden="true" />}
+          {stopPress.pauseLabel}
+        </button>
       </div>
     </aside>
   )

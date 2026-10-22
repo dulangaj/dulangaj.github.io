@@ -1,8 +1,8 @@
-import { useEffect, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SiteConfig } from '@/models/SiteConfig'
 import { posts } from '@/data/posts'
 import { useTheme } from '@/hooks/useTheme'
+import { useToday } from '@/hooks/useToday'
 import { Nameplate, Teletype } from '@/components/ui/Nameplate'
 
 /* ─── Masthead ───────────────────────────────────────────────────────────── */
@@ -56,18 +56,15 @@ function isExtraEdition(now: Date): boolean {
 }
 
 export function Masthead() {
-  const [now, setNow] = useState(() => new Date())
+  const now = useToday()
   const { isDark, toggle } = useTheme()
 
-  useEffect(() => {
-    const tick = window.setInterval(() => setNow(new Date()), 60_000)
-    return () => window.clearInterval(tick)
-  }, [])
-
   const { vol, no } = volumeAndIssue(now)
+  const edition = isDark ? paper.editions.dark.name : paper.editions.light.name
   const isExtra = isExtraEdition(now)
-  const editionAria = `Switch to ${isDark ? paper.editions.light.name : paper.editions.dark.name}`
+  const editionAria = `${edition}, switch to ${isDark ? paper.editions.light.name : paper.editions.dark.name}`
   const dateline = formatLongDate(now)
+  const shortDate = now.toLocaleDateString(paper.dateLocale, { day: 'numeric', month: 'short', year: 'numeric' })
 
   return (
     <section
@@ -77,12 +74,13 @@ export function Masthead() {
       <div className="max-w-7xl mx-auto">
         {/* Top metadata strip — vol/date/edition, with a thin double rule on top */}
         <div className="border-t-4 border-double border-[var(--color-ink)] pt-3">
-          {/* Letterspaced mono must never break mid-phrase: flex row on mobile
-              (dateline hidden), three-column grid once the dateline fits (lg) */}
+          {/* Letterspaced mono must never break mid-phrase: below lg the strip
+              collapses to one date/edition line; three-column grid at lg */}
           <div className="flex items-baseline justify-between gap-3 lg:grid lg:grid-cols-3 font-mono text-[10px] md:text-[11px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
-            <span className="text-left whitespace-nowrap">
+            <span className="text-left whitespace-nowrap hidden lg:inline">
               Vol. {vol} &nbsp;·&nbsp; No. {no}
             </span>
+            <span className="lg:hidden text-left whitespace-nowrap text-[var(--color-ink)]">{shortDate}</span>
             <Teletype text={dateline} className="text-center hidden lg:block text-[var(--color-ink)]" />
             {/* The edition ear doubles as the light/dark toggle while the
                 utility header is hidden at the top of the page. */}
@@ -96,14 +94,10 @@ export function Masthead() {
               <span className="edition-dark">{paper.editions.dark.name}</span>
             </button>
           </div>
-          {/* Mobile dateline */}
-          <div className="lg:hidden text-center pt-2 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-ink)]">
-            {dateline}
-          </div>
         </div>
 
         {/* Nameplate; the EXTRA stamp rides the top corner */}
-        <div className="relative text-center pt-6 md:pt-8 pb-4 md:pb-5">
+        <div className="relative text-center pt-4 lg:pt-8 pb-4 lg:pb-5">
           {isExtra && (
             <motion.span
               className="hidden lg:inline-block absolute top-2 right-0 border-2 border-[var(--color-crimson)] px-2 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.3em] indent-[0.3em] text-[var(--color-crimson)]"
@@ -117,7 +111,7 @@ export function Masthead() {
           {/* Deliberately set smaller at lg+ rather than filling the measure */}
           <Nameplate className="font-display font-black leading-none tracking-tight text-[var(--color-ink)] text-[clamp(2.5rem,9vw,6rem)] lg:text-[clamp(2rem,6vw,5rem)]" />
           <motion.p
-            className="masthead-motto mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
+            className="masthead-motto hidden lg:block mt-4 font-display italic text-[15px] md:text-[17px] text-[var(--color-muted)]"
             initial={{ opacity: 0, y: 8 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 1.1, duration: 0.7, ease: [0.22, 1, 0.36, 1] }}
@@ -129,13 +123,10 @@ export function Masthead() {
         {/* Bottom metadata strip — established / bureau / price, bracketed by a triple rule */}
         <div className="border-t-2 border-[var(--color-ink)]">
           <div className="border-t border-[var(--color-ink)] mt-[3px]" />
-          <div className="flex items-baseline justify-between gap-3 md:grid md:grid-cols-3 pt-3 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
+          <div className="hidden lg:grid grid-cols-3 pt-3 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
             <span className="text-left whitespace-nowrap">Established {paper.established}</span>
-            <span className="text-center hidden md:block">{paper.bureau}</span>
+            <span className="text-center">{paper.bureau}</span>
             <span className="text-right whitespace-nowrap">{paper.price}</span>
-          </div>
-          <div className="md:hidden text-center pt-1 font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)]">
-            {paper.bureau}
           </div>
         </div>
       </div>

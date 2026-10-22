@@ -2,25 +2,14 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import path from 'path'
-import { execSync } from 'node:child_process'
 import { exifPlugin } from './vite-plugin-exif'
-
-function buildSha() {
-  try {
-    return execSync('git rev-parse --short HEAD', { encoding: 'utf8' }).trim() || 'dev'
-  } catch {
-    return 'dev'
-  }
-}
 
 // https://vite.dev/config/
 export default defineConfig(({ isSsrBuild }) => ({
   plugins: [exifPlugin(), react(), tailwindcss()],
   base: '/',
-  define: {
-    __BUILD_TIME__: JSON.stringify(new Date().toISOString()),
-    __BUILD_SHA__: JSON.stringify(buildSha()),
-  },
+  /* UTC day of the build: the date the prerendered masthead is printed with */
+  define: { __BUILD_DAY__: JSON.stringify(new Date().toISOString().slice(0, 10)) },
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src'),

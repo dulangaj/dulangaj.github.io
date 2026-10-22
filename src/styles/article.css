@@ -1,11 +1,9 @@
 /* ─── Inside pages: article prose ────────────────────────────────────────── */
-/* Article prose is set in the text serif, justified with hyphenation from   */
-/* md up (phone columns are too narrow to justify cleanly).                  */
+/* Article prose is set ragged-right in the text serif, with hyphenation.    */
 .post-body { font-family: var(--font-serif); color: var(--color-ink); }
 .post-body h2 { font-family: var(--font-display); font-size: 1.5rem; line-height: 1.2; color: var(--color-ink); margin: 2.5rem 0 1rem; scroll-margin-top: 6rem; }
 .post-body h3 { font-family: var(--font-display); font-size: 1.2rem; line-height: 1.3; color: var(--color-ink); margin: 2rem 0 0.75rem; }
 .post-body p  { font-size: 17px; line-height: 1.8; color: var(--color-ink); margin: 0 0 1.25rem; hyphens: auto; }
-@media (min-width: 768px) { .post-body p { text-align: justify; } }
 .post-body ul, .post-body ol { padding-left: 1.5rem; margin: 0 0 1.25rem; }
 .post-body li { font-size: 15px; line-height: 1.7; color: var(--color-muted); margin-bottom: 0.4rem; }
 .post-body li strong { color: var(--color-ink); }
@@ -35,7 +33,7 @@
 
 /* ─── Pull quote ─────────────────────────────────────────────────────────── */
 /* The first blockquote is set as the display pull quote: crimson hairlines
-   above and below, floated into the measure at md+ so copy wraps around it. */
+   above and below, full measure between paragraphs. */
 .post-body blockquote.pull-quote {
   border: none;
   border-top: 2px solid var(--color-crimson);
@@ -51,10 +49,3 @@
 }
 .post-body blockquote.pull-quote p { font: inherit; color: inherit; text-align: left; margin: 0; hyphens: none; }
 
-@media (min-width: 768px) {
-  .post-body blockquote.pull-quote {
-    float: right;
-    width: 40%;
-    margin: 0.4rem 0 1rem 2rem;
-  }
-}
