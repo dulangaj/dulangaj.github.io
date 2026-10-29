@@ -1,4 +1,4 @@
-import { useEffect, type ReactNode } from 'react'
+import { useEffect, useSyncExternalStore, type ReactNode } from 'react'
 import { useParams, Link, useLocation } from 'react-router-dom'
 import { motion } from 'framer-motion'
 import ReactMarkdown, { type Components } from 'react-markdown'
@@ -10,9 +10,11 @@ import { Header } from '@/components/layout/Header'
 import { Footer } from '@/components/layout/Footer'
 import { Tag } from '@/components/ui/Tag'
 import { SectionBanner } from '@/components/ui/SectionBanner'
+import { NotFoundPage } from '@/pages/NotFoundPage'
 import { SiteConfig } from '@/models/SiteConfig'
 import { getPostCanonicalUrl, getPostPath, getPostSlug } from '@/utils/postUrls'
 import { extractHeadings, ledeOffset, pullQuoteOffset, slugify } from '@/utils/articleMeasure'
+import { srcSetFor } from '@/utils/imageVariants'
 
 /* ─── PostDetail ──────────────────────────────────────────────────────────── */
 /* Full article page rendered from posts/*.md markdown files, set as an       */
@@ -22,16 +24,19 @@ const flattenText = (node: ReactNode): string =>
   Array.isArray(node) ? node.map(flattenText).join('')
     : typeof node === 'string' || typeof node === 'number' ? String(node) : ''
 
+/* history.state survives a reload but the prerendered HTML can't see it, so  */
+/* the back link reads it only once hydration is done.                        */
+const subscribeNoop = () => () => {}
+
 export function PostDetail() {
   const { slug } = useParams<{ slug: string }>()
   const location = useLocation()
   const post = posts.find((p) => getPostSlug(p.id) === slug)
-  const navigationState = location.state as { backTo?: string, backLabel?: string } | null
-  const searchParams = new URLSearchParams(location.search)
-  const requestedBackTo = navigationState?.backTo ?? searchParams.get('backTo') ?? '/'
+  const hydrated = useSyncExternalStore(subscribeNoop, () => true, () => false)
+  const navigationState = hydrated ? location.state as { backTo?: string, backLabel?: string } | null : null
+  const requestedBackTo = navigationState?.backTo ?? '/'
   const backTo = requestedBackTo.startsWith('/') && !requestedBackTo.startsWith('//') ? requestedBackTo : '/'
-  const backLabel =
-    navigationState?.backLabel ?? searchParams.get('backLabel') ?? SiteConfig.paper.article.defaultBackLabel
+  const backLabel = navigationState?.backLabel ?? SiteConfig.paper.article.defaultBackLabel
 
   useEffect(() => { window.scrollTo(0, 0) }, [slug])
 
@@ -79,31 +84,7 @@ export function PostDetail() {
     }
   }, [post])
 
-  if (!post) {
-    return (
-      <>
-        <a href="#main-content" className="skip-link">Skip to content</a>
-        <Header />
-        <main id="main-content" className="min-h-screen flex items-center justify-center px-6">
-          <div className="text-center">
-            <p className="font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-crimson)] mb-4">
-              {SiteConfig.paper.article.notFound.kicker}
-            </p>
-            <h1 className="font-display text-4xl text-[var(--color-ink)] mb-6">
-              {SiteConfig.paper.article.notFound.headline}
-            </h1>
-            <Link
-              to={backTo}
-              className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
-            >
-              <FiArrowLeft size={12} /> {backLabel}
-            </Link>
-          </div>
-        </main>
-        <Footer />
-      </>
-    )
-  }
+  if (!post) return <NotFoundPage />
 
   const body = post.file ? getPostContent(post.file) : null
   const paper = SiteConfig.paper
@@ -169,7 +150,7 @@ export function PostDetail() {
           >
             <Link
               to={backTo}
-              className="inline-flex items-center gap-2 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
+              className="inline-flex items-center gap-2 min-h-11 -my-3.5 font-mono text-[11px] tracking-[0.22em] uppercase text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-200"
             >
               <FiArrowLeft size={11} /> {backLabel}
             </Link>
@@ -232,7 +213,7 @@ export function PostDetail() {
               <p className="m-0 mb-3 font-mono text-[10px] tracking-[0.28em] uppercase text-[var(--color-muted)]">
                 {article.index.heading}
               </p>
-              <ul className="m-0 list-none p-0 space-y-1.5">
+              <ul className="m-0 list-none p-0">
                 {jumpLines.map((line) => (
                   <li key={line.id}>
                     <a
@@ -241,7 +222,7 @@ export function PostDetail() {
                         event.preventDefault()
                         document.querySelector(`#${line.id}`)?.scrollIntoView({ behavior: 'smooth' })
                       }}
-                      className="font-serif text-[13px] text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-150"
+                      className="inline-block py-1 font-serif text-[13px] leading-[1.5] text-[var(--color-muted)] hover:text-[var(--color-crimson)] transition-colors duration-150"
                     >
                       {line.label}
                     </a>
@@ -261,6 +242,8 @@ export function PostDetail() {
             >
               <img
                 src={post.image}
+                srcSet={srcSetFor(post.image)}
+                sizes="(min-width: 768px) 768px, 100vw"
                 alt={post.title}
                 className="w-full h-full object-cover"
                 loading="eager"

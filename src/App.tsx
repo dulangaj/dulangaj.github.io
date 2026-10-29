@@ -7,13 +7,12 @@ import { Masthead }   from '@/components/layout/Masthead'
 import { Hero }       from '@/components/sections/Hero'
 import { StopPress }  from '@/components/ui/StopPress'
 import { ReadingRule } from '@/components/ui/ReadingRule'
-import { Spotlight }  from '@/components/ui/Spotlight'
 import { Featured }   from '@/components/sections/Featured'
-import { Experience } from '@/components/sections/Experience'
 import { Writing }    from '@/components/sections/Writing'
 import { homeSections } from '@/data/homeSections'
 import { PostDetail } from '@/pages/PostDetail'
 import { WritingPage } from '@/pages/WritingPage'
+import { NotFoundPage } from '@/pages/NotFoundPage'
 
 const MapPage = lazy(async () => {
   const module = await import('@/pages/MapPage')
@@ -84,14 +83,12 @@ function HomePage() {
     <>
       <a href="#main-content" className="skip-link">Skip to content</a>
       <ReadingRule />
-      <Spotlight />
       <Header />
       <main id="main-content">
         {homeSections.masthead && <Masthead />}
         {homeSections.stopPress && <StopPress />}
         {homeSections.hero && <Hero />}
         {homeSections.featured && <Featured />}
-        {homeSections.experience && <Experience />}
         {homeSections.writing && <Writing />}
       </main>
       <Footer />
@@ -193,6 +190,7 @@ export default function App() {
           <Route path="/writing" element={<WritingPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/:slug" element={<PostDetail />} />
+          <Route path="*" element={<NotFoundPage />} />
         </Routes>
       </Suspense>
      </MotionConfig>
