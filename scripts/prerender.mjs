@@ -122,7 +122,7 @@ function buildSitemap(posts, photoLocations) {
   )
   const latestPostMtime = [...postMtimes.values()].sort().at(-1) ?? today
   const homeMtime = [
-    gitMtime('src/components/sections/Home.tsx'),
+    gitMtime('src/components/sections/Hero.tsx'),
     gitMtime('index.html'),
     latestPostMtime,
   ].filter(Boolean).sort().at(-1) ?? today
@@ -189,7 +189,8 @@ ${entries.map((entry) => {
 /** Build a hidden-but-crawlable list of <figure> blocks for every map photo.
  *  Sighted users don't see this (sr-only), but Googlebot reads the alts,
  *  figcaptions, and full-size <img> URLs in the static HTML — solving the
- *  problem that Leaflet markers and the modal only render at runtime. */
+ *  problem that Leaflet markers and the modal only render at runtime.
+ *  The <img>s are `hidden` so browsers don't download every full-size photo. */
 function buildPhotoIndexHtml(photoLocations) {
   const items = photoLocations.map((photo) => {
     const credit = photo.photoCredit
@@ -199,7 +200,7 @@ function buildPhotoIndexHtml(photoLocations) {
       ? `<p>${escapeHtml(photo.description)}</p>`
       : ''
     return `<figure>
-  <img src="${escapeAttribute(photo.image)}" srcset="${escapeAttribute(photo.thumbnail)} 160w, ${escapeAttribute(photo.image)} 1600w" sizes="(max-width: 640px) 100vw, 720px" alt="${escapeAttribute(photo.alt)}" loading="lazy" decoding="async" width="1600" height="1200" />
+  <img hidden src="${escapeAttribute(photo.image)}" alt="${escapeAttribute(photo.alt)}" loading="lazy" decoding="async" width="1600" height="1200" />
   <figcaption>
     <h3>${escapeHtml(photo.title)}</h3>
     <p>${escapeHtml(photo.location)} · ${escapeHtml(photo.date)}</p>
@@ -424,6 +425,15 @@ async function main() {
     articleHtml = injectSsrIntoRoot(articleHtml, articleRender.html)
     await writeFile(path.join(slug, 'index.html'), articleHtml)
   }
+
+  // GitHub Pages serves 404.html for any path with no file behind it
+  let notFoundHtml = applyMetadata(shell, {
+    title: `Page not found | ${SITE_NAME}`,
+    description: HOME_DESCRIPTION,
+    canonicalPath: '/',
+  }).replace('content="index,follow"', 'content="noindex"')
+  notFoundHtml = injectSsrIntoRoot(notFoundHtml, render('/404').html)
+  await writeFile('404.html', notFoundHtml)
 
   await writeFile('sitemap.xml', buildSitemap(posts, photoLocations))
 }

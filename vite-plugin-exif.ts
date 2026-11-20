@@ -324,7 +324,7 @@ async function extractAndWrite(root: string) {
   await Promise.all(
     files.map(async (file) => {
       try {
-        const data = await exifr.parse(path.join(imgDir, file), {
+        const data = await exifr.parse(await fs.readFile(path.join(imgDir, file)), {
           gps: true,
           ifd0: { pick: ['ImageDescription', 'XPTitle', 'Make', 'Model'] },
           exif: { pick: ['DateTimeOriginal', 'CreateDate'] },
