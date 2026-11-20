@@ -8,6 +8,7 @@ const DIST_DIR = path.join(ROOT_DIR, 'dist')
 
 const REQUIRED_FILES = [
   'index.html',
+  '404.html',
   'map/index.html',
   'writing/index.html',
   'morgan-stanley-equity-risk/index.html',

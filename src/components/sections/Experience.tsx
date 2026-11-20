@@ -47,7 +47,7 @@ function TimelineItem({ experience, index, isOpen, onToggle, registerHeaderRef }
               {experience.role}
             </span>
             {experience.isCurrent && (
-              <span className="font-mono text-[10px] px-2 py-0.5 bg-[var(--color-crimson)] text-white tracking-[0.22em] uppercase">
+              <span className="font-mono text-[10px] px-2 py-0.5 bg-[var(--color-crimson)] text-[var(--color-paper)] tracking-[0.22em] uppercase">
                 {SiteConfig.paper.experienceBadge}
               </span>
             )}

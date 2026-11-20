@@ -139,7 +139,7 @@ body::before {
 
 ::selection {
   background-color: var(--color-crimson);
-  color: white;
+  color: var(--color-paper);
 }
 
 /* Keyboard focus treatment tuned for the editorial palette. */
@@ -370,7 +370,7 @@ button:focus-visible,
   padding: 0 5px;
   border-radius: 10px;
   background: var(--color-crimson);
-  color: #fff;
+  color: var(--color-paper);
   font-family: var(--font-body);
   font-size: 10px;
   font-weight: 700;
@@ -397,7 +397,7 @@ button:focus-visible,
   font-family: var(--font-body);
   font-size: 13px;
   font-weight: 600;
-  color: #fff;
+  color: var(--color-paper);
   line-height: 1;
 }
 
