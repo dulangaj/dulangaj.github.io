@@ -139,9 +139,20 @@ async function assertSitemapCanonicalConsistency() {
   }
 }
 
+async function assertEmployerLeadsExperience() {
+  const html = await fs.readFile(path.join(DIST_DIR, 'index.html'), 'utf8')
+  const employer = html.match(/"worksFor":\{"@type":"Organization","name":"([^"]+)"/)?.[1]
+  const experience = html.slice(html.indexOf('id="experience"'))
+  const firstEntry = experience.slice(0, experience.indexOf('aria-expanded', experience.indexOf('aria-expanded') + 1))
+  if (!employer || !firstEntry.includes(employer) || !firstEntry.includes('>Now<')) {
+    throw new Error(`Expected the first Experience entry to be ${employer} with the Now badge.`)
+  }
+}
+
 async function main() {
   await assertRequiredFiles()
   await assertSitemapCanonicalConsistency()
+  await assertEmployerLeadsExperience()
 
   const server = createStaticServer()
 

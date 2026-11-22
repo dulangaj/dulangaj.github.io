@@ -191,7 +191,7 @@ export const SiteConfig = new SiteConfigClass({
       {
         id: 'experience', folio: 'A2', label: 'Experience', note: 'The record',
         headline:   'Where the work was done.',
-        standfirst: 'Risk systems at Morgan Stanley, e-commerce at VBrands, and Android apps in Sri Lanka before either.',
+        standfirst: 'Exchange systems at Bullish, risk systems at Morgan Stanley, e-commerce at VBrands, and Android apps in Sri Lanka before all three.',
       },
       {
         id: 'writing', folio: 'A3', label: 'Writing', note: 'The inside pages',
