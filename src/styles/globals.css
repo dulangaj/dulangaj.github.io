@@ -17,9 +17,9 @@
   --color-crimson:       #65081F;   /* Accent / brand (burgundy) */
   --color-crimson-hover: #4a0517;   /* Accent hover            */
 
-  --font-display:    'Playfair Display', Georgia, serif;
-  --font-body:       'Inter', system-ui, sans-serif;
-  --font-serif:      'Source Serif 4', Georgia, serif;
+  --font-display:    'Playfair Display Variable', Georgia, serif;
+  --font-body:       system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-serif:      'Source Serif 4 Variable', Georgia, serif;
   --font-mono:       'JetBrains Mono', 'Courier New', monospace;
 }
 
@@ -155,7 +155,8 @@ body::before {
 /* Keyboard focus treatment tuned for the editorial palette. */
 a:focus-visible,
 button:focus-visible,
-[role="button"]:focus-visible {
+[role="button"]:focus-visible,
+.stop-press-viewport:focus-visible {
   outline: 2px solid color-mix(in oklab, var(--color-crimson) 80%, white 20%);
   outline-offset: 2px;
   border-radius: 4px;
@@ -185,7 +186,7 @@ button:focus-visible,
 
 /* ─── Typography Utilities ───────────────────────────────────────────────── */
 /* font-serif is for running copy (ledes, standfirsts, article prose);        */
-/* font-body (Inter) stays on UI chrome: nav, buttons, bios, metadata.        */
+/* font-body (system UI) stays on UI chrome: nav, buttons, bios, metadata.    */
 .font-display  { font-family: var(--font-display); }
 .font-body     { font-family: var(--font-body); }
 .font-serif    { font-family: var(--font-serif); }
@@ -271,9 +272,8 @@ button:focus-visible,
 /* Attribution text */
 .leaflet-control-attribution {
   font-family: var(--font-body) !important;
-  font-size: 9px !important;
   background: color-mix(in srgb, var(--color-surface) 85%, transparent) !important;
-  color: var(--color-subtle) !important;
+  color: var(--color-muted) !important;
   backdrop-filter: blur(8px);
   border-radius: 6px 0 0 0 !important;
 }
@@ -286,8 +286,10 @@ button:focus-visible,
   background: var(--color-surface) !important;
   color: var(--color-ink) !important;
   border-color: var(--color-rule) !important;
-  font-size: 16px !important;
-  line-height: 28px !important;
+  font-size: 18px !important;
+  width: 44px !important;
+  height: 44px !important;
+  line-height: 44px !important;
   transition: background 0.15s ease !important;
 }
 .leaflet-control-zoom a:hover {
@@ -440,9 +442,12 @@ button:focus-visible,
 /* Motion lives in StopPress.tsx: the viewport's scrollLeft is advanced each  */
 /* frame so the reader can also scroll the wire by hand. Under reduced        */
 /* motion the script never starts; the duplicate runs collapse and the        */
-/* single run stays hand-scrollable.                                          */
+/* single run stays hand-scrollable, inset past the left edge fade, and the  */
+/* Pause button has nothing to pause.                                         */
 @media (prefers-reduced-motion: reduce) {
   .stop-press-run[aria-hidden='true'] { display: none; }
+  .stop-press-run { padding-left: 2rem; }
+  .stop-press-toggle { display: none; }
 }
 
 /* ─── Newsroom motion ────────────────────────────────────────────────────── */
@@ -457,20 +462,6 @@ button:focus-visible,
   z-index: 60;
 }
 
-/* Desk lamp trailing the pointer */
-.spotlight {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 9998;
-  opacity: 0.08;
-  mix-blend-mode: multiply;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .spotlight { mix-blend-mode: screen; opacity: 0.14; }
-}
-:root[data-theme="dark"] .spotlight { mix-blend-mode: screen; opacity: 0.14; }
-
 /* Teletype caret blinks while the dateline arrives, then clears */
 .teletype-caret { color: var(--color-crimson); animation: caret 0.7s steps(1) 6 forwards; }
 @keyframes caret { 0%, 50% { opacity: 1; } 51%, 100% { opacity: 0; } }
@@ -483,7 +474,6 @@ button:focus-visible,
   .teletype-caret { display: none; }
 }
 @media (prefers-reduced-motion: reduce) {
-  .spotlight { display: none; }
   .teletype-caret { animation: none; opacity: 0; }
 }
 

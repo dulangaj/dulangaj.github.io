@@ -17,7 +17,6 @@
  *   public/assets/img/<old>             → public/assets/img/<new>          (git mv)
  *   public/assets/img/thumbs/<old>      → public/assets/img/thumbs/<new>   (git mv)
  *   src/data/photoMetadata.ts           → object keys rewritten
- *   src/data/experiences.ts             → /assets/img/<old> paths rewritten
  *   src/data/featuredConfig.ts          → /assets/img/<old> paths rewritten
  *   posts/<slug>.md                     → frontmatter image: + body ![](…) refs
  *
@@ -164,7 +163,6 @@ for (const [name, olds] of newNames.entries()) {
 
 const REF_FILES = [
   'src/data/photoMetadata.ts',
-  'src/data/experiences.ts',
   'src/data/featuredConfig.ts',
   ...readdirSync(join(repoRoot, 'posts')).filter((f) => f.endsWith('.md')).map((f) => `posts/${f}`),
 ]
