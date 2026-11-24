@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { SiteConfig } from '@/models/SiteConfig'
 
 /* ─── SectionBanner ──────────────────────────────────────────────────────── */
@@ -13,9 +14,10 @@ interface SectionBannerProps {
   note?: string
   bottomRule?: 'double' | 'single'
   labelAs?: 'span' | 'h1' | 'h2'  // semantic element for the label (page heading vs. decoration)
+  aside?: ReactNode                // controls set at the right of the banner, shown at every width
 }
 
-export function SectionBanner({ folio, label, note, bottomRule = 'double', labelAs: LabelTag = 'span' }: SectionBannerProps) {
+export function SectionBanner({ folio, label, note, bottomRule = 'double', labelAs: LabelTag = 'span', aside }: SectionBannerProps) {
   const bottomClass =
     bottomRule === 'double'
       ? 'border-b-2 border-[var(--color-ink)]'
@@ -36,10 +38,15 @@ export function SectionBanner({ folio, label, note, bottomRule = 'double', label
             {label}
           </LabelTag>
         </div>
-        {note && (
-          <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] hidden sm:block">
-            {note}
-          </span>
+        {(note || aside) && (
+          <div className="flex items-baseline gap-4">
+            {note && (
+              <span className="font-mono text-[10px] tracking-[0.22em] uppercase text-[var(--color-subtle)] hidden sm:block">
+                {note}
+              </span>
+            )}
+            {aside}
+          </div>
         )}
       </div>
     </div>

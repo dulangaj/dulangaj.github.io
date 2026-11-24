@@ -28,7 +28,7 @@ Target audience: fintech/finance professionals.
 ## Architecture (OOP)
 ```
 src/
-  models/      # Typed classes (Experience, Project, etc.) — the domain layer
+  models/      # Typed classes (Post, SiteConfig, etc.) — the domain layer
   data/        # Content files — the CMS layer, no business logic
   components/
     layout/    # Page shells, grids, wrappers
@@ -39,4 +39,4 @@ src/
 ## Core Principles
 1. **Content is segregated from technology** — swap data/ without touching components
 2. **Codebase looks good** — clean OOP, no god files, single responsibility
-3. **Easy maintainability** — new experience or project = add an entry to data/, nothing else
+3. **Easy maintainability** — new post or project = add an entry to data/, nothing else
