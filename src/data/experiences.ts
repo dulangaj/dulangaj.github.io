@@ -5,6 +5,21 @@ import { Experience } from '@/models/Experience'
 
 export const experiences = [
   new Experience({
+    id:          'bullish',
+    role:        'Software Engineer',
+    company:     'Bullish',
+    location:    'Hong Kong',
+    period:      '2025 – Present',
+    startYear:   2025,
+    description: 'Builds broker and client services for the Bullish exchange.',
+    highlights: [
+      'Built a tax-document service that lets every US client download their tax forms securely through the platform',
+      'Designed an OTC options trading flow that lets brokers trade for delegated client accounts without sharing client credentials',
+      'Rewrote the history-export pipeline so brokers export their clients\' trading data themselves, and added its first end-to-end tests',
+    ],
+    tags: ['Java', 'Micronaut', 'TypeScript', 'BigQuery', 'Flyway'],
+  }),
+  new Experience({
     id:          'morgan-stanley',
     role:        'Risk Systems Developer',
     company:     'Morgan Stanley',
