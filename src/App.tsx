@@ -193,6 +193,7 @@ export default function App() {
           <Route path="/writing" element={<WritingPage />} />
           <Route path="/map" element={<MapPage />} />
           <Route path="/:slug" element={<PostDetail />} />
+          <Route path="*" element={<PostDetail />} />
         </Routes>
       </Suspense>
      </MotionConfig>

@@ -137,11 +137,9 @@ export function StopPress() {
           {stopPress.label}
         </span>
 
-        <div
-          ref={viewportRef}
-          className="stop-press-viewport relative flex-1 overflow-x-auto no-scrollbar overscroll-x-contain"
-        >
-          {/* Edge fades — copy slips in and out of the margins, not clipped mid-stroke */}
+        <div className="relative flex-1 min-w-0">
+          {/* Edge fades — copy slips in and out of the margins, not clipped mid-stroke.
+              Outside the scroll area, or they would scroll away with the copy. */}
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8"
@@ -152,10 +150,12 @@ export function StopPress() {
             className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8"
             style={{ background: 'linear-gradient(to left, var(--color-paper), transparent)' }}
           />
-          <div className="stop-press-track flex items-baseline w-max">
-            {REPEAT_RUNS.map((hidden, idx) => (
-              <BulletinRun key={idx} items={items} hidden={hidden} />
-            ))}
+          <div ref={viewportRef} className="stop-press-viewport overflow-x-auto no-scrollbar overscroll-x-contain">
+            <div className="stop-press-track flex items-baseline w-max">
+              {REPEAT_RUNS.map((hidden, idx) => (
+                <BulletinRun key={idx} items={items} hidden={hidden} />
+              ))}
+            </div>
           </div>
         </div>
       </div>
