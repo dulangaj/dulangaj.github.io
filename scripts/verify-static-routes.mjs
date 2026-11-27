@@ -139,9 +139,20 @@ async function assertSitemapCanonicalConsistency() {
   }
 }
 
+// The lead summary must never be cropped to a fixed height: overflow:hidden hides text with no ellipsis.
+async function assertLeadStandfirstUncropped() {
+  const html = await fs.readFile(path.join(DIST_DIR, 'index.html'), 'utf8')
+  const classes = html.match(/<p class="(lead-standfirst[^"]*)"/)?.[1]
+  if (!classes) throw new Error('dist/index.html has no .lead-standfirst paragraph.')
+  if (/\bmax-h-|\boverflow-hidden\b/.test(classes)) {
+    throw new Error(`Lead standfirst is height-cropped and cuts text mid-sentence: "${classes}".`)
+  }
+}
+
 async function main() {
   await assertRequiredFiles()
   await assertSitemapCanonicalConsistency()
+  await assertLeadStandfirstUncropped()
 
   const server = createStaticServer()
 
